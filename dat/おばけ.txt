@@ -1,0 +1,19 @@
+﻿
+名前：
+二つ名:魔材テレサ
+種族:人じゃない
+
+森が月の光すら当たらなくなったころに活発に活動ができる。
+基本的に舐めた態度で相手をあおる。
+人魂を作って仲間と行動するらしい
+
+#include<stdio.h>
+int main(void){
+int count,少年;
+count = 0;
+少年 = bot;
+while(count != ∞)｛
+if(少年 said kusa || 少年 said mazai){count++}
+printf("少年は%d回パワワを発言した。",count)｝
+return 0;
+}
