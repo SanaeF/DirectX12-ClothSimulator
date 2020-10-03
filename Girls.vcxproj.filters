@@ -31,13 +31,22 @@
     <Filter Include="DirectXlib\DxWindow">
       <UniqueIdentifier>{e3f44038-831a-4f85-83ef-5e6fc6286f29}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\PMDActor\VMDmotion">
+      <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\PMDActor\Bone">
+      <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Dx12Wrapper\DX_Resource">
+      <UniqueIdentifier>{ed01f120-1ebe-4337-846a-d3c8468c415c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader">
+      <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx12Wrapper.h">
       <Filter>ソース ファイル\Dx12Wrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="PMDActor.h">
-      <Filter>ソース ファイル\PMDActor</Filter>
     </ClInclude>
     <ClInclude Include="PMDRenderer.h">
       <Filter>ソース ファイル\PMDRenderer</Filter>
@@ -48,13 +57,31 @@
     <ClInclude Include="GIDirectLib\DirectX12lib.h">
       <Filter>DirectXlib</Filter>
     </ClInclude>
+    <ClInclude Include="VMD_Motion.h">
+      <Filter>ソース ファイル\PMDActor\VMDmotion</Filter>
+    </ClInclude>
+    <ClInclude Include="PMDActor.h">
+      <Filter>ソース ファイル\PMDActor</Filter>
+    </ClInclude>
+    <ClInclude Include="DX_Resource.h">
+      <Filter>ソース ファイル\Dx12Wrapper\DX_Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicVertexShader.hlsl" />
     <FxCompile Include="BasicPixelShader.hlsl" />
+    <FxCompile Include="PixelPolygon.hlsl">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="VertexPolygon.hlsl">
+      <Filter>リソース ファイル\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli" />
+    <None Include="HeaderPolygon.hlsli">
+      <Filter>リソース ファイル\Shader</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -74,6 +101,12 @@
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>ソース ファイル\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="VMD_Motion.cpp">
+      <Filter>ソース ファイル\PMDActor\VMDmotion</Filter>
+    </ClCompile>
+    <ClCompile Include="DX_Resource.cpp">
+      <Filter>ソース ファイル\Dx12Wrapper\DX_Resource</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -443,6 +443,73 @@ ComPtr < ID3D12GraphicsCommandList> Dx12Wrapper::CommandList() {
 	return _cmdList;
 }
 
+void Dx12Wrapper::writte() {
+	auto heapDesc = _rtvHeaps->GetDesc();
+	auto& bbuff = _backBuffers[0];
+	auto resDesc = bbuff->GetDesc();
+	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+
+	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
+	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_B8G8R8A8_UNORM, clsClr);
+
+	auto result = _dev->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		&clearValue,
+		IID_PPV_ARGS(mPolyRes.ReleaseAndGetAddressOf())
+	);
+}
+
+void Dx12Wrapper::tex_view() {
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+	heapDesc.NumDescriptors = 1;
+
+	auto result = _dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mPolyRTV_Heap.ReleaseAndGetAddressOf()));
+
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	_dev->CreateRenderTargetView(
+		mPolyRes.Get(),
+		&rtvDesc,
+		mPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart()
+	);
+	heapDesc.NumDescriptors = 1;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+	result = _dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mPolySRV_Heap.ReleaseAndGetAddressOf()));
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Format = rtvDesc.Format;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	_dev->CreateShaderResourceView(
+		mPolyRes.Get(),
+		&srvDesc,
+		mPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
+	);
+
+}
+
+void Dx12Wrapper::target() {
+	auto rtvHeapPointer = mPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
+
+	_cmdList->OMSetRenderTargets(
+		1,
+		&rtvHeapPointer,
+		false,
+		&_dsvHeap->GetCPUDescriptorHandleForHeapStart()
+	);
+}
+
+
 void Dx12Wrapper::Update() {
 
 }
@@ -463,7 +530,8 @@ void Dx12Wrapper::BeginDraw() {
 
 	//深度を指定
 	auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
+	//_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
+	target();
 	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 
@@ -512,6 +580,9 @@ void Dx12Wrapper::EndDraw() {
 	_cmdAllocator->Reset();//キューをクリア
 	_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
 }
+
+
+
 
 ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {
 	return _swapchain;

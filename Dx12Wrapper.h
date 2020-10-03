@@ -74,7 +74,15 @@ class Dx12Wrapper{
 	//テクスチャ名からテクスチャバッファ作成、中身をコピー
 	ID3D12Resource* CreateTextureFromFile(const char* texpath);
 
+	ComPtr<ID3D12Resource> mPolyRes;
+	ComPtr<ID3D12DescriptorHeap> mPolyRTV_Heap;
+	ComPtr<ID3D12DescriptorHeap> mPolySRV_Heap;
 
+	void writte();
+
+	void tex_view();
+
+	void target();
 
 public:
 	Dx12Wrapper(HWND hwnd);

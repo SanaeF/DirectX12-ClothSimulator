@@ -9,6 +9,7 @@
 
 class Dx12Wrapper;
 class PMDRenderer;
+
 class PMDActor{
 	friend PMDRenderer;
 private:
@@ -95,12 +96,28 @@ private:
 
 	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);
 
-	void PlayAnimation();
-
 	void MotionUpdate();
 
 
 	float _angle;//テスト用Y軸回転
+
+	struct KeyFrame {
+		unsigned int frameNo;//フレーム№(アニメーション開始からの経過時間)
+		DirectX::XMVECTOR quaternion;//クォータニオン
+		DirectX::XMFLOAT2 p1, p2;//ベジェの中間コントロールポイント
+		KeyFrame(unsigned int fno, const DirectX::XMVECTOR& q, const DirectX::XMFLOAT2& ip1, const DirectX::XMFLOAT2& ip2) :
+			frameNo(fno),
+			quaternion(q),
+			p1(ip1),
+			p2(ip2) {}
+	};
+
+	std::unordered_map<std::string, std::vector<KeyFrame>> _motiondata;
+
+	float GetYFromXOnBezier(float x, const DirectX::XMFLOAT2& a, const DirectX::XMFLOAT2& b, uint8_t n = 12);
+
+	DWORD _startTime;
+
 public:
 	PMDActor(const char* filepath, PMDRenderer& renderer);
 	~PMDActor();
@@ -109,7 +126,8 @@ public:
 
 	PMDActor* Clone();
 
-
+	void LoadVMDFile(const char* filepath, const char* name);
+	void PlayAnimation();
 	void Update();
 	void Draw();
 
