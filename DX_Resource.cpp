@@ -49,10 +49,10 @@ bool DX_Resource::writte(
 		&clearValue,
 		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())
 	);
-	//if (FAILED(result)) {
-	//	assert(0);
-	//	return false;
-	//}
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
 
 	return true;
 

@@ -76,7 +76,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 	//デバッグレイヤーをオンに
 	EnableDebugLayer();
 #endif
-
+	DXRender.reset(new DX_Resource());
 	auto& app = Application::Instance();
 	_winSize = app.GetGraphicSize();
 
@@ -116,6 +116,13 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 
 	//フェンスの作成
 	if (FAILED(_dev->CreateFence(_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf())))) {
+		assert(0);
+		return;
+	}
+
+	if (FAILED(
+		DXRender->CreatePeraResourcesAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
+	)) {
 		assert(0);
 		return;
 	}
