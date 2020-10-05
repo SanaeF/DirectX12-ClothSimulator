@@ -84,16 +84,9 @@ class Dx12Wrapper{
 	ComPtr<ID3D12DescriptorHeap> mScPolyRTV_Heap;
 	ComPtr<ID3D12DescriptorHeap> mScPolySRV_Heap;
 
-	bool CreatePeraResourcesAndView();
-	bool CreateRenderTargetView();
-	bool CreateDepthBuffer();
-	bool CreateDSV();
-	bool CreateCommandList();
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
-
-	bool Init();
 
 	void Update();
 	void BeginDraw();

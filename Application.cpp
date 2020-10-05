@@ -76,21 +76,17 @@ bool Application::Init() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
 	//DirectX12ラッパー生成＆初期化
-	pDx12.reset(new Dx12Wrapper(_hwnd));
-	if (!pDx12->Init()) {
-		return false;
-	}
 	return true;
 }
 
 void Application::Run() {
-
-	//pPMDRenderer[1].reset(new PMDRenderer(*pDx12)); 
-	//pPMDRenderer[0].reset(new PMDRenderer(*pDx12));
-	//pPMDActor.reset(new PMDActor("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer[0]));
-	//pPMDActor.reset(new PMDActor("model/朝倉音夢（本校制服）ミク.pmd", *pPMDRenderer[1]));//テクスチャを上書きしている
-	//pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
-	//pPMDActor->PlayAnimation();
+	pDx12.reset(new Dx12Wrapper(_hwnd));
+	pPMDRenderer[1].reset(new PMDRenderer(*pDx12)); 
+	pPMDRenderer[0].reset(new PMDRenderer(*pDx12));
+	pPMDActor.reset(new PMDActor("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer[0]));
+	pPMDActor.reset(new PMDActor("model/朝倉音夢（本校制服）ミク.pmd", *pPMDRenderer[1]));//テクスチャを上書きしている
+	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
+	pPMDActor->PlayAnimation();
 	float angle = 0.0f;
 	MSG msg = {};
 	unsigned int frame = 0;
@@ -105,13 +101,13 @@ void Application::Run() {
 		}
 		//全体の描画準備
 		pDx12->BeginDraw();
-		////PMD用の描画パイプラインに合わせる
-		//pDx12->CommandList()->SetPipelineState(pPMDRenderer[1]->GetPipelineState());
-		//pDx12->CommandList()->SetPipelineState(pPMDRenderer[0]->GetPipelineState());
-		////ルートシグネチャもPMD用に合わせる
-		//pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[1]->GetRootSignature());
-		//pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[0]->GetRootSignature());
-		//pDx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//PMD用の描画パイプラインに合わせる
+		pDx12->CommandList()->SetPipelineState(pPMDRenderer[1]->GetPipelineState());
+		pDx12->CommandList()->SetPipelineState(pPMDRenderer[0]->GetPipelineState());
+		//ルートシグネチャもPMD用に合わせる
+		pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[1]->GetRootSignature());
+		pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[0]->GetRootSignature());
+		pDx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		pDx12->SetScene();
 
