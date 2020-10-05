@@ -7,7 +7,7 @@
 #include<string>
 #include<functional>
 
-class DX_Resource {
+class DX_MultRend {
 private:
 	enum {
 		eDESCRIPTOR_RANGE,
@@ -18,14 +18,10 @@ private:
 
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
-	//std::vector<ID3D12Resource*> _backBuffers;//バックバッファ(2つ以上…スワップチェインが確保)
-	//
-	//ComPtr< ID3D12Device> _dev = nullptr;//デバイス
-	//ComPtr < ID3D12GraphicsCommandList> _cmdList = nullptr;//コマンドリスト
-	ComPtr<ID3D12Resource> mScPolyRes=nullptr;
+
+	ComPtr<ID3D12Resource> mScPolyRes;
 	ComPtr<ID3D12Resource> mScPolyVB;
-	//ComPtr<ID3D12DescriptorHeap> _rtvHeaps = nullptr;//レンダーターゲット用デスクリプタヒープ
-	//ComPtr<ID3D12DescriptorHeap> _dsvHeap = nullptr;//深度バッファビュー用デスクリプタヒープ
+
 	ComPtr<ID3D12DescriptorHeap> mScPolyRTV_Heap;
 	ComPtr<ID3D12DescriptorHeap> mScPolySRV_Heap;
 	ComPtr<ID3D12PipelineState> mScPolyPipeline;
@@ -47,12 +43,9 @@ private:
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpsDesc = {};
 	D3D12_VERTEX_BUFFER_VIEW mScPolyVBV;
 
-	//int mPipeline_State;
 public:
 
-	bool Init();
-
-	bool CreatePeraResourcesAndView(
+	bool CreateScreenResAndView(
 		ComPtr< ID3D12Device> _dev,
 		ComPtr<ID3D12DescriptorHeap> _rtvHeaps,
 		ComPtr<ID3D12DescriptorHeap> _dsvHeap,
@@ -70,9 +63,8 @@ public:
 
 	void ScreenFlip();
 
-	DX_Resource()
+	DX_MultRend()
 	{
-
 	}
 private:
 
@@ -93,15 +85,11 @@ private:
 	bool rootSignature(ComPtr< ID3D12Device> _dev);
 	bool gpipeline(ComPtr< ID3D12Device> _dev);
 
-	bool loadShader();
-
 	void barrier(
 		ID3D12Resource* p,
 		D3D12_RESOURCE_STATES before,
 		D3D12_RESOURCE_STATES after,
 		ComPtr < ID3D12GraphicsCommandList> _cmdList
 	);
-
-	void setState(int num);
 
 };

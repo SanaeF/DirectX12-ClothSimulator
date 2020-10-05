@@ -8,11 +8,11 @@
 #include<string>
 #include<functional>
 
-class DX_Resource;
+class DX_MultRend;
 
 class Dx12Wrapper{
 	HWND _hwnd;
-	std::shared_ptr<DX_Resource>DXRender;
+	std::shared_ptr<DX_MultRend>DXRender;
 	UINT64 _fenceValue;
 	//DX_Resource DXRender2;
 	SIZE _winSize,_graphicSize;

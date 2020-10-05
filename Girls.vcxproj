@@ -129,7 +129,7 @@
     <ClCompile Include="main2.cpp" />
     <ClCompile Include="PMDActor.cpp" />
     <ClCompile Include="PMDRenderer.cpp" />
-    <ClCompile Include="DX_Resource.cpp" />
+    <ClCompile Include="DX_MultRend.cpp" />
     <ClCompile Include="VMD_Motion.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -138,7 +138,7 @@
     <ClInclude Include="GIDirectLib\DirectX12lib.h" />
     <ClInclude Include="PMDActor.h" />
     <ClInclude Include="PMDRenderer.h" />
-    <ClInclude Include="DX_Resource.h" />
+    <ClInclude Include="DX_MultRend.h" />
     <ClInclude Include="VMD_Motion.h" />
   </ItemGroup>
   <ItemGroup>

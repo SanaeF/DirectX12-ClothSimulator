@@ -2,7 +2,7 @@
 #include "Dx12Wrapper.h"
 #include<cassert>
 #include<d3dx12.h>
-#include "DX_Resource.h"
+#include "DX_MultRend.h"
 #include"Application.h"
 
 #pragma comment(lib,"DirectXTex.lib")
@@ -76,7 +76,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 	//デバッグレイヤーをオンに
 	EnableDebugLayer();
 #endif
-	DXRender.reset(new DX_Resource());
+	DXRender.reset(new DX_MultRend());
 	auto& app = Application::Instance();
 	_winSize = app.GetGraphicSize();
 
@@ -121,7 +121,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 	}
 
 	if (FAILED(
-		DXRender->CreatePeraResourcesAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
+		DXRender->CreateScreenResAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
 	)) {
 		assert(0);
 		return;

@@ -1,6 +1,6 @@
 #include "Application.h"
 #include"Dx12Wrapper.h"
-#include "DX_Resource.h"
+
 #include"PMDRenderer.h"
 #include"PMDActor.h"
 void Application::SetWindow(int width, int height, const char* window_name, const char* Name) {

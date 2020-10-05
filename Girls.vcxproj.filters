@@ -63,7 +63,7 @@
     <ClInclude Include="PMDActor.h">
       <Filter>ソース ファイル\PMDActor</Filter>
     </ClInclude>
-    <ClInclude Include="DX_Resource.h">
+    <ClInclude Include="DX_MultRend.h">
       <Filter>ソース ファイル\Dx12Wrapper\DX_Resource</Filter>
     </ClInclude>
   </ItemGroup>
@@ -111,7 +111,7 @@
     <ClCompile Include="VMD_Motion.cpp">
       <Filter>ソース ファイル\PMDActor\VMDmotion</Filter>
     </ClCompile>
-    <ClCompile Include="DX_Resource.cpp">
+    <ClCompile Include="DX_MultRend.cpp">
       <Filter>ソース ファイル\Dx12Wrapper\DX_Resource</Filter>
     </ClCompile>
   </ItemGroup>
