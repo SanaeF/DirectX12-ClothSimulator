@@ -15,6 +15,7 @@
 class Dx12Wrapper;
 class PMDRenderer;
 class PMDActor;
+
 ///シングルトンクラス
 class Application{
 private:

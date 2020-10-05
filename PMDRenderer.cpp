@@ -190,9 +190,7 @@ PMDRenderer::CreateGraphicsPipelineForPMD() {
 	if (FAILED(result)) {
 		assert(SUCCEEDED(result));
 	}
-	return result;
-
-}
+	return result;}
 //ルートシグネチャ初期化
 HRESULT
 PMDRenderer::CreateRootSignature() {

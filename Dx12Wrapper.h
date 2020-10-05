@@ -8,7 +8,13 @@
 #include<string>
 #include<functional>
 
+class DX_Resource;
+
 class Dx12Wrapper{
+	HWND _hwnd;
+	std::shared_ptr<DX_Resource>DXRender;
+	UINT64 _fenceValue;
+	//DX_Resource DXRender2;
 	SIZE _winSize,_graphicSize;
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -74,19 +80,20 @@ class Dx12Wrapper{
 	//テクスチャ名からテクスチャバッファ作成、中身をコピー
 	ID3D12Resource* CreateTextureFromFile(const char* texpath);
 
-	ComPtr<ID3D12Resource> mPolyRes;
-	ComPtr<ID3D12DescriptorHeap> mPolyRTV_Heap;
-	ComPtr<ID3D12DescriptorHeap> mPolySRV_Heap;
+	ComPtr<ID3D12Resource> mScPolyRes;
+	ComPtr<ID3D12DescriptorHeap> mScPolyRTV_Heap;
+	ComPtr<ID3D12DescriptorHeap> mScPolySRV_Heap;
 
-	void writte();
-
-	void tex_view();
-
-	void target();
-
+	bool CreatePeraResourcesAndView();
+	bool CreateRenderTargetView();
+	bool CreateDepthBuffer();
+	bool CreateDSV();
+	bool CreateCommandList();
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
+
+	bool Init();
 
 	void Update();
 	void BeginDraw();

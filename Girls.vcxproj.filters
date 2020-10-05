@@ -68,19 +68,25 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicVertexShader.hlsl" />
-    <FxCompile Include="BasicPixelShader.hlsl" />
     <FxCompile Include="PixelPolygon.hlsl">
       <Filter>リソース ファイル\Shader</Filter>
     </FxCompile>
     <FxCompile Include="VertexPolygon.hlsl">
       <Filter>リソース ファイル\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="BasicPixelShader.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="BasicVertexShader.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="BasicShaderHeader.hlsli" />
     <None Include="HeaderPolygon.hlsli">
       <Filter>リソース ファイル\Shader</Filter>
+    </None>
+    <None Include="BasicShaderHeader.hlsli">
+      <Filter>リソース ファイル</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
