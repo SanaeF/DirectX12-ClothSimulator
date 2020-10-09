@@ -20,27 +20,25 @@ bool DX_MultRend::CreateScreenResAndView(
 	ComPtr <ID3D12GraphicsCommandList> cmdList,
 	std::vector<ID3D12Resource*> backBuffers
 	) {
-	if (!writte(device,rtvHeaps, backBuffers))return false;
-	if (!tex_view(device))return false;
-	if (!target(dsvHeap, cmdList))return false;
+	if (!mWritter(device,rtvHeaps, backBuffers))return false;
+	if (!mViewer(device))return false;
+	if (!mTarget(dsvHeap, cmdList))return false;
 	return true;
 
 }
 
-bool DX_MultRend::writte(
+bool DX_MultRend::mWritter(
 	ComPtr< ID3D12Device> device,
 	ComPtr<ID3D12DescriptorHeap> rtvHeaps,
 	std::vector<ID3D12Resource*> backBuffers
 ) {
-
+	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
 	auto heapDesc = rtvHeaps->GetDesc();
 	auto& bbuff = backBuffers[0];
 	auto resDesc = bbuff->GetDesc();
+
 	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-
-	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
-	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_B8G8R8A8_UNORM, clsClr);
-
+	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clsClr);//DXGI_FORMAT_B8G8R8A8_UNORM
 	auto result = device->CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
@@ -49,13 +47,13 @@ bool DX_MultRend::writte(
 		&clearValue,
 		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())//ヌルポ！
 	);
+
 	if (FAILED(result)) {
 		assert(
 			"おめでとう!				" &&
 			"【CreateCommittedResource】がバグったよ～♪ ->>"&& 0
 		);
 		return false;
-
 		//	（　・∀・）　　|　|　ｶﾞｯ!
 		//	⊂　　　　）　  |　|
 		//	  Ｙ　 / ノ　　　人
@@ -68,34 +66,76 @@ bool DX_MultRend::writte(
 
 }
 
-bool DX_MultRend::tex_view(ComPtr< ID3D12Device> device) {
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+bool DX_MultRend::mHeapRTV(ComPtr< ID3D12Device> device) {
+
 	heapDesc.NumDescriptors = 1;
 
-	if (FAILED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())))) {
-		assert(0);
+	auto result = device->CreateDescriptorHeap(
+		&heapDesc,
+		IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())
+	);
+
+	if (FAILED(result)) {
+		assert(
+			"おめでとう!				" &&
+			"【mScPolyRTV_Heap】がスッカスカ～♪ ->>" && 0
+		);
 		return false;
+		//	（　・∀・）　　|　|　ｶﾞｯ!
+		//	⊂　　　　）　  |　|
+		//	  Ｙ　 / ノ　　　人
+		//		  / ）　 　 < 　>__Λ  ∩
+		//	  ＿ /し'  ／／. Ｖ｀Д´）/ ←>>1
+		//	（＿フ彡　　　　　 /
 	}
 
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+	return true;
+}
+
+bool DX_MultRend::mDescRTV(ComPtr< ID3D12Device> device){
 
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	auto handle = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
 	device->CreateRenderTargetView(
 		mScPolyRes.Get(),
 		&rtvDesc,
-		mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart()
+		handle
 	);
+	//例外！！
+
+	return true;
+}
+
+bool DX_MultRend::mHeapSRV(ComPtr< ID3D12Device> device) {
+
 	heapDesc.NumDescriptors = 1;
 	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-	if (FAILED(device->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())))){
-		assert(0);
+	auto result = device->CreateDescriptorHeap(
+		&heapDesc, 
+		IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())
+	);
+
+	if (FAILED(result)) {
+		assert(
+			"おめでとう!				" &&
+			"【mScPolySRV_Heap】がスッカスカ～♪ ->>" && 0
+		);
 		return false;
+		//	（　・∀・）　　|　|　ｶﾞｯ!
+		//	⊂　　　　）　  |　|
+		//	  Ｙ　 / ノ　　　人
+		//		  / ）　 　 < 　>__Λ  ∩
+		//	  ＿ /し'  ／／. Ｖ｀Д´）/ ←>>1
+		//	（＿フ彡　　　　　 /
 	}
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	return true;
+}
+
+bool DX_MultRend::mDescSRV(ComPtr< ID3D12Device> device) {
 
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Format = rtvDesc.Format;
@@ -106,12 +146,48 @@ bool DX_MultRend::tex_view(ComPtr< ID3D12Device> device) {
 		mScPolyRes.Get(),
 		&srvDesc,
 		mScPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
-		);
+
+	);
 
 	return true;
 }
 
-bool DX_MultRend::target(
+bool DX_MultRend::mViewer(ComPtr< ID3D12Device> device) {
+	//RTV
+	if (!mHeapRTV(device)){
+		assert(
+			"おめでとう!				" &&
+			"error～♪ ->>" && 0
+		);
+		return false;
+	}
+	if (!mDescRTV(device)) {
+		assert(
+			"おめでとう!				" &&
+			"error～♪ ->>" && 0
+		);
+		return false;
+	}
+	//SRV
+	if (!mHeapSRV(device)) {
+		assert(
+			"おめでとう!				" &&
+			"error～♪ ->>" && 0
+		);
+		return false;
+	}
+	if (!mDescSRV(device)) {
+		assert(
+			"おめでとう!				" &&
+			"error～♪ ->>" && 0
+		);
+		return false;
+	}
+	return true;
+}
+
+
+bool DX_MultRend::mTarget(
 	ComPtr<ID3D12DescriptorHeap> dsvHeap,
 	ComPtr < ID3D12GraphicsCommandList> cmdList
 ) {
