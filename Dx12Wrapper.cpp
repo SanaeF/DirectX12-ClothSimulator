@@ -444,7 +444,74 @@ HRESULT Dx12Wrapper::CreateFinalRenderTargets() {
 	_scissorrect.reset(new CD3DX12_RECT(0, 0, desc.Width, desc.Height));
 	return result;
 }
+bool Dx12Wrapper::CreateScreenResAndView() {
+	auto heapDesc = _rtvHeaps->GetDesc();
+	auto& bbuff = _backBuffers[0];
+	auto resDesc = bbuff->GetDesc();
+	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
+	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
+	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clsClr);
+
+	auto result = _dev->CreateCommittedResource(
+		&heapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&resDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		&clearValue,
+		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())
+	);
+	if (FAILED(result)) {
+		assert(0);
+		return false;
+	}
+	//D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+	heapDesc.NumDescriptors = 1;
+
+	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())))) {
+		assert(0);
+		return false;
+	}
+
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	_dev->CreateRenderTargetView(
+		mScPolyRes.Get(),
+		&rtvDesc,
+		mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart()
+	);
+	heapDesc.NumDescriptors = 1;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())))) {
+		assert(0);
+		return false;
+	}
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Format = rtvDesc.Format;
+	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+
+	_dev->CreateShaderResourceView(
+		mScPolyRes.Get(),
+		&srvDesc,
+		mScPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
+	);
+	auto rtvHeapPointer = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
+
+	_cmdList->OMSetRenderTargets(
+		1,
+		&rtvHeapPointer,
+		false,
+		&_dsvHeap->GetCPUDescriptorHandleForHeapStart()
+	);
+}
 ComPtr< ID3D12Device> Dx12Wrapper::Device() {
 	return _dev;
 }

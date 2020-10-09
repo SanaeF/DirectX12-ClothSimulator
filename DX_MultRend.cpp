@@ -33,7 +33,7 @@ bool DX_MultRend::mWritter(
 	std::vector<ID3D12Resource*> backBuffers
 ) {
 	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
-	auto heapDesc = rtvHeaps->GetDesc();
+	heapDesc = rtvHeaps->GetDesc();
 	auto& bbuff = backBuffers[0];
 	auto resDesc = bbuff->GetDesc();
 

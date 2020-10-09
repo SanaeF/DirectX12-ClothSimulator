@@ -83,7 +83,7 @@ class Dx12Wrapper{
 	ComPtr<ID3D12Resource> mScPolyRes;
 	ComPtr<ID3D12DescriptorHeap> mScPolyRTV_Heap;
 	ComPtr<ID3D12DescriptorHeap> mScPolySRV_Heap;
-
+	bool CreateScreenResAndView();
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
