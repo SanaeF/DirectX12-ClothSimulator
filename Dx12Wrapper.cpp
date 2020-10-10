@@ -108,9 +108,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 	}
 
 	//テクスチャローダー関連初期化
-	//CreateTextureLoaderTable();
-
-
+	CreateTextureLoaderTable();
 
 	//深度バッファ作成
 	if (FAILED(CreateDepthStencilView())) {
@@ -123,6 +121,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 		assert(0);
 		return;
 	}
+
 	if (FAILED(
 		Resource->CreateScreenResAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
 	)) {
@@ -535,42 +534,41 @@ ComPtr < ID3D12GraphicsCommandList> Dx12Wrapper::CommandList() {
 }
 
 void Dx12Wrapper::Update() {
-
+	Render->DrawScreen(
+		Resource->getResource(),
+		_cmdList
+	);
 }
 
 void Dx12Wrapper::BeginDraw() {
 	////DirectX処理
 
-	////バックバッファのインデックスを取得
-	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	//バックバッファのインデックスを取得
+	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
-	//_cmdList->ResourceBarrier(1,
-	//	&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
-	//		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
-
-
-	//////レンダーターゲットを指定
-	//auto rtvH = _rtvHeaps->GetCPUDescriptorHandleForHeapStart();
-	//rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	//////深度を指定
-	//auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	//_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
-	//_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	_cmdList->ResourceBarrier(1,
+		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
+			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 
-	//////画面クリア
-	//float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };//白色
-	//_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
+	////レンダーターゲットを指定
+	auto rtvH = _rtvHeaps->GetCPUDescriptorHandleForHeapStart();
+	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	////ビューポート、シザー矩形のセット
-	//_cmdList->RSSetViewports(1, _viewport.get());
-	//_cmdList->RSSetScissorRects(1, _scissorrect.get());
+	////深度を指定
+	auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
+	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
-	Render->DrawScreen(
-		Resource->getResource(),
-		_cmdList
-	);
+
+	////画面クリア
+	float clearColor[] = { 0.0f,0.7f,0.5f,1.0f };//白色
+	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
+
+	//ビューポート、シザー矩形のセット
+	_cmdList->RSSetViewports(1, _viewport.get());
+	_cmdList->RSSetScissorRects(1, _scissorrect.get());
+
 }
 
 void Dx12Wrapper::SetScene() {
@@ -582,34 +580,34 @@ void Dx12Wrapper::SetScene() {
 }
 
 void Dx12Wrapper::EndDraw() {
-	//_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
-	//	D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
+		D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 
-	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
-	//_cmdList->ResourceBarrier(1,
-	//	&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
-	//		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	_cmdList->ResourceBarrier(1,
+		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
+			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	////命令のクローズ
-	//_cmdList->Close();
+	//命令のクローズ
+	_cmdList->Close();
 
 
 
-	////コマンドリストの実行
-	//ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
-	//_cmdQueue->ExecuteCommandLists(1, cmdlists);
-	//////待ち
-	//_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
+	//コマンドリストの実行
+	ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
+	_cmdQueue->ExecuteCommandLists(1, cmdlists);
+	////待ち
+	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
 
-	//if (_fence->GetCompletedValue() < _fenceVal) {
-	//	auto event = CreateEvent(nullptr, false, false, nullptr);
-	//	_fence->SetEventOnCompletion(_fenceVal, event);
-	//	WaitForSingleObject(event, INFINITE);
-	//	CloseHandle(event);
-	//}
-	//_cmdAllocator->Reset();//キューをクリア
-	//_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
+	if (_fence->GetCompletedValue() < _fenceVal) {
+		auto event = CreateEvent(nullptr, false, false, nullptr);
+		_fence->SetEventOnCompletion(_fenceVal, event);
+		WaitForSingleObject(event, INFINITE);
+		CloseHandle(event);
+	}
+	_cmdAllocator->Reset();//キューをクリア
+	_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
 }
 
 ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {

@@ -46,6 +46,9 @@
     <Filter Include="ソース ファイル\Dx12Wrapper\CreateScreen">
       <UniqueIdentifier>{5319f35b-416c-448a-b215-a5d3c46ddae2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\DX3DActor\DXHandler">
+      <UniqueIdentifier>{ac04ad31-b41f-4ac3-a1f2-e8cfcc94c7d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx12Wrapper.h">
