@@ -130,13 +130,13 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 		return;
 	}
 	if (FAILED(
-		Render->pipeline(_dev)
+		Render->createScreenPolygon(_dev)
 	)) {
 		assert(0);
 		return;
 	}
 	if (FAILED(
-		Render->createScreenPolygon(_dev)
+		Render->pipeline(_dev)
 	)) {
 		assert(0);
 		return;

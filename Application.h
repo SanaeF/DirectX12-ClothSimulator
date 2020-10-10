@@ -28,7 +28,7 @@ private:
 	WNDCLASSEX _windowClass;
 	HWND _hwnd;
 	std::shared_ptr<Dx12Wrapper> pDx12;
-	std::shared_ptr<PMDRenderer> pPMDRenderer[2];
+	std::shared_ptr<PMDRenderer> pPMDRenderer;
 	std::shared_ptr<PMDActor> pPMDActor;
 
 	//ゲーム用ウィンドウの生成
