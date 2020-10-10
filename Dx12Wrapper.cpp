@@ -542,11 +542,11 @@ void Dx12Wrapper::BeginDraw() {
 	////DirectX処理
 
 	////バックバッファのインデックスを取得
-	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
-	_cmdList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
-			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	//_cmdList->ResourceBarrier(1,
+	//	&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
+	//		D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 
 	//////レンダーターゲットを指定
@@ -582,34 +582,34 @@ void Dx12Wrapper::SetScene() {
 }
 
 void Dx12Wrapper::EndDraw() {
-	_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
-		D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+	//_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
+	//	D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 
-	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
-	_cmdList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
-			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	//_cmdList->ResourceBarrier(1,
+	//	&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
+	//		D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-	//命令のクローズ
-	_cmdList->Close();
+	////命令のクローズ
+	//_cmdList->Close();
 
 
 
-	//コマンドリストの実行
-	ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
-	_cmdQueue->ExecuteCommandLists(1, cmdlists);
-	////待ち
-	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
+	////コマンドリストの実行
+	//ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
+	//_cmdQueue->ExecuteCommandLists(1, cmdlists);
+	//////待ち
+	//_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
 
-	if (_fence->GetCompletedValue() < _fenceVal) {
-		auto event = CreateEvent(nullptr, false, false, nullptr);
-		_fence->SetEventOnCompletion(_fenceVal, event);
-		WaitForSingleObject(event, INFINITE);
-		CloseHandle(event);
-	}
-	_cmdAllocator->Reset();//キューをクリア
-	_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
+	//if (_fence->GetCompletedValue() < _fenceVal) {
+	//	auto event = CreateEvent(nullptr, false, false, nullptr);
+	//	_fence->SetEventOnCompletion(_fenceVal, event);
+	//	WaitForSingleObject(event, INFINITE);
+	//	CloseHandle(event);
+	//}
+	//_cmdAllocator->Reset();//キューをクリア
+	//_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
 }
 
 ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {

@@ -82,11 +82,10 @@ bool Application::Init() {
 void Application::Run() {
 	pDx12.reset(new Dx12Wrapper(_hwnd));
 	pPMDRenderer.reset(new PMDRenderer(*pDx12)); 
-	//pPMDRenderer[0].reset(new PMDRenderer(*pDx12));
-	pPMDActor.reset(new PMDActor("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer));
+	//pPMDActor.reset(new PMDActor("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer));
 
-	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
-	pPMDActor->PlayAnimation();
+	//pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
+	//pPMDActor->PlayAnimation();
 	float angle = 0.0f;
 	MSG msg = {};
 	unsigned int frame = 0;
@@ -106,10 +105,10 @@ void Application::Run() {
 		//ルートシグネチャもPMD用に合わせる
 		pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer->GetRootSignature());
 		pDx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		pDx12->SetScene();
+		//pDx12->SetScene();
 
-		pPMDActor->Update();
-		pPMDActor->Draw();
+		//pPMDActor->Update();
+		//pPMDActor->Draw();
 
 		pDx12->EndDraw();
 
