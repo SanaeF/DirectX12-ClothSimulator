@@ -2,6 +2,7 @@
 #include "Dx12Wrapper.h"
 #include<cassert>
 #include<d3dx12.h>
+#include "DXResource.h"
 #include "DX_MultRend.h"
 #include"Application.h"
 
@@ -76,7 +77,10 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 	//デバッグレイヤーをオンに
 	EnableDebugLayer();
 #endif
-	DXRender.reset(new DX_MultRend());
+
+	Resource.reset(new DXResource());
+	Render.reset(new DX_MultRend());
+
 	auto& app = Application::Instance();
 	_winSize = app.GetGraphicSize();
 
@@ -104,7 +108,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 	}
 
 	//テクスチャローダー関連初期化
-	CreateTextureLoaderTable();
+	//CreateTextureLoaderTable();
 
 
 
@@ -119,14 +123,24 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
 		assert(0);
 		return;
 	}
-
 	if (FAILED(
-		DXRender->CreateScreenResAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
+		Resource->CreateScreenResAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
 	)) {
 		assert(0);
 		return;
 	}
-
+	if (FAILED(
+		Render->pipeline(_dev)
+	)) {
+		assert(0);
+		return;
+	}
+	if (FAILED(
+		Render->createScreenPolygon(_dev)
+	)) {
+		assert(0);
+		return;
+	}
 }
 
 HRESULT Dx12Wrapper::CreateDepthStencilView() {
@@ -444,74 +458,75 @@ HRESULT Dx12Wrapper::CreateFinalRenderTargets() {
 	_scissorrect.reset(new CD3DX12_RECT(0, 0, desc.Width, desc.Height));
 	return result;
 }
-bool Dx12Wrapper::CreateScreenResAndView() {
-	auto heapDesc = _rtvHeaps->GetDesc();
-	auto& bbuff = _backBuffers[0];
-	auto resDesc = bbuff->GetDesc();
-	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
 
-	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
-	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clsClr);
-
-	auto result = _dev->CreateCommittedResource(
-		&heapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		&clearValue,
-		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())
-	);
-	if (FAILED(result)) {
-		assert(0);
-		return false;
-	}
-	//D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.NumDescriptors = 1;
-
-	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())))) {
-		assert(0);
-		return false;
-	}
-
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	_dev->CreateRenderTargetView(
-		mScPolyRes.Get(),
-		&rtvDesc,
-		mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart()
-	);
-	heapDesc.NumDescriptors = 1;
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())))) {
-		assert(0);
-		return false;
-	}
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Format = rtvDesc.Format;
-	srvDesc.Texture2D.MipLevels = 1;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-
-	_dev->CreateShaderResourceView(
-		mScPolyRes.Get(),
-		&srvDesc,
-		mScPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
-	);
-	auto rtvHeapPointer = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
-
-	_cmdList->OMSetRenderTargets(
-		1,
-		&rtvHeapPointer,
-		false,
-		&_dsvHeap->GetCPUDescriptorHandleForHeapStart()
-	);
-}
+//bool Dx12Wrapper::CreateScreenResAndView() {
+//	auto heapDesc = _rtvHeaps->GetDesc();
+//	auto& bbuff = _backBuffers[0];
+//	auto resDesc = bbuff->GetDesc();
+//	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+//
+//	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
+//	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clsClr);
+//
+//	auto result = _dev->CreateCommittedResource(
+//		&heapProp,
+//		D3D12_HEAP_FLAG_NONE,
+//		&resDesc,
+//		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+//		&clearValue,
+//		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())
+//	);
+//	if (FAILED(result)) {
+//		assert(0);
+//		return false;
+//	}
+//	//D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+//	heapDesc.NumDescriptors = 1;
+//
+//	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())))) {
+//		assert(0);
+//		return false;
+//	}
+//
+//	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+//
+//	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+//	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+//	_dev->CreateRenderTargetView(
+//		mScPolyRes.Get(),
+//		&rtvDesc,
+//		mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart()
+//	);
+//	heapDesc.NumDescriptors = 1;
+//	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+//	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+//
+//	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())))) {
+//		assert(0);
+//		return false;
+//	}
+//
+//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+//
+//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+//	srvDesc.Format = rtvDesc.Format;
+//	srvDesc.Texture2D.MipLevels = 1;
+//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+//
+//	_dev->CreateShaderResourceView(
+//		mScPolyRes.Get(),
+//		&srvDesc,
+//		mScPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
+//	);
+//	auto rtvHeapPointer = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
+//
+//	_cmdList->OMSetRenderTargets(
+//		1,
+//		&rtvHeapPointer,
+//		false,
+//		&_dsvHeap->GetCPUDescriptorHandleForHeapStart()
+//	);
+//}
 ComPtr< ID3D12Device> Dx12Wrapper::Device() {
 	return _dev;
 }
@@ -524,8 +539,9 @@ void Dx12Wrapper::Update() {
 }
 
 void Dx12Wrapper::BeginDraw() {
-	//DirectX処理
-	//バックバッファのインデックスを取得
+	////DirectX処理
+
+	////バックバッファのインデックスを取得
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
 	_cmdList->ResourceBarrier(1,
@@ -533,25 +549,28 @@ void Dx12Wrapper::BeginDraw() {
 			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 
 
-	//レンダーターゲットを指定
-	auto rtvH = _rtvHeaps->GetCPUDescriptorHandleForHeapStart();
-	rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	//////レンダーターゲットを指定
+	//auto rtvH = _rtvHeaps->GetCPUDescriptorHandleForHeapStart();
+	//rtvH.ptr += bbIdx * _dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	//深度を指定
-	auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
-	_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
-	_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
-
-	//画面クリア
-	float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };//白色
-	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
-
-	//ビューポート、シザー矩形のセット
-	_cmdList->RSSetViewports(1, _viewport.get());
-	_cmdList->RSSetScissorRects(1, _scissorrect.get());
+	//////深度を指定
+	//auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	//_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
+	//_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 
+	//////画面クリア
+	//float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };//白色
+	//_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
+
+	////ビューポート、シザー矩形のセット
+	//_cmdList->RSSetViewports(1, _viewport.get());
+	//_cmdList->RSSetScissorRects(1, _scissorrect.get());
+
+	Render->DrawScreen(
+		Resource->getResource(),
+		_cmdList
+	);
 }
 
 void Dx12Wrapper::SetScene() {
@@ -563,6 +582,10 @@ void Dx12Wrapper::SetScene() {
 }
 
 void Dx12Wrapper::EndDraw() {
+	_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
+		D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 	_cmdList->ResourceBarrier(1,
 		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],

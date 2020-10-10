@@ -8,13 +8,16 @@
 #include<string>
 #include<functional>
 
+class DXResource;
 class DX_MultRend;
 
 class Dx12Wrapper{
+
+	std::shared_ptr<DX_MultRend>Render;
+	std::shared_ptr<DXResource>Resource;
+
 	HWND _hwnd;
-	std::shared_ptr<DX_MultRend>DXRender;
 	UINT64 _fenceValue;
-	//DX_Resource DXRender2;
 	SIZE _winSize,_graphicSize;
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;

@@ -13,195 +13,6 @@ using namespace Microsoft::WRL;
 using namespace DirectX;
 using namespace std;
 
-bool DX_MultRend::CreateScreenResAndView(
-	ComPtr<ID3D12Device> device,
-	ComPtr<ID3D12DescriptorHeap> rtvHeaps,
-	ComPtr<ID3D12DescriptorHeap> dsvHeap,
-	ComPtr <ID3D12GraphicsCommandList> cmdList,
-	std::vector<ID3D12Resource*> backBuffers
-	) {
-	if (!mWritter(device,rtvHeaps, backBuffers))return false;
-	if (!mViewer(device))return false;
-	if (!mTarget(dsvHeap, cmdList))return false;
-	return true;
-
-}
-
-bool DX_MultRend::mWritter(
-	ComPtr< ID3D12Device> device,
-	ComPtr<ID3D12DescriptorHeap> rtvHeaps,
-	std::vector<ID3D12Resource*> backBuffers
-) {
-	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
-	heapDesc = rtvHeaps->GetDesc();
-	auto& bbuff = backBuffers[0];
-	auto resDesc = bbuff->GetDesc();
-
-	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clsClr);//DXGI_FORMAT_B8G8R8A8_UNORM
-	auto result = device->CreateCommittedResource(
-		&heapProp,
-		D3D12_HEAP_FLAG_NONE,
-		&resDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		&clearValue,
-		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())//ヌルポ！
-	);
-
-	if (FAILED(result)) {
-		assert(
-			"おめでとう!				" &&
-			"【CreateCommittedResource】がバグったよ～♪ ->>"&& 0
-		);
-		return false;
-		//	（　・∀・）　　|　|　ｶﾞｯ!
-		//	⊂　　　　）　  |　|
-		//	  Ｙ　 / ノ　　　人
-		//		  / ）　 　 < 　>__Λ  ∩
-		//	  ＿ /し'  ／／. Ｖ｀Д´）/ ←>>1
-		//	（＿フ彡　　　　　 /
-	}
-
-	return true;
-
-}
-
-bool DX_MultRend::mHeapRTV(ComPtr< ID3D12Device> device) {
-
-	heapDesc.NumDescriptors = 1;
-
-	auto result = device->CreateDescriptorHeap(
-		&heapDesc,
-		IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())
-	);
-
-	if (FAILED(result)) {
-		assert(
-			"おめでとう!				" &&
-			"【mScPolyRTV_Heap】がスッカスカ～♪ ->>" && 0
-		);
-		return false;
-		//	（　・∀・）　　|　|　ｶﾞｯ!
-		//	⊂　　　　）　  |　|
-		//	  Ｙ　 / ノ　　　人
-		//		  / ）　 　 < 　>__Λ  ∩
-		//	  ＿ /し'  ／／. Ｖ｀Д´）/ ←>>1
-		//	（＿フ彡　　　　　 /
-	}
-
-	return true;
-}
-
-bool DX_MultRend::mDescRTV(ComPtr< ID3D12Device> device){
-
-	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	auto handle = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
-	device->CreateRenderTargetView(
-		mScPolyRes.Get(),
-		&rtvDesc,
-		handle
-	);
-	//例外！！
-
-	return true;
-}
-
-bool DX_MultRend::mHeapSRV(ComPtr< ID3D12Device> device) {
-
-	heapDesc.NumDescriptors = 1;
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-	auto result = device->CreateDescriptorHeap(
-		&heapDesc, 
-		IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())
-	);
-
-	if (FAILED(result)) {
-		assert(
-			"おめでとう!				" &&
-			"【mScPolySRV_Heap】がスッカスカ～♪ ->>" && 0
-		);
-		return false;
-		//	（　・∀・）　　|　|　ｶﾞｯ!
-		//	⊂　　　　）　  |　|
-		//	  Ｙ　 / ノ　　　人
-		//		  / ）　 　 < 　>__Λ  ∩
-		//	  ＿ /し'  ／／. Ｖ｀Д´）/ ←>>1
-		//	（＿フ彡　　　　　 /
-	}
-
-	return true;
-}
-
-bool DX_MultRend::mDescSRV(ComPtr< ID3D12Device> device) {
-
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Format = rtvDesc.Format;
-	srvDesc.Texture2D.MipLevels = 1;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-
-	device->CreateShaderResourceView(
-		mScPolyRes.Get(),
-		&srvDesc,
-		mScPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
-
-	);
-
-	return true;
-}
-
-bool DX_MultRend::mViewer(ComPtr< ID3D12Device> device) {
-	//RTV
-	if (!mHeapRTV(device)){
-		assert(
-			"おめでとう!				" &&
-			"error～♪ ->>" && 0
-		);
-		return false;
-	}
-	if (!mDescRTV(device)) {
-		assert(
-			"おめでとう!				" &&
-			"error～♪ ->>" && 0
-		);
-		return false;
-	}
-	//SRV
-	if (!mHeapSRV(device)) {
-		assert(
-			"おめでとう!				" &&
-			"error～♪ ->>" && 0
-		);
-		return false;
-	}
-	if (!mDescSRV(device)) {
-		assert(
-			"おめでとう!				" &&
-			"error～♪ ->>" && 0
-		);
-		return false;
-	}
-	return true;
-}
-
-
-bool DX_MultRend::mTarget(
-	ComPtr<ID3D12DescriptorHeap> dsvHeap,
-	ComPtr < ID3D12GraphicsCommandList> cmdList
-) {
-	auto rtvHeapPointer = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
-
-	cmdList->OMSetRenderTargets(
-		1,
-		&rtvHeapPointer,
-		false,
-		&dsvHeap->GetCPUDescriptorHandleForHeapStart()
-	);
-	return true;
-}
-
 bool DX_MultRend::descRange() {
 	range[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;//b
 	range[0].BaseShaderRegister = 0;//0
@@ -244,13 +55,13 @@ bool DX_MultRend::rootSignature(ComPtr< ID3D12Device> device) {
 
 	auto result = D3D12SerializeRootSignature(&rsDesc, D3D_ROOT_SIGNATURE_VERSION_1, rsBlob.ReleaseAndGetAddressOf(), errBlob.ReleaseAndGetAddressOf());
 	if (FAILED(result)) {
-		//エラー処理
-		return result;
+		assert(0 && "D3D12SerializeRootSignature");
+		return false;
 	}
 	result = device->CreateRootSignature(0, rsBlob->GetBufferPointer(), rsBlob->GetBufferSize(), IID_PPV_ARGS(mScPolyRS.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) {
-		//エラー処理
-		return result;
+		assert(0 && "CreateRootSignature");
+		return false;
 	}
 
 	result = D3DCompileFromFile(L"VertexPolygon.hlsl",
@@ -264,14 +75,31 @@ bool DX_MultRend::rootSignature(ComPtr< ID3D12Device> device) {
 		nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
 		"ps", "ps_5_0", 0, 0, ps.ReleaseAndGetAddressOf(), errBlob.ReleaseAndGetAddressOf());
 	if (FAILED(result)) {
-		//エラー処理
-		return result;
+		assert(0 && "CreateGraphicsPipelineState");
+		return false;
 	}
+
 
 	return true;
 }
 
 bool DX_MultRend::gpipeline(ComPtr< ID3D12Device> device) {
+	D3D12_INPUT_ELEMENT_DESC layout[2] = {
+   {   "POSITION",
+	   0,
+	   DXGI_FORMAT_R32G32B32_FLOAT,
+	   0,
+	   D3D12_APPEND_ALIGNED_ELEMENT,
+	   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+	   0},
+   {   "TEXCOORD",
+	   0,
+	   DXGI_FORMAT_R32G32_FLOAT,
+	   0,
+	   D3D12_APPEND_ALIGNED_ELEMENT,
+	   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+	   0},
+	};
 
 	gpsDesc.InputLayout.NumElements = _countof(layout);
 	gpsDesc.InputLayout.pInputElementDescs = layout;
@@ -290,14 +118,105 @@ bool DX_MultRend::gpipeline(ComPtr< ID3D12Device> device) {
 	gpsDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
 	gpsDesc.pRootSignature = mScPolyRS.Get();
 
-	auto result = device->CreateGraphicsPipelineState(&gpsDesc, IID_PPV_ARGS(mScPolyPipeline.ReleaseAndGetAddressOf()));
+	auto result = device->CreateGraphicsPipelineState(
+		&gpsDesc,
+		IID_PPV_ARGS(mScPolyPipeline.ReleaseAndGetAddressOf())
+	);
+	if (FAILED(result)) {
+		assert(0&&"CreateGraphicsPipelineState");
+		return false;
+	}
+
+	return true;
+}
+
+bool DX_MultRend::gpipelineTest(ComPtr< ID3D12Device> device) {
+	D3D12_INPUT_ELEMENT_DESC layout[2] = {
+	   {
+		   "POSITION",
+		   0,
+		   DXGI_FORMAT_R32G32B32_FLOAT,
+		   0,
+		   D3D12_APPEND_ALIGNED_ELEMENT,
+		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+		   0
+	   },
+	   {
+		   "TEXCOORD",
+		   0,
+		   DXGI_FORMAT_R32G32_FLOAT,
+		   0,
+		   D3D12_APPEND_ALIGNED_ELEMENT,
+		   D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+		   0
+	   },
+	};
+	gpsDesc.InputLayout.NumElements = _countof(layout);
+	gpsDesc.InputLayout.pInputElementDescs = layout;
+
+	auto result = D3DCompileFromFile(L"VertexPolygon.hlsl",
+		nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"vertexShader", "vs_5_0", 0, 0, vs.ReleaseAndGetAddressOf(), errBlob.ReleaseAndGetAddressOf());
+	if (FAILED(result)) {
+		//エラー処理
+		return result;
+	}
+	result = D3DCompileFromFile(L"PixelPolygon.hlsl",
+		nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		"ps", "ps_5_0", 0, 0, ps.ReleaseAndGetAddressOf(), errBlob.ReleaseAndGetAddressOf());
 	if (FAILED(result)) {
 		//エラー処理
 		return result;
 	}
 
-	return true;
+	gpsDesc.VS = CD3DX12_SHADER_BYTECODE(vs.Get());
+	gpsDesc.PS = CD3DX12_SHADER_BYTECODE(ps.Get());
+
+	gpsDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	gpsDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+	gpsDesc.NumRenderTargets = 1;
+	gpsDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+	gpsDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+	gpsDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	gpsDesc.SampleDesc.Count = 1;
+	gpsDesc.SampleDesc.Quality = 0;
+	gpsDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+
+	rsDesc.NumParameters = 0;
+	rsDesc.pParameters = 0;
+	rsDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	result = D3D12SerializeRootSignature(
+		&rsDesc,
+		D3D_ROOT_SIGNATURE_VERSION_1,
+		rsBlob.ReleaseAndGetAddressOf(),
+		errBlob.ReleaseAndGetAddressOf()
+	);
+
+	if (FAILED(result)) {
+		//エラー処理
+		return result;
+	}
+	result = device->CreateRootSignature(
+		0,
+		rsBlob->GetBufferPointer(),
+		rsBlob->GetBufferSize(),
+		IID_PPV_ARGS(mScPolyRS.ReleaseAndGetAddressOf())
+	);
+
+	if (FAILED(result)) {
+		//エラー処理
+		return result;
+	}
+
+	gpsDesc.pRootSignature = mScPolyRS.Get();
+
+	result = device->CreateGraphicsPipelineState(
+		&gpsDesc,
+		IID_PPV_ARGS(mScPolyPipeline.ReleaseAndGetAddressOf())
+	);
 }
+
 
 bool DX_MultRend::pipeline(ComPtr< ID3D12Device> device) {
 	if (!descRange())return false;
@@ -367,13 +286,7 @@ bool DX_MultRend::ClearDrawScreen() {
 	return true;
 }
 
-void DX_MultRend::DrawScreen(ComPtr < ID3D12GraphicsCommandList> _cmdList) {
-	_cmdList->ResourceBarrier(
-		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(mScPolyRes.Get(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
-
+void DX_MultRend::DrawScreen(ComPtr<ID3D12Resource> ScPolyRes, ComPtr < ID3D12GraphicsCommandList> _cmdList) {
 	_cmdList->SetGraphicsRootSignature(mScPolyRS.Get());
 	_cmdList->SetPipelineState(mScPolyPipeline.Get());
 	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);

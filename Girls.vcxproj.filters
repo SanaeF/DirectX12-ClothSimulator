@@ -25,9 +25,6 @@
     <Filter Include="DirectXlib\DxWindow">
       <UniqueIdentifier>{e3f44038-831a-4f85-83ef-5e6fc6286f29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Dx12Wrapper\DX_Resource">
-      <UniqueIdentifier>{ed01f120-1ebe-4337-846a-d3c8468c415c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Shader">
       <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
     </Filter>
@@ -42,6 +39,12 @@
     </Filter>
     <Filter Include="ソース ファイル\DX3DRenderer">
       <UniqueIdentifier>{8f96b75e-1ef9-42a4-beb1-84ad1c009c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Dx12Wrapper\RenderTargetView">
+      <UniqueIdentifier>{ed01f120-1ebe-4337-846a-d3c8468c415c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Dx12Wrapper\CreateScreen">
+      <UniqueIdentifier>{5319f35b-416c-448a-b215-a5d3c46ddae2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,7 +67,10 @@
       <Filter>ソース ファイル\DX3DActor</Filter>
     </ClInclude>
     <ClInclude Include="DX_MultRend.h">
-      <Filter>ソース ファイル\Dx12Wrapper\DX_Resource</Filter>
+      <Filter>ソース ファイル\Dx12Wrapper\RenderTargetView</Filter>
+    </ClInclude>
+    <ClInclude Include="DXResource.h">
+      <Filter>ソース ファイル\Dx12Wrapper\CreateScreen</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -109,7 +115,10 @@
       <Filter>ソース ファイル\DX3DActor\VMDmotion</Filter>
     </ClCompile>
     <ClCompile Include="DX_MultRend.cpp">
-      <Filter>ソース ファイル\Dx12Wrapper\DX_Resource</Filter>
+      <Filter>ソース ファイル\Dx12Wrapper\RenderTargetView</Filter>
+    </ClCompile>
+    <ClCompile Include="DXResource.cpp">
+      <Filter>ソース ファイル\Dx12Wrapper\CreateScreen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

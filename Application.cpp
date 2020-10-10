@@ -82,43 +82,42 @@ bool Application::Init() {
 void Application::Run() {
 	pDx12.reset(new Dx12Wrapper(_hwnd));
 	//pPMDRenderer[1].reset(new PMDRenderer(*pDx12)); 
-	//pPMDRenderer[0].reset(new PMDRenderer(*pDx12));
+	////pPMDRenderer[0].reset(new PMDRenderer(*pDx12));
 	//pPMDActor.reset(new PMDActor("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer[0]));
-	//pPMDActor.reset(new PMDActor("model/朝倉音夢（本校制服）ミク.pmd", *pPMDRenderer[1]));//テクスチャを上書きしている
+	////pPMDActor.reset(new PMDActor("model/朝倉音夢（本校制服）ミク.pmd", *pPMDRenderer[1]));//テクスチャを上書きしている
 	//pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
 	//pPMDActor->PlayAnimation();
 	float angle = 0.0f;
 	MSG msg = {};
 	unsigned int frame = 0;
-	//while (true) {
-	//	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-	//		TranslateMessage(&msg);
-	//		DispatchMessage(&msg);
-	//	}
-	//	//もうアプリケーションが終わるって時にmessageがWM_QUITになる
-	//	if (msg.message == WM_QUIT) {
-	//		break;
-	//	}
-	//	//全体の描画準備
-	//	pDx12->BeginDraw();
-	//	//PMD用の描画パイプラインに合わせる
-	//	pDx12->CommandList()->SetPipelineState(pPMDRenderer[1]->GetPipelineState());
-	//	pDx12->CommandList()->SetPipelineState(pPMDRenderer[0]->GetPipelineState());
-	//	//ルートシグネチャもPMD用に合わせる
-	//	pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[1]->GetRootSignature());
-	//	pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[0]->GetRootSignature());
-	//	pDx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	while (true) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+		//もうアプリケーションが終わるって時にmessageがWM_QUITになる
+		if (msg.message == WM_QUIT) {
+			break;
+		}
+		//全体の描画準備
+		pDx12->BeginDraw();
+		////PMD用の描画パイプラインに合わせる
+		//pDx12->CommandList()->SetPipelineState(pPMDRenderer[1]->GetPipelineState());
+		////pDx12->CommandList()->SetPipelineState(pPMDRenderer[0]->GetPipelineState());
+		////ルートシグネチャもPMD用に合わせる
+		//pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[1]->GetRootSignature());
+		////pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer[0]->GetRootSignature());
+		//pDx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		//pDx12->SetScene();
 
-	//	pDx12->SetScene();
+		//pPMDActor->Update();
+		//pPMDActor->Draw();
 
-	//	pPMDActor->Update();
-	//	pPMDActor->Draw();
+		pDx12->EndDraw();
 
-	//	pDx12->EndDraw();
-
-	//	//フリップ
-	//	pDx12->Swapchain()->Present(1, 0);
-	//}
+		//フリップ
+		pDx12->Swapchain()->Present(1, 0);
+	}
 }
 
 
