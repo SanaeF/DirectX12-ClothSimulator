@@ -62,6 +62,8 @@ public:
 		return _boneNodeTable;
 	}
 
+	void setBoneMatrices(BoneNode* node, const DirectX::XMMATRIX mat);
+
 	HRESULT CreateTransformView(ComPtr<ID3D12Device> _dev);
 
 	ComPtr<ID3D12DescriptorHeap> getTransHeap();

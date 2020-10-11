@@ -14,12 +14,18 @@ void DXPMDBone::BoneInitialize() {
 }
 
 void DXPMDBone::RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat) {
-	_boneMatrices[node->boneIdx] = mat;
+	//_boneMatrices[node->boneIdx] = mat;
 	for (auto& cnode : node->children) {
 
 		RecursiveMatrixMultiply(cnode, _boneMatrices[cnode->boneIdx] * mat);
 
 	}
+}
+
+void DXPMDBone::setBoneMatrices(BoneNode* node, const DirectX::XMMATRIX mat) {
+
+	_boneMatrices[node->boneIdx] = mat;
+
 }
 
 void DXPMDBone::setTransWorld() {

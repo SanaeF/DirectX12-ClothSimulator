@@ -97,7 +97,7 @@ bool DXVMDMotion::Update(DWORD startTime) {
 		auto mat = XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *//å¥ì_Ç…ñﬂÇµ
 			rotation *//âÒì]
 			XMMatrixTranslation(pos.x, pos.y, pos.z);//å≥ÇÃç¿ïWÇ…ñﬂÇ∑
-		getBoneMatrices()[node.boneIdx] = mat;
+		setBoneMatrices(&node, mat);
 	}
 	BoneInitialize();
 }
@@ -119,7 +119,7 @@ void DXVMDMotion::boneMotion() {
 			XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *
 			XMMatrixRotationQuaternion(bonemotion.second[0].quaternion) *
 			XMMatrixTranslation(pos.x, pos.y, pos.z);
-		getBoneMatrices()[node.boneIdx] = mat;
+		setBoneMatrices(&node, mat);
 
 	}
 }
