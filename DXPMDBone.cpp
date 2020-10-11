@@ -16,7 +16,9 @@ void DXPMDBone::BoneInitialize() {
 void DXPMDBone::RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat) {
 	_boneMatrices[node->boneIdx] = mat;
 	for (auto& cnode : node->children) {
+
 		RecursiveMatrixMultiply(cnode, _boneMatrices[cnode->boneIdx] * mat);
+
 	}
 }
 

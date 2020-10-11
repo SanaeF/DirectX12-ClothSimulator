@@ -62,7 +62,6 @@ PMDActor::PMDActor(const char* filepath, PMDRenderer& renderer) :
 	Motion->CreateTransformView(_dx12.Device());
 	CreateMaterialData();
 	CreateMaterialAndTextureView();
-	//Motion->BoneInitialize();//
 
 }
 

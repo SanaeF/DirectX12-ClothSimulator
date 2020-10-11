@@ -22,7 +22,6 @@ private:
 		DirectX::XMMATRIX world;
 	};
 
-
 	struct KeyFrame {
 		unsigned int frameNo;//フレーム№(アニメーション開始からの経過時間)
 		DirectX::XMVECTOR quaternion;//クォータニオン

@@ -1,4 +1,5 @@
 #include "DXVMDMotion.h"
+#include <algorithm>
 #include<d3dx12.h>
 
 using namespace Microsoft::WRL;
@@ -8,59 +9,36 @@ using namespace DirectX;
 void DXVMDMotion::LoadVMDFile(const char* filepath, const char* name) {
 	auto fp = fopen(filepath, "rb");
 	fseek(fp, 50, SEEK_SET);//最初の50バイトは飛ばしてOK
-	unsigned int motionDataNum = 0;
-	fread(&motionDataNum, sizeof(motionDataNum), 1, fp);
-	struct VMDmotionData {
-		char boneName[15];
-		unsigned int freameNo;
-		XMFLOAT3 location;
-		XMFLOAT4 quaternion;
+	unsigned int keyframeNum = 0;
+	fread(&keyframeNum, sizeof(keyframeNum), 1, fp);
 
-		unsigned char bezier[64];
+	struct VMDKeyFrame {
+		char boneName[15]; // ボーン名
+		unsigned int frameNo; // フレーム番号(読込時は現在のフレーム位置を0とした相対位置)
+		XMFLOAT3 location; // 位置
+		XMFLOAT4 quaternion; // Quaternion // 回転
+		unsigned char bezier[64]; // [4][4][4]  ベジェ補完パラメータ
 	};
-
-	struct Motion {
-		unsigned int frameNo;
-		DirectX::XMVECTOR quaternion;
-			//Motion();
-		Motion(unsigned int fno, const XMVECTOR& q) 
-			:frameNo(fno),
-			quaternion(q)
-		{
-		}
-	};
-
-	std::unordered_map<std::string, std::vector<Motion>> mMotionData;
-
-	std::vector<VMDmotionData>vmdMotionData(motionDataNum);
-	for (auto& motion : vmdMotionData) {
-		fread(motion.boneName, sizeof(motion.boneName), 1, fp);
-		fread(
-			&motion.freameNo,
-			sizeof(motion.freameNo) +
-			sizeof(motion.location) +
-			sizeof(motion.quaternion),
-			1,
-			fp
-		);
-
+	vector<VMDKeyFrame> keyframes(keyframeNum);
+	for (auto& keyframe : keyframes) {
+		fread(keyframe.boneName, sizeof(keyframe.boneName), 1, fp);//ボーン名
+		fread(&keyframe.frameNo, sizeof(keyframe.frameNo) +//フレーム番号
+			sizeof(keyframe.location) +//位置(IKのときに使用予定)
+			sizeof(keyframe.quaternion) +//クオータニオン
+			sizeof(keyframe.bezier), 1, fp);//補間ベジェデータ
 	}
-	for (auto& vmdMotion : vmdMotionData) {
-		mMotionData[vmdMotion.boneName].emplace_back(
-			Motion(
-				vmdMotion.freameNo,
-				XMLoadFloat4(&vmdMotion.quaternion)
-			)
-		);
+
+	//VMDのキーフレームデータから、実際に使用するキーフレームテーブルへ変換
+	for (auto& f : keyframes) {
+		mKeyFrameData[f.boneName].emplace_back(KeyFrame(f.frameNo, XMLoadFloat4(&f.quaternion),
+			XMFLOAT2((float)f.bezier[3] / 127.0f, (float)f.bezier[7] / 127.0f),
+			XMFLOAT2((float)f.bezier[11] / 127.0f, (float)f.bezier[15] / 127.0f)));
 	}
-	for (auto& bonemotion : mMotionData) {
-		auto node = getBoneNodeTable()[bonemotion.first];
-		auto& pos = node.startPos;
-		auto mat = XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *
-			XMMatrixRotationQuaternion(bonemotion.second[0].quaternion) *
-			XMMatrixTranslation(pos.x, pos.y, pos.z);
-		getBoneMatrices()[node.boneIdx] = mat;
-	}
+
+	keyMotion();
+	
+	boneMotion();
+
 	BoneInitialize();
 }
 
@@ -120,5 +98,28 @@ bool DXVMDMotion::Update(DWORD startTime) {
 			rotation *//回転
 			XMMatrixTranslation(pos.x, pos.y, pos.z);//元の座標に戻す
 		getBoneMatrices()[node.boneIdx] = mat;
+	}
+	BoneInitialize();
+}
+
+void DXVMDMotion::keyMotion() {
+	for (auto& motion : mKeyFrameData) {
+		sort(motion.second.begin(), motion.second.end(),
+			[](const KeyFrame& lval, const KeyFrame& rval) {
+			return lval.frameNo <= rval.frameNo;
+		});
+	}
+}
+
+void DXVMDMotion::boneMotion() {
+	for (auto& bonemotion : mKeyFrameData) {
+		auto node = getBoneNodeTable()[bonemotion.first];
+		auto& pos = node.startPos;
+		auto mat =
+			XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *
+			XMMatrixRotationQuaternion(bonemotion.second[0].quaternion) *
+			XMMatrixTranslation(pos.x, pos.y, pos.z);
+		getBoneMatrices()[node.boneIdx] = mat;
+
 	}
 }
