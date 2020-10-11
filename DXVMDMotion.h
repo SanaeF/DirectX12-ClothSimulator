@@ -12,8 +12,8 @@ private:
 	struct VMDKeyFrame {
 		char boneName[15]; // ボーン名
 		unsigned int frameNo; // フレーム番号(読込時は現在のフレーム位置を0とした相対位置)
-		XMFLOAT3 location; // 位置
-		XMFLOAT4 quaternion; // Quaternion // 回転
+		DirectX::XMFLOAT3 location; // 位置
+		DirectX::XMFLOAT4 quaternion; // Quaternion // 回転
 		unsigned char bezier[64]; // [4][4][4]  ベジェ補完パラメータ
 	};
 
