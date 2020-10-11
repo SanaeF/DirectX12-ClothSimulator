@@ -14,7 +14,7 @@
 
 class Dx12Wrapper;
 class PMDRenderer;
-class PMDActor;
+class DXPMDModel;
 
 ///シングルトンクラス
 class Application{
@@ -29,7 +29,7 @@ private:
 	HWND _hwnd;
 	std::shared_ptr<Dx12Wrapper> pDx12;
 	std::shared_ptr<PMDRenderer> pPMDRenderer;
-	std::shared_ptr<PMDActor> pPMDActor;
+	std::shared_ptr<DXPMDModel> pPMDActor;
 
 	//ゲーム用ウィンドウの生成
 	void CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass);

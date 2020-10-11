@@ -129,7 +129,7 @@
     <ClCompile Include="DXPMDBone.cpp" />
     <ClCompile Include="DXResource.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="PMDActor.cpp" />
+    <ClCompile Include="DXPMDModel.cpp" />
     <ClCompile Include="PMDRenderer.cpp" />
     <ClCompile Include="DX_MultRend.cpp" />
     <ClCompile Include="DXVMDMotion.cpp" />
@@ -141,7 +141,7 @@
     <ClInclude Include="DXPMDBone.h" />
     <ClInclude Include="DXResource.h" />
     <ClInclude Include="GIDirectLib\DirectX12lib.h" />
-    <ClInclude Include="PMDActor.h" />
+    <ClInclude Include="DXPMDModel.h" />
     <ClInclude Include="PMDRenderer.h" />
     <ClInclude Include="DX_MultRend.h" />
     <ClInclude Include="DXVMDMotion.h" />

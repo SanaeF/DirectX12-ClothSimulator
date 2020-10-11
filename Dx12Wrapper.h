@@ -83,10 +83,6 @@ class Dx12Wrapper{
 	//テクスチャ名からテクスチャバッファ作成、中身をコピー
 	ID3D12Resource* CreateTextureFromFile(const char* texpath);
 
-	ComPtr<ID3D12Resource> mScPolyRes;
-	ComPtr<ID3D12DescriptorHeap> mScPolyRTV_Heap;
-	ComPtr<ID3D12DescriptorHeap> mScPolySRV_Heap;
-	bool CreateScreenResAndView();
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
@@ -104,4 +100,5 @@ public:
 
 	void SetScene();
 
+	void ScreenFlip();
 };

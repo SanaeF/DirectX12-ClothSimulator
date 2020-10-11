@@ -6,10 +6,10 @@
 #include<memory>
 
 class Dx12Wrapper;
-class PMDActor;
+class DXPMDModel;
 class PMDRenderer
 {
-	friend PMDActor;
+	friend DXPMDModel;
 private:
 	Dx12Wrapper& _dx12;
 	template<typename T>

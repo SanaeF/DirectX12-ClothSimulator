@@ -28,9 +28,6 @@
     <Filter Include="リソース ファイル\Shader">
       <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX3DActor">
-      <UniqueIdentifier>{3e3ab550-147d-4eae-8129-0719e8cb2a83}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DX3DRenderer">
       <UniqueIdentifier>{8f96b75e-1ef9-42a4-beb1-84ad1c009c53}</UniqueIdentifier>
     </Filter>
@@ -40,17 +37,20 @@
     <Filter Include="ソース ファイル\Dx12Wrapper\CreateScreen">
       <UniqueIdentifier>{5319f35b-416c-448a-b215-a5d3c46ddae2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX3DActor\PMDData">
-      <UniqueIdentifier>{73814352-a52b-4b2f-b4e0-bb74b000c52c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DX3DActor\PMDData\DXPMDBone">
-      <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DX3DActor\PMDData\VMDMotion">
-      <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DXHandler">
       <UniqueIdentifier>{ac04ad31-b41f-4ac3-a1f2-e8cfcc94c7d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXPMDModel">
+      <UniqueIdentifier>{3e3ab550-147d-4eae-8129-0719e8cb2a83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXPMDModel\PMDData">
+      <UniqueIdentifier>{73814352-a52b-4b2f-b4e0-bb74b000c52c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXPMDModel\PMDData\VMDMotion">
+      <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone">
+      <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -66,9 +66,6 @@
     <ClInclude Include="GIDirectLib\DirectX12lib.h">
       <Filter>DirectXlib</Filter>
     </ClInclude>
-    <ClInclude Include="PMDActor.h">
-      <Filter>ソース ファイル\DX3DActor</Filter>
-    </ClInclude>
     <ClInclude Include="DX_MultRend.h">
       <Filter>ソース ファイル\Dx12Wrapper\RenderTargetView</Filter>
     </ClInclude>
@@ -79,10 +76,13 @@
       <Filter>ソース ファイル\DXHandler</Filter>
     </ClInclude>
     <ClInclude Include="DXPMDBone.h">
-      <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDBone</Filter>
+      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
     </ClInclude>
     <ClInclude Include="DXVMDMotion.h">
-      <Filter>ソース ファイル\DX3DActor\PMDData\VMDMotion</Filter>
+      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion</Filter>
+    </ClInclude>
+    <ClInclude Include="DXPMDModel.h">
+      <Filter>ソース ファイル\DXPMDModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,9 +114,6 @@
     <ClCompile Include="Dx12Wrapper.cpp">
       <Filter>ソース ファイル\Dx12Wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="PMDActor.cpp">
-      <Filter>ソース ファイル\DX3DActor</Filter>
-    </ClCompile>
     <ClCompile Include="PMDRenderer.cpp">
       <Filter>ソース ファイル\DX3DRenderer</Filter>
     </ClCompile>
@@ -133,10 +130,13 @@
       <Filter>ソース ファイル\DXHandler</Filter>
     </ClCompile>
     <ClCompile Include="DXPMDBone.cpp">
-      <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDBone</Filter>
+      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
     </ClCompile>
     <ClCompile Include="DXVMDMotion.cpp">
-      <Filter>ソース ファイル\DX3DActor\PMDData\VMDMotion</Filter>
+      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion</Filter>
+    </ClCompile>
+    <ClCompile Include="DXPMDModel.cpp">
+      <Filter>ソース ファイル\DXPMDModel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

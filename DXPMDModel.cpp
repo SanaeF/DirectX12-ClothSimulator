@@ -1,4 +1,4 @@
-#include "PMDActor.h"
+#include"DXPMDModel.h"
 #include"PMDRenderer.h"
 #include"Dx12Wrapper.h"
 #include"DXVMDMotion.h"
@@ -11,9 +11,7 @@ using namespace DirectX;
 #pragma comment(lib,"winmm.lib")
 namespace {
 	///テクスチャのパスをセパレータ文字で分離する
-	///@param path 対象のパス文字列
-	///@param splitter 区切り文字
-	///@return 分離前後の文字列ペア
+	///@param path 対象のパス文字列///@param splitter 区切り文字///@return 分離前後の文字列ペア
 	pair<string, string>
 		SplitFileName(const std::string& path, const char splitter = '*') {
 		int idx = path.find(splitter);
@@ -23,17 +21,14 @@ namespace {
 		return ret;
 	}
 	///ファイル名から拡張子を取得する
-	///@param path 対象のパス文字列
-	///@return 拡張子
+	///@param path 対象のパス文字列///@return 拡張子
 	string
 		GetExtension(const std::string& path) {
 		int idx = path.rfind('.');
 		return path.substr(idx + 1, path.length() - idx - 1);
 	}
 	///モデルのパスとテクスチャのパスから合成パスを得る
-	///@param modelPath アプリケーションから見たpmdモデルのパス
-	///@param texPath PMDモデルから見たテクスチャのパス
-	///@return アプリケーションから見たテクスチャのパス
+	///@param modelPath アプリケーションから見たpmdモデルのパス///@param texPath PMDモデルから見たテクスチャのパス///@return アプリケーションから見たテクスチャのパス
 	std::string GetTexturePathFromModelAndTexPath(const std::string& modelPath, const char* texPath) {
 		//ファイルのフォルダ区切りは\と/の二種類が使用される可能性があり
 		//ともかく末尾の\か/を得られればいいので、双方のrfindをとり比較する
@@ -46,8 +41,7 @@ namespace {
 	}
 }
 
-
-PMDActor::PMDActor(const char* filepath, PMDRenderer& renderer) :
+DXPMDModel::DXPMDModel(const char* filepath, PMDRenderer& renderer) :
 	_renderer(renderer),
 	_dx12(renderer._dx12),
 	_angle(0.0f)
@@ -62,13 +56,10 @@ PMDActor::PMDActor(const char* filepath, PMDRenderer& renderer) :
 
 }
 
-
-PMDActor::~PMDActor()
-{
+DXPMDModel::~DXPMDModel(){
 }
 
-
-HRESULT PMDActor::LoadPMDFile(const char* path) {
+void DXPMDModel::LoadPMDFile(const char* path) {
 	//PMDヘッダ構造体
 	struct PMDHeader {
 		float version; //例：00 00 80 3F == 1.00
@@ -84,7 +75,7 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 	if (fp == nullptr) {
 		//エラー処理
 		assert(0);
-		return ERROR_FILE_NOT_FOUND;
+		return;
 	}
 	fread(signature, sizeof(signature), 1, fp);
 	fread(&pmdheader, sizeof(pmdheader), 1, fp);
@@ -92,7 +83,55 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 	unsigned int vertNum;//頂点数
 	fread(&vertNum, sizeof(vertNum), 1, fp);
 
+	LoadMaterial(vertNum, strModelPath, fp);
 
+	Motion->BoneLoad(fp);
+}
+
+void DXPMDModel::LoadVMDFile(const char* filepath, const char* name) {
+	Motion->LoadVMDFile(filepath, name);
+}
+
+void DXPMDModel::PlayAnimation() {
+	Motion->PlayAnimation();
+}
+
+void DXPMDModel::MotionUpdate() {
+	Motion->Update(_startTime);
+}
+
+void DXPMDModel::Update() {
+	MotionUpdate();
+}
+
+void DXPMDModel::Draw() {
+	_dx12.CommandList()->IASetVertexBuffers(0, 1, &_vbView);
+	_dx12.CommandList()->IASetIndexBuffer(&_ibView);
+
+	ID3D12DescriptorHeap* transheaps[] = { Motion->getTransHeap().Get() };
+	_dx12.CommandList()->SetDescriptorHeaps(1, transheaps);
+	_dx12.CommandList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
+
+
+
+	ID3D12DescriptorHeap* mdh[] = { _materialHeap.Get() };
+	//マテリアル
+	_dx12.CommandList()->SetDescriptorHeaps(1, mdh);
+
+	auto materialH = _materialHeap->GetGPUDescriptorHandleForHeapStart();
+	unsigned int idxOffset = 0;
+
+	auto cbvsrvIncSize = _dx12.Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 5;
+	for (auto& m : _materials) {
+		_dx12.CommandList()->SetGraphicsRootDescriptorTable(2, materialH);
+		_dx12.CommandList()->DrawIndexedInstanced(m.indicesNum, 1, idxOffset, 0, 0);
+		materialH.ptr += cbvsrvIncSize;
+		idxOffset += m.indicesNum;
+	}
+
+}
+
+void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* fp) {
 #pragma pack(1)//ここから1バイトパッキング…アライメントは発生しない
 	//PMDマテリアル構造体
 	struct PMDMaterial {
@@ -110,7 +149,7 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 #pragma pack()//1バイトパッキング解除
 
 	constexpr unsigned int pmdvertex_size = 38;//頂点1つあたりのサイズ
-	std::vector<unsigned char> vertices(vertNum*pmdvertex_size);//バッファ確保
+	std::vector<unsigned char> vertices(vertNum * pmdvertex_size);//バッファ確保
 	fread(vertices.data(), vertices.size(), 1, fp);//一気に読み込み
 
 	unsigned int indicesNum;//インデックス数
@@ -243,82 +282,16 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 			_spaResources[i] = _dx12.GetTextureByPath(spaFilePath.c_str());
 		}
 	}
-	Motion->BoneLoad(fp);
 }
 
-
-void PMDActor::LoadVMDFile(const char* filepath, const char* name) {
-	Motion->LoadVMDFile(filepath, name);
-}
-void PMDActor::PlayAnimation() {
-	Motion->PlayAnimation();
-	//_startTime = timeGetTime();
-}
-
-void PMDActor::MotionUpdate() {
-	Motion->Update(_startTime);
-}
-
-
-HRESULT PMDActor::CreateTransformView() {
-	//GPUバッファ作成
-	auto buffSize = sizeof(XMMATRIX)*(1+_boneMatrices.size());
-	buffSize = (buffSize + 0xff)&~0xff;
-	auto result = _dx12.Device()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(buffSize),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(_transformBuff.ReleaseAndGetAddressOf())
-	);
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
-
-	//マップとコピー
-	result = _transformBuff->Map(0, nullptr, (void**)&_mappedMatrices);
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
-	_mappedMatrices[0] = _transform.world;
-
-
-
-	copy(_boneMatrices.begin(), _boneMatrices.end(), _mappedMatrices + 1);
-
-	//ビューの作成
-	D3D12_DESCRIPTOR_HEAP_DESC transformDescHeapDesc = {};
-	transformDescHeapDesc.NumDescriptors = 1;//とりあえずワールドひとつ
-	transformDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	transformDescHeapDesc.NodeMask = 0;
-
-	transformDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;//デスクリプタヒープ種別
-	result = _dx12.Device()->CreateDescriptorHeap(&transformDescHeapDesc, IID_PPV_ARGS(_transformHeap.ReleaseAndGetAddressOf()));//生成
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
-
-	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.BufferLocation = _transformBuff->GetGPUVirtualAddress();
-	cbvDesc.SizeInBytes = buffSize;
-	_dx12.Device()->CreateConstantBufferView(&cbvDesc, _transformHeap->GetCPUDescriptorHandleForHeapStart());
-
-	return S_OK;
-}
-
-
-HRESULT PMDActor::CreateMaterialData() {
+HRESULT DXPMDModel::CreateMaterialData() {
 	//マテリアルバッファを作成
 	auto materialBuffSize = sizeof(MaterialForHlsl);
-	materialBuffSize = (materialBuffSize + 0xff)&~0xff;
+	materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
 	auto result = _dx12.Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(materialBuffSize*_materials.size()),//勿体ないけど仕方ないですね
+		&CD3DX12_RESOURCE_DESC::Buffer(materialBuffSize * _materials.size()),//勿体ないけど仕方ないですね
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(_materialBuff.ReleaseAndGetAddressOf())
@@ -345,8 +318,7 @@ HRESULT PMDActor::CreateMaterialData() {
 
 }
 
-
-HRESULT PMDActor::CreateMaterialAndTextureView() {
+HRESULT DXPMDModel::CreateMaterialAndTextureView() {
 	D3D12_DESCRIPTOR_HEAP_DESC materialDescHeapDesc = {};
 	materialDescHeapDesc.NumDescriptors = _materials.size() * 5;//マテリアル数ぶん(定数1つ、テクスチャ3つ)
 	materialDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -359,7 +331,7 @@ HRESULT PMDActor::CreateMaterialAndTextureView() {
 		return result;
 	}
 	auto materialBuffSize = sizeof(MaterialForHlsl);
-	materialBuffSize = (materialBuffSize + 0xff)&~0xff;
+	materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
 	D3D12_CONSTANT_BUFFER_VIEW_DESC matCBVDesc = {};
 	matCBVDesc.BufferLocation = _materialBuff->GetGPUVirtualAddress();
 	matCBVDesc.SizeInBytes = materialBuffSize;
@@ -416,40 +388,4 @@ HRESULT PMDActor::CreateMaterialAndTextureView() {
 		}
 		matDescHeapH.ptr += incSize;
 	}
-}
-
-
-
-void PMDActor::Update() {
-	//_angle += 0.012f;
-	//_mappedMatrices[0] = XMMatrixRotationY(_angle);
-
-	MotionUpdate();
-}
-
-void PMDActor::Draw() {
-	_dx12.CommandList()->IASetVertexBuffers(0, 1, &_vbView);
-	_dx12.CommandList()->IASetIndexBuffer(&_ibView);
-
-	ID3D12DescriptorHeap* transheaps[] = { Motion->getTransHeap().Get() };
-	_dx12.CommandList()->SetDescriptorHeaps(1, transheaps);
-	_dx12.CommandList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
-
-
-
-	ID3D12DescriptorHeap* mdh[] = { _materialHeap.Get() };
-	//マテリアル
-	_dx12.CommandList()->SetDescriptorHeaps(1, mdh);
-
-	auto materialH = _materialHeap->GetGPUDescriptorHandleForHeapStart();
-	unsigned int idxOffset = 0;
-
-	auto cbvsrvIncSize = _dx12.Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 5;
-	for (auto& m : _materials) {
-		_dx12.CommandList()->SetGraphicsRootDescriptorTable(2, materialH);
-		_dx12.CommandList()->DrawIndexedInstanced(m.indicesNum, 1, idxOffset, 0, 0);
-		materialH.ptr += cbvsrvIncSize;
-		idxOffset += m.indicesNum;
-	}
-
 }

@@ -1,8 +1,8 @@
 #include "Application.h"
 #include"Dx12Wrapper.h"
-
 #include"PMDRenderer.h"
-#include"PMDActor.h"
+#include"DXPMDModel.h"
+
 void Application::SetWindow(int width, int height, const char* window_name, const char* Name) {
 
 	mWin.cx = width;
@@ -82,7 +82,7 @@ bool Application::BoneInitialize() {
 void Application::Run() {
 	pDx12.reset(new Dx12Wrapper(_hwnd));
 	pPMDRenderer.reset(new PMDRenderer(*pDx12)); 
-	pPMDActor.reset(new PMDActor("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer));
+	pPMDActor.reset(new DXPMDModel("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer));
 
 	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
 	pPMDActor->PlayAnimation();
@@ -114,7 +114,8 @@ void Application::Run() {
 		pDx12->EndDraw();
 
 		//フリップ
-		pDx12->Swapchain()->Present(1, 0);
+		pDx12->ScreenFlip();
+		//pDx12->Swapchain()->Present(1, 0);
 	}
 }
 
