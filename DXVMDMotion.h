@@ -9,6 +9,13 @@ class DXVMDMotion : public DXPMDBone {
 private:
 	DWORD _startTime;
 
+	struct VMDKeyFrame {
+		char boneName[15]; // ボーン名
+		unsigned int frameNo; // フレーム番号(読込時は現在のフレーム位置を0とした相対位置)
+		XMFLOAT3 location; // 位置
+		XMFLOAT4 quaternion; // Quaternion // 回転
+		unsigned char bezier[64]; // [4][4][4]  ベジェ補完パラメータ
+	};
 
 	struct KeyFrame {
 		unsigned int frameNo;//フレーム№(アニメーション開始からの経過時間)
@@ -22,10 +29,6 @@ private:
 	};
 	std::unordered_map<std::string, std::vector<KeyFrame>> mKeyFrameData;
 
-	void keyMotion();
-
-	void boneMotion();
-
 public:
 	void LoadVMDFile(const char* filepath, const char* name);
 
@@ -37,5 +40,9 @@ public:
 
 	DXVMDMotion() {
 	}
+private:
+
+	void keyMotion();
+	void boneMotion();
 
 };

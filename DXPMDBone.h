@@ -22,24 +22,6 @@ private:
 		DirectX::XMMATRIX world;
 	};
 
-	struct KeyFrame {
-		unsigned int frameNo;//フレーム№(アニメーション開始からの経過時間)
-		DirectX::XMVECTOR quaternion;//クォータニオン
-		DirectX::XMFLOAT2 p1, p2;//ベジェの中間コントロールポイント
-		KeyFrame(
-			unsigned int fno,
-			DirectX::XMVECTOR& q,
-			const DirectX::XMFLOAT2& ip1,
-			const DirectX::XMFLOAT2& ip2
-		) :
-			frameNo(fno),
-			quaternion(q),
-			p1(ip1),
-			p2(ip2) {
-		};
-
-	};
-
 	std::vector<DirectX::XMMATRIX> _boneMatrices;
 	std::map<std::string, BoneNode> _boneNodeTable;
 
@@ -54,6 +36,7 @@ private:
 
 public:
 	void BoneInitialize();
+	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);
 
 	std::vector<DirectX::XMMATRIX> getBoneMatrices() {
 		return _boneMatrices;
@@ -73,8 +56,5 @@ public:
 	DXPMDBone() {
 
 	}
-private:
-
-	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);
 
 };

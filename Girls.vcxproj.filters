@@ -40,9 +40,6 @@
     <Filter Include="ソース ファイル\Dx12Wrapper\CreateScreen">
       <UniqueIdentifier>{5319f35b-416c-448a-b215-a5d3c46ddae2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX3DActor\DXHandler">
-      <UniqueIdentifier>{ac04ad31-b41f-4ac3-a1f2-e8cfcc94c7d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DX3DActor\PMDData">
       <UniqueIdentifier>{73814352-a52b-4b2f-b4e0-bb74b000c52c}</UniqueIdentifier>
     </Filter>
@@ -54,6 +51,9 @@
     </Filter>
     <Filter Include="ソース ファイル\DX3DActor\PMDData\VMDMotion">
       <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXHandler">
+      <UniqueIdentifier>{ac04ad31-b41f-4ac3-a1f2-e8cfcc94c7d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,7 +79,7 @@
       <Filter>ソース ファイル\Dx12Wrapper\CreateScreen</Filter>
     </ClInclude>
     <ClInclude Include="DXHandler.h">
-      <Filter>ソース ファイル\DX3DActor\DXHandler</Filter>
+      <Filter>ソース ファイル\DXHandler</Filter>
     </ClInclude>
     <ClInclude Include="DXPMDBone.h">
       <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDBone</Filter>
@@ -136,7 +136,7 @@
       <Filter>ソース ファイル\Dx12Wrapper\CreateScreen</Filter>
     </ClCompile>
     <ClCompile Include="DXHandler.cpp">
-      <Filter>ソース ファイル\DX3DActor\DXHandler</Filter>
+      <Filter>ソース ファイル\DXHandler</Filter>
     </ClCompile>
     <ClCompile Include="DXPMDBone.cpp">
       <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDBone</Filter>

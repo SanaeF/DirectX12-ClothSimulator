@@ -2,6 +2,6 @@
 class DXHandler {
 private:
 public:
-	int Graphic();
+	int getHandle(const char* FilePath, void* data);
 
 };

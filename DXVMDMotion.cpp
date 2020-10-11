@@ -12,13 +12,6 @@ void DXVMDMotion::LoadVMDFile(const char* filepath, const char* name) {
 	unsigned int keyframeNum = 0;
 	fread(&keyframeNum, sizeof(keyframeNum), 1, fp);
 
-	struct VMDKeyFrame {
-		char boneName[15]; // ボーン名
-		unsigned int frameNo; // フレーム番号(読込時は現在のフレーム位置を0とした相対位置)
-		XMFLOAT3 location; // 位置
-		XMFLOAT4 quaternion; // Quaternion // 回転
-		unsigned char bezier[64]; // [4][4][4]  ベジェ補完パラメータ
-	};
 	vector<VMDKeyFrame> keyframes(keyframeNum);
 	for (auto& keyframe : keyframes) {
 		fread(keyframe.boneName, sizeof(keyframe.boneName), 1, fp);//ボーン名
