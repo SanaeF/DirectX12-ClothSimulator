@@ -125,22 +125,28 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Dx12Wrapper.cpp" />
+    <ClCompile Include="DXHandler.cpp" />
+    <ClCompile Include="DXPMDBone.cpp" />
+    <ClCompile Include="DXPMDModel.cpp" />
     <ClCompile Include="DXResource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PMDActor.cpp" />
     <ClCompile Include="PMDRenderer.cpp" />
     <ClCompile Include="DX_MultRend.cpp" />
-    <ClCompile Include="VMD_Motion.cpp" />
+    <ClCompile Include="DXVMDMotion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Dx12Wrapper.h" />
+    <ClInclude Include="DXHandler.h" />
+    <ClInclude Include="DXPMDBone.h" />
+    <ClInclude Include="DXPMDModel.h" />
     <ClInclude Include="DXResource.h" />
     <ClInclude Include="GIDirectLib\DirectX12lib.h" />
     <ClInclude Include="PMDActor.h" />
     <ClInclude Include="PMDRenderer.h" />
     <ClInclude Include="DX_MultRend.h" />
-    <ClInclude Include="VMD_Motion.h" />
+    <ClInclude Include="DXVMDMotion.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPixelShader.hlsl">

@@ -72,7 +72,7 @@ void Application::ShowWin() {
 }
 
 
-bool Application::Init() {
+bool Application::BoneInitialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
 	//DirectX12ƒ‰ƒbƒp[¶¬•‰Šú‰»

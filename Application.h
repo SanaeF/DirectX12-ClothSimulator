@@ -43,7 +43,7 @@ private:
 public:
 
 	///‰Šú‰»
-	bool Init();
+	bool BoneInitialize();
 
 	///ƒ‹[ƒv‹N“®
 	void ShowWin();

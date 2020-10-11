@@ -5,7 +5,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	app.SetWindow(1280,960,"DirectX","ƒeƒXƒg");
 	app.SetGraphMode(1920,1440);
-	if (!app.Init()) {
+	if (!app.BoneInitialize()) {
 		return -1;
 	}
 	app.ShowWin();
