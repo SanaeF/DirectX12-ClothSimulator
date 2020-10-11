@@ -127,7 +127,6 @@
     <ClCompile Include="Dx12Wrapper.cpp" />
     <ClCompile Include="DXHandler.cpp" />
     <ClCompile Include="DXPMDBone.cpp" />
-    <ClCompile Include="DXPMDModel.cpp" />
     <ClCompile Include="DXResource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PMDActor.cpp" />
@@ -140,7 +139,6 @@
     <ClInclude Include="Dx12Wrapper.h" />
     <ClInclude Include="DXHandler.h" />
     <ClInclude Include="DXPMDBone.h" />
-    <ClInclude Include="DXPMDModel.h" />
     <ClInclude Include="DXResource.h" />
     <ClInclude Include="GIDirectLib\DirectX12lib.h" />
     <ClInclude Include="PMDActor.h" />

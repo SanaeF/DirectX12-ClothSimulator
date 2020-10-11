@@ -1,12 +1,9 @@
 #include "PMDActor.h"
 #include"PMDRenderer.h"
-#include"DXPMDModel.h"
 #include"Dx12Wrapper.h"
+#include"DXVMDMotion.h"
 #include<d3dx12.h>
 #include<sstream>
-
-#include"DXPMDBone.h"
-#include "DXVMDMotion.h"
 
 using namespace Microsoft::WRL;
 using namespace std;
@@ -49,15 +46,15 @@ namespace {
 	}
 }
 
+
 PMDActor::PMDActor(const char* filepath, PMDRenderer& renderer) :
 	_renderer(renderer),
 	_dx12(renderer._dx12),
 	_angle(0.0f)
 {
-
 	Motion.reset(new DXVMDMotion());
 	Motion->setTransWorld();
-	//_transform.world = XMMatrixIdentity();
+	
 	LoadPMDFile(filepath); 
 	Motion->CreateTransformView(_dx12.Device());
 	CreateMaterialData();
@@ -80,7 +77,9 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 	};
 	char signature[3];
 	PMDHeader pmdheader = {};
+
 	string strModelPath = path;
+
 	auto fp = fopen(strModelPath.c_str(), "rb");
 	if (fp == nullptr) {
 		//エラー処理
@@ -89,6 +88,7 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 	}
 	fread(signature, sizeof(signature), 1, fp);
 	fread(&pmdheader, sizeof(pmdheader), 1, fp);
+
 	unsigned int vertNum;//頂点数
 	fread(&vertNum, sizeof(vertNum), 1, fp);
 
@@ -124,17 +124,9 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(_vb.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) {
-		assert(0 && "CreateCommittedResource");
-		return result;
-	}
 
 	unsigned char* vertMap = nullptr;
 	result = _vb->Map(0, nullptr, (void**)&vertMap);
-	if (FAILED(result)) {
-		assert(0 && "Map");
-		return result;
-	}
 	std::copy(vertices.begin(), vertices.end(), vertMap);
 	_vb->Unmap(0, nullptr);
 
@@ -156,10 +148,7 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(_ib.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) {
-		assert(0 && "CreateCommittedResource");
-		return result;
-	}
+
 	//作ったバッファにインデックスデータをコピー
 	unsigned short* mappedIdx = nullptr;
 	_ib->Map(0, nullptr, (void**)&mappedIdx);
@@ -254,65 +243,71 @@ HRESULT PMDActor::LoadPMDFile(const char* path) {
 			_spaResources[i] = _dx12.GetTextureByPath(spaFilePath.c_str());
 		}
 	}
-
-	unsigned short boneNum = 0;
-	fread(&boneNum, sizeof(boneNum), 1, fp);
-
-#pragma pack(1)
-
-	//読み込み用ボーン構造体
-	struct PMDBone {
-		char boneName[20];//ボーン名
-		unsigned short parentNo;//親ボーン番号
-		unsigned short nextNo;//先端のボーン番号
-		unsigned char type;//ボーン種別
-		unsigned short ikBoneNo;//IKボーン番号
-		XMFLOAT3 pos;//ボーンの基準点座標
-	};
-
-#pragma pack()
-	std::vector<PMDBone>pmdBones(boneNum);
-	fread(pmdBones.data(), sizeof(PMDBone), boneNum, fp);
-
-	fclose(fp);
-
-
-	/*std::map<std::string, BoneNode> _boneNodeTable;*/
-	vector<string> boneNames(pmdBones.size());
-	for (int idx = 0; idx < pmdBones.size(); ++idx) {
-		auto& pb = pmdBones[idx];
-		boneNames[idx] = pb.boneName;
-		auto& node = Motion->getBoneNodeTable()[pb.boneName];
-		node.boneIdx = idx;
-		node.startPos = pb.pos;
-	}
-
-	for (auto& pb : pmdBones) {
-		//親インデックスをチェック(あり得ない番号なら飛ばす)
-		if (pb.parentNo >= pmdBones.size()) {
-			continue;
-		}
-		auto parentName = boneNames[pb.parentNo];
-		Motion->getBoneNodeTable()[parentName].children.emplace_back(&Motion->getBoneNodeTable()[pb.boneName]);
-	}
-	Motion->getBoneMatrices().resize(pmdBones.size());
-
-	std::fill(Motion->getBoneMatrices().begin(), Motion->getBoneMatrices().end(), XMMatrixIdentity());
-
+	Motion->BoneLoad(fp);
 }
+
 
 void PMDActor::LoadVMDFile(const char* filepath, const char* name) {
 	Motion->LoadVMDFile(filepath, name);
 }
-
 void PMDActor::PlayAnimation() {
-	_startTime = timeGetTime();
+	Motion->PlayAnimation();
+	//_startTime = timeGetTime();
 }
 
 void PMDActor::MotionUpdate() {
-	Motion->Update(
-		_startTime
+	Motion->Update(_startTime);
+}
+
+
+HRESULT PMDActor::CreateTransformView() {
+	//GPUバッファ作成
+	auto buffSize = sizeof(XMMATRIX)*(1+_boneMatrices.size());
+	buffSize = (buffSize + 0xff)&~0xff;
+	auto result = _dx12.Device()->CreateCommittedResource(
+		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		D3D12_HEAP_FLAG_NONE,
+		&CD3DX12_RESOURCE_DESC::Buffer(buffSize),
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(_transformBuff.ReleaseAndGetAddressOf())
 	);
+	if (FAILED(result)) {
+		assert(SUCCEEDED(result));
+		return result;
+	}
+
+	//マップとコピー
+	result = _transformBuff->Map(0, nullptr, (void**)&_mappedMatrices);
+	if (FAILED(result)) {
+		assert(SUCCEEDED(result));
+		return result;
+	}
+	_mappedMatrices[0] = _transform.world;
+
+
+
+	copy(_boneMatrices.begin(), _boneMatrices.end(), _mappedMatrices + 1);
+
+	//ビューの作成
+	D3D12_DESCRIPTOR_HEAP_DESC transformDescHeapDesc = {};
+	transformDescHeapDesc.NumDescriptors = 1;//とりあえずワールドひとつ
+	transformDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	transformDescHeapDesc.NodeMask = 0;
+
+	transformDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;//デスクリプタヒープ種別
+	result = _dx12.Device()->CreateDescriptorHeap(&transformDescHeapDesc, IID_PPV_ARGS(_transformHeap.ReleaseAndGetAddressOf()));//生成
+	if (FAILED(result)) {
+		assert(SUCCEEDED(result));
+		return result;
+	}
+
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+	cbvDesc.BufferLocation = _transformBuff->GetGPUVirtualAddress();
+	cbvDesc.SizeInBytes = buffSize;
+	_dx12.Device()->CreateConstantBufferView(&cbvDesc, _transformHeap->GetCPUDescriptorHandleForHeapStart());
+
+	return S_OK;
 }
 
 
@@ -329,7 +324,7 @@ HRESULT PMDActor::CreateMaterialData() {
 		IID_PPV_ARGS(_materialBuff.ReleaseAndGetAddressOf())
 	);
 	if (FAILED(result)) {
-		assert(0 && "CreateCommittedResource");
+		assert(SUCCEEDED(result));
 		return result;
 	}
 
@@ -337,7 +332,7 @@ HRESULT PMDActor::CreateMaterialData() {
 	char* mapMaterial = nullptr;
 	result = _materialBuff->Map(0, nullptr, (void**)&mapMaterial);
 	if (FAILED(result)) {
-		assert(0 && "_materialBuff");
+		assert(SUCCEEDED(result));
 		return result;
 	}
 	for (auto& m : _materials) {
@@ -426,8 +421,8 @@ HRESULT PMDActor::CreateMaterialAndTextureView() {
 
 
 void PMDActor::Update() {
-	//_angle += 0.09f;
-	//_mappedMatrices[0] = XMMatrixRotationY(cos(_angle));
+	//_angle += 0.012f;
+	//_mappedMatrices[0] = XMMatrixRotationY(_angle);
 
 	MotionUpdate();
 }
@@ -440,7 +435,7 @@ void PMDActor::Draw() {
 	_dx12.CommandList()->SetDescriptorHeaps(1, transheaps);
 	_dx12.CommandList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
 
-	
+
 
 	ID3D12DescriptorHeap* mdh[] = { _materialHeap.Get() };
 	//マテリアル

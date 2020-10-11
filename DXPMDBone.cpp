@@ -6,6 +6,54 @@ using namespace Microsoft::WRL;
 using namespace std;
 using namespace DirectX;
 
+void DXPMDBone::BoneLoad(FILE* fp) {
+
+	unsigned short boneNum = 0;
+	fread(&boneNum, sizeof(boneNum), 1, fp);
+
+#pragma pack(1)
+
+	//読み込み用ボーン構造体
+	struct PMDBone {
+		char boneName[20];//ボーン名
+		unsigned short parentNo;//親ボーン番号
+		unsigned short nextNo;//先端のボーン番号
+		unsigned char type;//ボーン種別
+		unsigned short ikBoneNo;//IKボーン番号
+		XMFLOAT3 pos;//ボーンの基準点座標
+	};
+
+#pragma pack()
+	std::vector<PMDBone>pmdBones(boneNum);
+	fread(pmdBones.data(), sizeof(PMDBone), boneNum, fp);
+
+	fclose(fp);
+
+
+	/*std::map<std::string, BoneNode> _boneNodeTable;*/
+	vector<string> boneNames(pmdBones.size());
+	for (int idx = 0; idx < pmdBones.size(); ++idx) {
+		auto& pb = pmdBones[idx];
+		boneNames[idx] = pb.boneName;
+		auto& node = _boneNodeTable[pb.boneName];
+		node.boneIdx = idx;
+		node.startPos = pb.pos;
+	}
+
+	for (auto& pb : pmdBones) {
+		//親インデックスをチェック(あり得ない番号なら飛ばす)
+		if (pb.parentNo >= pmdBones.size()) {
+			continue;
+		}
+		auto parentName = boneNames[pb.parentNo];
+		_boneNodeTable[parentName].children.emplace_back(&_boneNodeTable[pb.boneName]);
+	}
+	_boneMatrices.resize(pmdBones.size());
+
+	std::fill(_boneMatrices.begin(), _boneMatrices.end(), XMMatrixIdentity());
+
+}
+
 void DXPMDBone::BoneInitialize() {
 
 	RecursiveMatrixMultiply(&_boneNodeTable["センター"], XMMatrixIdentity());
@@ -14,7 +62,7 @@ void DXPMDBone::BoneInitialize() {
 }
 
 void DXPMDBone::RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat) {
-	//_boneMatrices[node->boneIdx] = mat;
+	_boneMatrices[node->boneIdx] = mat;
 	for (auto& cnode : node->children) {
 
 		RecursiveMatrixMultiply(cnode, _boneMatrices[cnode->boneIdx] * mat);
@@ -22,7 +70,7 @@ void DXPMDBone::RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX&
 	}
 }
 
-void DXPMDBone::setBoneMatrices(BoneNode* node, const DirectX::XMMATRIX mat) {
+void DXPMDBone::setBoneMatrices(BoneNode* node, DirectX::XMMATRIX mat) {
 
 	_boneMatrices[node->boneIdx] = mat;
 

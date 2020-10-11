@@ -7,13 +7,14 @@
 #include<wrl.h>
 
 class DXPMDBone {
-private:
+public:
 	struct BoneNode {
 		int boneIdx;//ボーンインデックス
 		DirectX::XMFLOAT3 startPos;//ボーン基準点(回転中心)
 		DirectX::XMFLOAT3 endPos;
 		std::vector<BoneNode*> children;//子ノード
 	};
+private:
 
 	struct Transform {
 		//内部に持ってるXMMATRIXメンバが16バイトアライメントであるため
@@ -38,6 +39,8 @@ public:
 	void BoneInitialize();
 	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);
 
+	void BoneLoad(FILE* fp);
+
 	std::vector<DirectX::XMMATRIX> getBoneMatrices() {
 		return _boneMatrices;
 	}
@@ -45,7 +48,7 @@ public:
 		return _boneNodeTable;
 	}
 
-	void setBoneMatrices(BoneNode* node, const DirectX::XMMATRIX mat);
+	void setBoneMatrices(BoneNode* node, DirectX::XMMATRIX mat);
 
 	HRESULT CreateTransformView(ComPtr<ID3D12Device> _dev);
 

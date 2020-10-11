@@ -1,5 +1,4 @@
 #pragma once
-
 #include<d3d12.h>
 #include<DirectXMath.h>
 #include<vector>
@@ -8,27 +7,21 @@
 #include<wrl.h>
 #include<memory>
 
-//class DXPMDBone;
-class DXVMDMotion;
-
-class DXPMDModel;
 class Dx12Wrapper;
 class PMDRenderer;
 
-class PMDActor {
+class DXVMDMotion;
+
+class PMDActor{
 	friend PMDRenderer;
 private:
-
 	PMDRenderer& _renderer;
 	Dx12Wrapper& _dx12;
 
+	std::shared_ptr<DXVMDMotion>Motion;
+
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
-
-	//std::shared_ptr<DXPMDModel> VMD_model;
-	//std::shared_ptr<DXPMDBone>Bone;
-
-	std::shared_ptr<DXVMDMotion>Motion;
 
 	//頂点関連
 	ComPtr<ID3D12Resource> _vb = nullptr;
@@ -37,6 +30,7 @@ private:
 	D3D12_INDEX_BUFFER_VIEW _ibView = {};
 
 	ComPtr<ID3D12Resource> _transformMat = nullptr;//座標変換行列(今はワールドのみ)
+	ComPtr<ID3D12DescriptorHeap> _transformHeap = nullptr;//座標変換ヒープ
 
 	//シェーダ側に投げられるマテリアルデータ
 	struct MaterialForHlsl {
@@ -52,13 +46,24 @@ private:
 		int toonIdx; //トゥーン番号
 		bool edgeFlg;//マテリアル毎の輪郭線フラグ
 	};
-
+	
 	//まとめたもの
 	struct Material {
 		unsigned int indicesNum;//インデックス数
 		MaterialForHlsl material;
 		AdditionalMaterial additional;
 	};
+
+	struct Transform {
+		//内部に持ってるXMMATRIXメンバが16バイトアライメントであるため
+		//Transformをnewする際には16バイト境界に確保する
+		void* operator new(size_t size);
+		DirectX::XMMATRIX world;
+	};
+
+	Transform _transform;
+	DirectX::XMMATRIX* _mappedMatrices = nullptr;
+	ComPtr<ID3D12Resource> _transformBuff = nullptr;
 
 	//マテリアル関連
 	std::vector<Material> _materials;
@@ -69,6 +74,17 @@ private:
 	std::vector<ComPtr<ID3D12Resource>> _toonResources;
 
 
+	//ボーン関連
+	std::vector<DirectX::XMMATRIX> _boneMatrices;
+
+	struct BoneNode {
+	int boneIdx;//ボーンインデックス
+	DirectX::XMFLOAT3 startPos;//ボーン基準点(回転中心)
+	DirectX::XMFLOAT3 endPos;
+	std::vector<BoneNode*> children;//子ノード
+	};
+	std::map<std::string, BoneNode> _boneNodeTable;
+
 	//読み込んだマテリアルをもとにマテリアルバッファを作成
 	HRESULT CreateMaterialData();
 
@@ -76,16 +92,35 @@ private:
 	//マテリアル＆テクスチャのビューを作成
 	HRESULT CreateMaterialAndTextureView();
 
+	//座標変換用ビューの生成
+	HRESULT CreateTransformView();
 
 	//PMDファイルのロード
 	HRESULT LoadPMDFile(const char* path);
 
-	DWORD _startTime;
+	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);
 
 	void MotionUpdate();
 
 
 	float _angle;//テスト用Y軸回転
+
+	struct KeyFrame {
+		unsigned int frameNo;//フレーム№(アニメーション開始からの経過時間)
+		DirectX::XMVECTOR quaternion;//クォータニオン
+		DirectX::XMFLOAT2 p1, p2;//ベジェの中間コントロールポイント
+		KeyFrame(unsigned int fno, const DirectX::XMVECTOR& q, const DirectX::XMFLOAT2& ip1, const DirectX::XMFLOAT2& ip2) :
+			frameNo(fno),
+			quaternion(q),
+			p1(ip1),
+			p2(ip2) {}
+	};
+
+	std::unordered_map<std::string, std::vector<KeyFrame>> _motiondata;
+
+	float GetYFromXOnBezier(float x, const DirectX::XMFLOAT2& a, const DirectX::XMFLOAT2& b, uint8_t n = 12);
+
+	DWORD _startTime;
 
 public:
 	PMDActor(const char* filepath, PMDRenderer& renderer);

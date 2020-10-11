@@ -46,9 +46,6 @@
     <Filter Include="ソース ファイル\DX3DActor\PMDData\DXPMDBone">
       <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX3DActor\PMDData\DXPMDModel">
-      <UniqueIdentifier>{af38312a-0dd3-48ef-a078-be8de60fdbd3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DX3DActor\PMDData\VMDMotion">
       <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
     </Filter>
@@ -83,9 +80,6 @@
     </ClInclude>
     <ClInclude Include="DXPMDBone.h">
       <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDBone</Filter>
-    </ClInclude>
-    <ClInclude Include="DXPMDModel.h">
-      <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDModel</Filter>
     </ClInclude>
     <ClInclude Include="DXVMDMotion.h">
       <Filter>ソース ファイル\DX3DActor\PMDData\VMDMotion</Filter>
@@ -140,9 +134,6 @@
     </ClCompile>
     <ClCompile Include="DXPMDBone.cpp">
       <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDBone</Filter>
-    </ClCompile>
-    <ClCompile Include="DXPMDModel.cpp">
-      <Filter>ソース ファイル\DX3DActor\PMDData\DXPMDModel</Filter>
     </ClCompile>
     <ClCompile Include="DXVMDMotion.cpp">
       <Filter>ソース ファイル\DX3DActor\PMDData\VMDMotion</Filter>
