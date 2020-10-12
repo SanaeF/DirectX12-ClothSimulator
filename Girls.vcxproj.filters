@@ -52,6 +52,9 @@
     <Filter Include="ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone">
       <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\DXPMDModel\PMDData\DXPMDMaterial">
+      <UniqueIdentifier>{2eb97d0b-c7a7-41ec-b055-32d21154a2c7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx12Wrapper.h">
@@ -83,6 +86,9 @@
     </ClInclude>
     <ClInclude Include="DXPMDModel.h">
       <Filter>ソース ファイル\DXPMDModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DXPMDMaterial.h">
+      <Filter>ソース ファイル\DXPMDModel\PMDData\DXPMDMaterial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="DXPMDModel.cpp">
       <Filter>ソース ファイル\DXPMDModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DXPMDMaterial.cpp">
+      <Filter>ソース ファイル\DXPMDModel\PMDData\DXPMDMaterial</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

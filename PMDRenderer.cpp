@@ -67,7 +67,7 @@ void PMDRenderer::AddActor(std::shared_ptr<DXPMDModel> actor) {
 	_actors.emplace_back(shared_ptr<DXPMDModel>(actor));
 }
 void PMDRenderer::AddActor(const char* filepath) {
-	AddActor(make_shared<DXPMDModel>(_dx12, make_shared <PMDRenderer>, filepath));
+	AddActor(make_shared<DXPMDModel>(_dx12, filepath));
 }
 
 ID3D12Resource* PMDRenderer::CreateDefaultTexture(size_t width, size_t height) {
@@ -250,6 +250,7 @@ HRESULT PMDRenderer::CreateRootSignature() {
 	}
 	return result;
 }
+
 
 ID3D12PipelineState* PMDRenderer::GetPipelineState() {
 	return _pipeline.Get();

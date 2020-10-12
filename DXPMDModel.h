@@ -15,7 +15,7 @@ class DXVMDMotion;
 class DXPMDModel{
 private:
 	//PMDRenderer& _renderer;
-	std::shared_ptr<PMDRenderer> _renderer;
+	//std::shared_ptr<PMDRenderer> _renderer;
 	std::shared_ptr<Dx12Wrapper> _dx12;
 
 	//シェーダ側に投げられるマテリアルデータ
@@ -63,7 +63,7 @@ private:
 
 public:
 
-	DXPMDModel(std::shared_ptr<Dx12Wrapper> dx, std::shared_ptr<PMDRenderer> renderer, const char* path);
+	DXPMDModel(std::shared_ptr<Dx12Wrapper> dx, const char* path);
 	~DXPMDModel();
 
 	///クローンは頂点およびマテリアルは共通のバッファを見るようにする

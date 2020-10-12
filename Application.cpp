@@ -84,8 +84,7 @@ void Application::Run() {
 	pPMDRenderer.reset(new PMDRenderer(pDx12)); 
 
 	pPMDRenderer->Init();
-	pPMDActor = std::make_shared<DXPMDModel>(pDx12, pPMDRenderer, "model/白河ことり（本校制服）ミク.pmd");
-	//pPMDActor->Move(-10, 0, 0);
+	pPMDActor = std::make_shared<DXPMDModel>(pDx12, "model/白河ことり（本校制服）ミク.pmd");
 	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
 	pPMDRenderer->AddActor(pPMDActor);
 
