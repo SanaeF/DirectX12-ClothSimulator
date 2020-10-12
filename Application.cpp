@@ -81,11 +81,14 @@ bool Application::BoneInitialize() {
 
 void Application::Run() {
 	pDx12.reset(new Dx12Wrapper(_hwnd));
-	pPMDRenderer.reset(new PMDRenderer(*pDx12)); 
-	pPMDActor.reset(new DXPMDModel("model/白河ことり（本校制服）ミク.pmd", *pPMDRenderer));
+	pPMDRenderer.reset(new PMDRenderer(pDx12)); 
 
+	pPMDRenderer->Init();
+	pPMDActor = std::make_shared<DXPMDModel>(pDx12, pPMDRenderer, "model/白河ことり（本校制服）ミク.pmd");
+	//pPMDActor->Move(-10, 0, 0);
 	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
-	pPMDActor->PlayAnimation();
+	pPMDRenderer->AddActor(pPMDActor);
+
 	float angle = 0.0f;
 	MSG msg = {};
 	unsigned int frame = 0;
@@ -101,6 +104,8 @@ void Application::Run() {
 		//全体の描画準備
 		pDx12->BeginDraw();
 		pDx12->Update();
+		pPMDRenderer->Update();
+		pPMDRenderer->BeforeDraw();
 		//PMD用の描画パイプラインに合わせる
 		pDx12->CommandList()->SetPipelineState(pPMDRenderer->GetPipelineState());
 		//ルートシグネチャもPMD用に合わせる
@@ -112,7 +117,7 @@ void Application::Run() {
 		pPMDActor->Draw();
 
 		pDx12->EndDraw();
-
+		//pDx12->Draw(pPMDRenderer);
 		//フリップ
 		pDx12->ScreenFlip();
 		//pDx12->Swapchain()->Present(1, 0);

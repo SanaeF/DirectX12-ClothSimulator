@@ -14,8 +14,9 @@ class DXVMDMotion;
 
 class DXPMDModel{
 private:
-	PMDRenderer& _renderer;
-	Dx12Wrapper& _dx12;
+	//PMDRenderer& _renderer;
+	std::shared_ptr<PMDRenderer> _renderer;
+	std::shared_ptr<Dx12Wrapper> _dx12;
 
 	//シェーダ側に投げられるマテリアルデータ
 	struct MaterialForHlsl {
@@ -49,28 +50,34 @@ private:
 	std::vector<ComPtr<ID3D12Resource>> _sphResources;
 	std::vector<ComPtr<ID3D12Resource>> _spaResources;
 	std::vector<ComPtr<ID3D12Resource>> _toonResources;
+
 	std::shared_ptr<DXVMDMotion>Motion;
 
 	D3D12_VERTEX_BUFFER_VIEW _vbView = {};
 	D3D12_INDEX_BUFFER_VIEW _ibView = {};
-
+	DirectX::XMFLOAT3 _rotator;
+	DirectX::XMFLOAT3 _pos;
 	DWORD _startTime;
 
 	float _angle;//テスト用Y軸回転
 
 public:
 
-	DXPMDModel(const char* filepath, PMDRenderer& renderer);
+	DXPMDModel(std::shared_ptr<Dx12Wrapper> dx, std::shared_ptr<PMDRenderer> renderer, const char* path);
 	~DXPMDModel();
 
 	///クローンは頂点およびマテリアルは共通のバッファを見るようにする
-
 	DXPMDModel* Clone();
 
+	void Move(float x, float y, float z);
+	void Rotate(float x, float y, float z);
 	void LoadVMDFile(const char* filepath, const char* name);
 	void PlayAnimation();
 	void Update();
 	void Draw();
+
+	const DirectX::XMFLOAT3& GetPosition()const;
+	const DirectX::XMFLOAT3& GetRotate()const;
 
 private:
 	//PMDファイルのロード

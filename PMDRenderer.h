@@ -7,11 +7,12 @@
 
 class Dx12Wrapper;
 class DXPMDModel;
-class PMDRenderer
-{
+
+class PMDRenderer{
 	friend DXPMDModel;
 private:
-	Dx12Wrapper& _dx12;
+	//Dx12Wrapper& _dx12;
+
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -28,6 +29,9 @@ private:
 	ID3D12Resource*	CreateBlackTexture();//黒テクスチャの生成
 	ID3D12Resource*	CreateGrayGradationTexture();//グレーテクスチャの生成
 
+	std::vector<std::shared_ptr<DXPMDModel>> _actors;
+	std::shared_ptr<Dx12Wrapper> _dx12;
+
 	//パイプライン初期化
 	HRESULT CreateGraphicsPipelineForPMD();
 	//ルートシグネチャ初期化
@@ -36,10 +40,21 @@ private:
 	bool CheckShaderCompileResult(HRESULT result, ID3DBlob* error = nullptr);
 
 public:
-	PMDRenderer(Dx12Wrapper& dx12);
+	PMDRenderer(std::shared_ptr<Dx12Wrapper> dx12);
 	~PMDRenderer();
-	void Update();
-	void Draw();
+
+	void Init();
+
+	void AddActor(std::shared_ptr<DXPMDModel> actor);
+	void AddActor(const char* filepath);
+
 	ID3D12PipelineState* GetPipelineState();
 	ID3D12RootSignature* GetRootSignature();
+
+	void Update();
+	void BeforeDraw();
+
+	void Draw();
+
+	void AnimationStart();
 };

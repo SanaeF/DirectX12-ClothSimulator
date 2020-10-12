@@ -35,6 +35,8 @@ private:
 	ComPtr<ID3D12Resource> _transformBuff = nullptr;
 	ComPtr<ID3D12DescriptorHeap> _transformHeap = nullptr;//À•W•ÏŠ·ƒq[ƒv
 
+
+
 public:
 	void BoneInitialize();
 	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);

@@ -41,16 +41,16 @@ namespace {
 	}
 }
 
-DXPMDModel::DXPMDModel(const char* filepath, PMDRenderer& renderer) :
+DXPMDModel::DXPMDModel(std::shared_ptr<Dx12Wrapper> dx, std::shared_ptr<PMDRenderer> renderer, const char* path) :
 	_renderer(renderer),
-	_dx12(renderer._dx12),
+	_dx12(dx),
 	_angle(0.0f)
 {
 	Motion.reset(new DXVMDMotion());
 	Motion->setTransWorld();
 	
-	LoadPMDFile(filepath); 
-	Motion->CreateTransformView(_dx12.Device());
+	LoadPMDFile(path);
+	Motion->CreateTransformView(_dx12->Device());
 	CreateMaterialData();
 	CreateMaterialAndTextureView();
 
@@ -105,31 +105,49 @@ void DXPMDModel::Update() {
 }
 
 void DXPMDModel::Draw() {
-	_dx12.CommandList()->IASetVertexBuffers(0, 1, &_vbView);
-	_dx12.CommandList()->IASetIndexBuffer(&_ibView);
+	_dx12->CommandList()->IASetVertexBuffers(0, 1, &_vbView);
+	_dx12->CommandList()->IASetIndexBuffer(&_ibView);
 
 	ID3D12DescriptorHeap* transheaps[] = { Motion->getTransHeap().Get() };
-	_dx12.CommandList()->SetDescriptorHeaps(1, transheaps);
-	_dx12.CommandList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
+	_dx12->CommandList()->SetDescriptorHeaps(1, transheaps);
+	_dx12->CommandList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
 
 
 
 	ID3D12DescriptorHeap* mdh[] = { _materialHeap.Get() };
 	//マテリアル
-	_dx12.CommandList()->SetDescriptorHeaps(1, mdh);
+	_dx12->CommandList()->SetDescriptorHeaps(1, mdh);
 
 	auto materialH = _materialHeap->GetGPUDescriptorHandleForHeapStart();
 	unsigned int idxOffset = 0;
 
-	auto cbvsrvIncSize = _dx12.Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 5;
+	auto cbvsrvIncSize = _dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 5;
 	for (auto& m : _materials) {
-		_dx12.CommandList()->SetGraphicsRootDescriptorTable(2, materialH);
-		_dx12.CommandList()->DrawIndexedInstanced(m.indicesNum, 1, idxOffset, 0, 0);
+		_dx12->CommandList()->SetGraphicsRootDescriptorTable(2, materialH);
+		_dx12->CommandList()->DrawIndexedInstanced(m.indicesNum, 1, idxOffset, 0, 0);
 		materialH.ptr += cbvsrvIncSize;
 		idxOffset += m.indicesNum;
 	}
 
 }
+//
+//void DXPMDModel::Move(float x, float y, float z) {
+//	_pos.x += x;
+//	_pos.y += y;
+//	_pos.z += z;
+//}
+//void DXPMDModel::Rotate(float x, float y, float z) {
+//	_rotator.x += x;
+//	_rotator.y += y;
+//	_rotator.z += z;
+//}
+//
+//const XMFLOAT3& DXPMDModel::GetPosition()const {
+//	return _pos;
+//}
+//const XMFLOAT3& DXPMDModel::GetRotate()const {
+//	return _rotator;
+//}
 
 void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* fp) {
 #pragma pack(1)//ここから1バイトパッキング…アライメントは発生しない
@@ -156,7 +174,7 @@ void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* f
 	fread(&indicesNum, sizeof(indicesNum), 1, fp);//
 
 	//UPLOAD(確保は可能)
-	auto result = _dx12.Device()->CreateCommittedResource(
+	auto result = _dx12->Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(vertices.size()),
@@ -180,7 +198,7 @@ void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* f
 
 	//設定は、バッファのサイズ以外頂点バッファの設定を使いまわして
 	//OKだと思います。
-	result = _dx12.Device()->CreateCommittedResource(
+	result = _dx12->Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(indices.size() * sizeof(indices[0])),
@@ -225,7 +243,7 @@ void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* f
 		//トゥーンリソースの読み込み
 		char toonFilePath[32];
 		sprintf(toonFilePath, "toon/toon%02d.bmp", pmdMaterials[i].toonIdx + 1);
-		_toonResources[i] = _dx12.GetTextureByPath(toonFilePath);
+		_toonResources[i] = _dx12->GetTextureByPath(toonFilePath);
 
 		if (strlen(pmdMaterials[i].texFilePath) == 0) {
 			_textureResources[i] = nullptr;
@@ -271,15 +289,15 @@ void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* f
 		//モデルとテクスチャパスからアプリケーションからのテクスチャパスを得る
 		if (texFileName != "") {
 			auto texFilePath = GetTexturePathFromModelAndTexPath(strModelPath, texFileName.c_str());
-			_textureResources[i] = _dx12.GetTextureByPath(texFilePath.c_str());
+			_textureResources[i] = _dx12->GetTextureByPath(texFilePath.c_str());
 		}
 		if (sphFileName != "") {
 			auto sphFilePath = GetTexturePathFromModelAndTexPath(strModelPath, sphFileName.c_str());
-			_sphResources[i] = _dx12.GetTextureByPath(sphFilePath.c_str());
+			_sphResources[i] = _dx12->GetTextureByPath(sphFilePath.c_str());
 		}
 		if (spaFileName != "") {
 			auto spaFilePath = GetTexturePathFromModelAndTexPath(strModelPath, spaFileName.c_str());
-			_spaResources[i] = _dx12.GetTextureByPath(spaFilePath.c_str());
+			_spaResources[i] = _dx12->GetTextureByPath(spaFilePath.c_str());
 		}
 	}
 }
@@ -288,7 +306,7 @@ HRESULT DXPMDModel::CreateMaterialData() {
 	//マテリアルバッファを作成
 	auto materialBuffSize = sizeof(MaterialForHlsl);
 	materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
-	auto result = _dx12.Device()->CreateCommittedResource(
+	auto result = _dx12->Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
 		D3D12_HEAP_FLAG_NONE,
 		&CD3DX12_RESOURCE_DESC::Buffer(materialBuffSize * _materials.size()),//勿体ないけど仕方ないですね
@@ -316,76 +334,4 @@ HRESULT DXPMDModel::CreateMaterialData() {
 
 	return S_OK;
 
-}
-
-HRESULT DXPMDModel::CreateMaterialAndTextureView() {
-	D3D12_DESCRIPTOR_HEAP_DESC materialDescHeapDesc = {};
-	materialDescHeapDesc.NumDescriptors = _materials.size() * 5;//マテリアル数ぶん(定数1つ、テクスチャ3つ)
-	materialDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	materialDescHeapDesc.NodeMask = 0;
-
-	materialDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;//デスクリプタヒープ種別
-	auto result = _dx12.Device()->CreateDescriptorHeap(&materialDescHeapDesc, IID_PPV_ARGS(_materialHeap.ReleaseAndGetAddressOf()));//生成
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
-	auto materialBuffSize = sizeof(MaterialForHlsl);
-	materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
-	D3D12_CONSTANT_BUFFER_VIEW_DESC matCBVDesc = {};
-	matCBVDesc.BufferLocation = _materialBuff->GetGPUVirtualAddress();
-	matCBVDesc.SizeInBytes = materialBuffSize;
-
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;//後述
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;//ミップマップは使用しないので1
-	CD3DX12_CPU_DESCRIPTOR_HANDLE matDescHeapH(_materialHeap->GetCPUDescriptorHandleForHeapStart());
-	auto incSize = _dx12.Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	for (int i = 0; i < _materials.size(); ++i) {
-		//マテリアル固定バッファビュー
-		_dx12.Device()->CreateConstantBufferView(&matCBVDesc, matDescHeapH);
-		matDescHeapH.ptr += incSize;
-		matCBVDesc.BufferLocation += materialBuffSize;
-		if (_textureResources[i] == nullptr) {
-			srvDesc.Format = _renderer._whiteTex->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_renderer._whiteTex.Get(), &srvDesc, matDescHeapH);
-		}
-		else {
-			srvDesc.Format = _textureResources[i]->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_textureResources[i].Get(), &srvDesc, matDescHeapH);
-		}
-		matDescHeapH.Offset(incSize);
-
-		if (_sphResources[i] == nullptr) {
-			srvDesc.Format = _renderer._whiteTex->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_renderer._whiteTex.Get(), &srvDesc, matDescHeapH);
-		}
-		else {
-			srvDesc.Format = _sphResources[i]->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_sphResources[i].Get(), &srvDesc, matDescHeapH);
-		}
-		matDescHeapH.ptr += incSize;
-
-		if (_spaResources[i] == nullptr) {
-			srvDesc.Format = _renderer._blackTex->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_renderer._blackTex.Get(), &srvDesc, matDescHeapH);
-		}
-		else {
-			srvDesc.Format = _spaResources[i]->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_spaResources[i].Get(), &srvDesc, matDescHeapH);
-		}
-		matDescHeapH.ptr += incSize;
-
-
-		if (_toonResources[i] == nullptr) {
-			srvDesc.Format = _renderer._gradTex->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_renderer._gradTex.Get(), &srvDesc, matDescHeapH);
-		}
-		else {
-			srvDesc.Format = _toonResources[i]->GetDesc().Format;
-			_dx12.Device()->CreateShaderResourceView(_toonResources[i].Get(), &srvDesc, matDescHeapH);
-		}
-		matDescHeapH.ptr += incSize;
-	}
 }

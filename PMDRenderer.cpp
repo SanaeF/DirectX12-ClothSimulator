@@ -2,9 +2,11 @@
 #include<d3dx12.h>
 #include<cassert>
 #include<d3dcompiler.h>
-#include"Dx12Wrapper.h"
 #include<string>
 #include<algorithm>
+
+#include"Dx12Wrapper.h"
+#include"DXPMDModel.h"
 
 using namespace std;
 
@@ -17,13 +19,13 @@ namespace {
 	}
 }
 
-PMDRenderer::PMDRenderer(Dx12Wrapper& dx12) :_dx12(dx12)
+PMDRenderer::PMDRenderer(shared_ptr<Dx12Wrapper> dx12) :_dx12(dx12)
 {
-	assert(SUCCEEDED(CreateRootSignature()));
-	assert(SUCCEEDED(CreateGraphicsPipelineForPMD()));
-	_whiteTex = CreateWhiteTexture();
-	_blackTex = CreateBlackTexture();
-	_gradTex = CreateGrayGradationTexture();
+	//assert(SUCCEEDED(CreateRootSignature()));
+	//assert(SUCCEEDED(CreateGraphicsPipelineForPMD()));
+	//_whiteTex = CreateWhiteTexture();
+	//_blackTex = CreateBlackTexture();
+	//_gradTex = CreateGrayGradationTexture();
 }
 
 
@@ -32,21 +34,47 @@ PMDRenderer::~PMDRenderer()
 }
 
 
-void
-PMDRenderer::Update() {
-
-}
-void
-PMDRenderer::Draw() {
+void PMDRenderer::Update() {
 
 }
 
-ID3D12Resource*
-PMDRenderer::CreateDefaultTexture(size_t width, size_t height) {
+void
+PMDRenderer::BeforeDraw() {
+	auto cmdlist = _dx12->CommandList();
+	cmdlist->SetPipelineState(_pipeline.Get());
+	cmdlist->SetGraphicsRootSignature(_rootSignature.Get());
+
+}
+
+void PMDRenderer::Draw() {
+	for (auto& actor : _actors) {
+		actor->Draw();
+	}
+}
+
+void PMDRenderer::Init() {
+	CreateRootSignature();
+	CreateGraphicsPipelineForPMD();
+}
+
+void PMDRenderer::AnimationStart() {
+	for (auto& actor : _actors) {
+		actor->PlayAnimation();
+	}
+}
+
+void PMDRenderer::AddActor(std::shared_ptr<DXPMDModel> actor) {
+	_actors.emplace_back(shared_ptr<DXPMDModel>(actor));
+}
+void PMDRenderer::AddActor(const char* filepath) {
+	AddActor(make_shared<DXPMDModel>(_dx12, make_shared <PMDRenderer>, filepath));
+}
+
+ID3D12Resource* PMDRenderer::CreateDefaultTexture(size_t width, size_t height) {
 	auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height);
 	auto texHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
 	ID3D12Resource* buff = nullptr;
-	auto result = _dx12.Device()->CreateCommittedResource(
+	auto result = _dx12->Device()->CreateCommittedResource(
 		&texHeapProp,
 		D3D12_HEAP_FLAG_NONE,//特に指定なし
 		&resDesc,
@@ -61,8 +89,7 @@ PMDRenderer::CreateDefaultTexture(size_t width, size_t height) {
 	return buff;
 }
 
-ID3D12Resource*
-PMDRenderer::CreateWhiteTexture() {
+ID3D12Resource* PMDRenderer::CreateWhiteTexture() {
 
 	ID3D12Resource* whiteBuff = CreateDefaultTexture(4, 4);
 
@@ -73,8 +100,7 @@ PMDRenderer::CreateWhiteTexture() {
 	assert(SUCCEEDED(result));
 	return whiteBuff;
 }
-ID3D12Resource*
-PMDRenderer::CreateBlackTexture() {
+ID3D12Resource* PMDRenderer::CreateBlackTexture() {
 
 	ID3D12Resource* blackBuff = CreateDefaultTexture(4, 4);
 	std::vector<unsigned char> data(4 * 4 * 4);
@@ -84,8 +110,7 @@ PMDRenderer::CreateBlackTexture() {
 	assert(SUCCEEDED(result));
 	return blackBuff;
 }
-ID3D12Resource*
-PMDRenderer::CreateGrayGradationTexture() {
+ID3D12Resource* PMDRenderer::CreateGrayGradationTexture() {
 	ID3D12Resource* gradBuff = CreateDefaultTexture(4, 256);
 	//上が白くて下が黒いテクスチャデータを作成
 	std::vector<unsigned int> data(4 * 256);
@@ -102,8 +127,7 @@ PMDRenderer::CreateGrayGradationTexture() {
 	return gradBuff;
 }
 
-bool
-PMDRenderer::CheckShaderCompileResult(HRESULT result, ID3DBlob* error) {
+bool PMDRenderer::CheckShaderCompileResult(HRESULT result, ID3DBlob* error) {
 	if (FAILED(result)) {
 		if (result == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND)) {
 			::OutputDebugStringA("ファイルが見当たりません");
@@ -123,8 +147,7 @@ PMDRenderer::CheckShaderCompileResult(HRESULT result, ID3DBlob* error) {
 }
 
 //パイプライン初期化
-HRESULT
-PMDRenderer::CreateGraphicsPipelineForPMD() {
+HRESULT PMDRenderer::CreateGraphicsPipelineForPMD() {
 	ComPtr<ID3DBlob> vsBlob = nullptr;
 	ComPtr<ID3DBlob> psBlob = nullptr;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
@@ -186,14 +209,13 @@ PMDRenderer::CreateGraphicsPipelineForPMD() {
 	gpipeline.SampleDesc.Count = 1;//サンプリングは1ピクセルにつき１
 	gpipeline.SampleDesc.Quality = 0;//クオリティは最低
 
-	result = _dx12.Device()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(_pipeline.ReleaseAndGetAddressOf()));
+	result = _dx12->Device()->CreateGraphicsPipelineState(&gpipeline, IID_PPV_ARGS(_pipeline.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) {
 		assert(SUCCEEDED(result));
 	}
 	return result;}
 //ルートシグネチャ初期化
-HRESULT
-PMDRenderer::CreateRootSignature() {
+HRESULT PMDRenderer::CreateRootSignature() {
 	//レンジ
 	CD3DX12_DESCRIPTOR_RANGE  descTblRanges[4] = {};//テクスチャと定数の２つ
 	descTblRanges[0].BoneInitialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);//定数[b0](ビュープロジェクション用)
@@ -221,7 +243,7 @@ PMDRenderer::CreateRootSignature() {
 		assert(SUCCEEDED(result));
 		return result;
 	}
-	result = _dx12.Device()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
+	result = _dx12->Device()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) {
 		assert(SUCCEEDED(result));
 		return result;
@@ -229,12 +251,10 @@ PMDRenderer::CreateRootSignature() {
 	return result;
 }
 
-ID3D12PipelineState*
-PMDRenderer::GetPipelineState() {
+ID3D12PipelineState* PMDRenderer::GetPipelineState() {
 	return _pipeline.Get();
 }
 
-ID3D12RootSignature*
-PMDRenderer::GetRootSignature() {
+ID3D12RootSignature* PMDRenderer::GetRootSignature() {
 	return _rootSignature.Get();
 }
