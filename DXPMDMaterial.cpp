@@ -360,3 +360,10 @@ ID3D12Resource* DXPMDMaterial::CreateGrayGradationTexture(ComPtr< ID3D12Device> 
 	assert(SUCCEEDED(result));
 	return gradBuff;
 }
+
+D3D12_VERTEX_BUFFER_VIEW DXPMDMaterial::getVB_View() {
+	return _vbView;
+}
+D3D12_INDEX_BUFFER_VIEW DXPMDMaterial::getIB_View() {
+	return _ibView;
+}

@@ -38,7 +38,7 @@ private:
 
 
 public:
-	void BoneInitialize();
+	void treeBoneCopy();
 	void RecursiveMatrixMultiply(BoneNode* node, const DirectX::XMMATRIX& mat);
 
 	void BoneLoad(FILE* fp);

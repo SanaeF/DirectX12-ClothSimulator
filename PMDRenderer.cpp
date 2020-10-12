@@ -218,10 +218,10 @@ HRESULT PMDRenderer::CreateGraphicsPipelineForPMD() {
 HRESULT PMDRenderer::CreateRootSignature() {
 	//レンジ
 	CD3DX12_DESCRIPTOR_RANGE  descTblRanges[4] = {};//テクスチャと定数の２つ
-	descTblRanges[0].BoneInitialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);//定数[b0](ビュープロジェクション用)
-	descTblRanges[1].BoneInitialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);//定数[b1](ワールド、ボーン用)
-	descTblRanges[2].BoneInitialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);//定数[b2](マテリアル用)
-	descTblRanges[3].BoneInitialize(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0);//テクスチャ４つ(基本とsphとspaとトゥーン)
+	descTblRanges[0].Initialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 0);//定数[b0](ビュープロジェクション用)
+	descTblRanges[1].Initialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 1);//定数[b1](ワールド、ボーン用)
+	descTblRanges[2].Initialize(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, 2);//定数[b2](マテリアル用)
+	descTblRanges[3].Initialize(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 0);//テクスチャ４つ(基本とsphとspaとトゥーン)
 
 	//ルートパラメータ
 	CD3DX12_ROOT_PARAMETER rootParams[3] = {};
@@ -230,11 +230,11 @@ HRESULT PMDRenderer::CreateRootSignature() {
 	rootParams[2].InitAsDescriptorTable(2, &descTblRanges[2]);//マテリアル周り
 
 	CD3DX12_STATIC_SAMPLER_DESC samplerDescs[2] = {};
-	samplerDescs[0].BoneInitialize(0);
-	samplerDescs[1].BoneInitialize(1, D3D12_FILTER_ANISOTROPIC, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
+	samplerDescs[0].Initialize(0);
+	samplerDescs[1].Initialize(1, D3D12_FILTER_ANISOTROPIC, D3D12_TEXTURE_ADDRESS_MODE_CLAMP, D3D12_TEXTURE_ADDRESS_MODE_CLAMP);
 
 	CD3DX12_ROOT_SIGNATURE_DESC rootSignatureDesc = {};
-	rootSignatureDesc.BoneInitialize(3, rootParams, 2, samplerDescs, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+	rootSignatureDesc.Initialize(3, rootParams, 2, samplerDescs, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 	ComPtr<ID3DBlob> rootSigBlob = nullptr;
 	ComPtr<ID3DBlob> errorBlob = nullptr;

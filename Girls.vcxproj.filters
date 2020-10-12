@@ -28,9 +28,6 @@
     <Filter Include="リソース ファイル\Shader">
       <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DX3DRenderer">
-      <UniqueIdentifier>{8f96b75e-1ef9-42a4-beb1-84ad1c009c53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Dx12Wrapper\RenderTargetView">
       <UniqueIdentifier>{ed01f120-1ebe-4337-846a-d3c8468c415c}</UniqueIdentifier>
     </Filter>
@@ -40,20 +37,32 @@
     <Filter Include="ソース ファイル\DXHandler">
       <UniqueIdentifier>{ac04ad31-b41f-4ac3-a1f2-e8cfcc94c7d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXPMDModel">
+    <Filter Include="ソース ファイル\PMD">
+      <UniqueIdentifier>{cc5969b0-ae42-493a-ab80-743f8fe778d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\PMD\DXPMDModel">
       <UniqueIdentifier>{3e3ab550-147d-4eae-8129-0719e8cb2a83}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXPMDModel\PMDData">
+    <Filter Include="ソース ファイル\PMD\DXPMDModel\PMDData">
       <UniqueIdentifier>{73814352-a52b-4b2f-b4e0-bb74b000c52c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXPMDModel\PMDData\VMDMotion">
+    <Filter Include="ソース ファイル\PMD\DXPMDModel\PMDData\VMDMotion">
       <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone">
+    <Filter Include="ソース ファイル\PMD\DXPMDModel\PMDData\VMDMotion\PMDBone">
       <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXPMDModel\PMDData\DXPMDMaterial">
+    <Filter Include="ソース ファイル\PMD\DXPMDModel\PMDData\DXPMDMaterial">
       <UniqueIdentifier>{2eb97d0b-c7a7-41ec-b055-32d21154a2c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\PMD\DX3DRenderer">
+      <UniqueIdentifier>{8f96b75e-1ef9-42a4-beb1-84ad1c009c53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics">
+      <UniqueIdentifier>{173db223-9681-4d80-9715-58dbcebb6db3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\3DModel">
+      <UniqueIdentifier>{b160fe52-92be-4a99-b700-f89f9219b9f2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -61,7 +70,7 @@
       <Filter>ソース ファイル\Dx12Wrapper</Filter>
     </ClInclude>
     <ClInclude Include="PMDRenderer.h">
-      <Filter>ソース ファイル\DX3DRenderer</Filter>
+      <Filter>ソース ファイル\PMD\DX3DRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>ソース ファイル\Application</Filter>
@@ -79,16 +88,16 @@
       <Filter>ソース ファイル\DXHandler</Filter>
     </ClInclude>
     <ClInclude Include="DXPMDBone.h">
-      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
     </ClInclude>
     <ClInclude Include="DXVMDMotion.h">
-      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\VMDMotion</Filter>
     </ClInclude>
     <ClInclude Include="DXPMDModel.h">
-      <Filter>ソース ファイル\DXPMDModel</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel</Filter>
     </ClInclude>
     <ClInclude Include="DXPMDMaterial.h">
-      <Filter>ソース ファイル\DXPMDModel\PMDData\DXPMDMaterial</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -121,7 +130,7 @@
       <Filter>ソース ファイル\Dx12Wrapper</Filter>
     </ClCompile>
     <ClCompile Include="PMDRenderer.cpp">
-      <Filter>ソース ファイル\DX3DRenderer</Filter>
+      <Filter>ソース ファイル\PMD\DX3DRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>ソース ファイル\Application</Filter>
@@ -136,16 +145,16 @@
       <Filter>ソース ファイル\DXHandler</Filter>
     </ClCompile>
     <ClCompile Include="DXPMDBone.cpp">
-      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
     </ClCompile>
     <ClCompile Include="DXVMDMotion.cpp">
-      <Filter>ソース ファイル\DXPMDModel\PMDData\VMDMotion</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\VMDMotion</Filter>
     </ClCompile>
     <ClCompile Include="DXPMDModel.cpp">
-      <Filter>ソース ファイル\DXPMDModel</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel</Filter>
     </ClCompile>
     <ClCompile Include="DXPMDMaterial.cpp">
-      <Filter>ソース ファイル\DXPMDModel\PMDData\DXPMDMaterial</Filter>
+      <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

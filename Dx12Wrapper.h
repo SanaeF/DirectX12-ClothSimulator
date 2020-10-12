@@ -10,6 +10,7 @@
 
 class DXResource;
 class DX_MultRend;
+class PMDRenderer;
 
 class Dx12Wrapper{
 
@@ -86,7 +87,7 @@ class Dx12Wrapper{
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
-
+	void Draw(std::shared_ptr<PMDRenderer> renderer);
 	void Update();
 	void BeginDraw();
 	void EndDraw();

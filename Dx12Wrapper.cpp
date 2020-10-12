@@ -5,6 +5,7 @@
 #include "DXResource.h"
 #include "DX_MultRend.h"
 #include"Application.h"
+#include"PMDRenderer.h"
 
 #pragma comment(lib,"DirectXTex.lib")
 #pragma comment(lib,"d3d12.lib")
@@ -538,6 +539,14 @@ void Dx12Wrapper::Update() {
 		Resource->getResource(),
 		_cmdList
 	);
+}
+
+void Dx12Wrapper::Draw(shared_ptr<PMDRenderer> renderer) {
+	_cmdList->SetPipelineState(Render->getPipeline());
+	_cmdList->SetPipelineState(renderer->GetPipelineState());
+	//ルートシグネチャもPMD用に合わせる
+	_cmdList->SetGraphicsRootSignature(renderer->GetRootSignature());
+	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Dx12Wrapper::BeginDraw() {

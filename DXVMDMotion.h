@@ -32,11 +32,9 @@ private:
 public:
 	void LoadVMDFile(const char* filepath, const char* name);
 
-	bool Update(
-		DWORD startTime
-	);
+	bool Update(DWORD startTime);
 
-	void PlayAnimation();
+	void PlayAnimation(DWORD _startTime);
 
 	DXVMDMotion() {
 	}

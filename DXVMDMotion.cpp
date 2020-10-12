@@ -32,7 +32,7 @@ void DXVMDMotion::LoadVMDFile(const char* filepath, const char* name) {
 	
 	boneMotion();
 
-	BoneInitialize();
+	treeBoneCopy();
 }
 
 float GetYFromXOnBezier(float x, const XMFLOAT2& a, const XMFLOAT2& b, uint8_t n) {
@@ -58,12 +58,12 @@ float GetYFromXOnBezier(float x, const XMFLOAT2& a, const XMFLOAT2& b, uint8_t n
 	return t * t * t + 3 * t * t * r * b.y + 3 * t * r * r * a.y;
 }
 
-void DXVMDMotion::PlayAnimation() {
-	_startTime = timeGetTime();
+void DXVMDMotion::PlayAnimation(DWORD startTime) {
+	_startTime = startTime;
 }
 
 bool DXVMDMotion::Update(DWORD startTime) {
-	auto elapsedTime = timeGetTime() - _startTime;
+	auto elapsedTime = startTime - _startTime;
 	unsigned int frameNo = 30 * (elapsedTime / 1000.0f);
 	for (auto& bonemotion : mKeyFrameData) {
 		auto node = getBoneNodeTable()[bonemotion.first];
@@ -92,7 +92,7 @@ bool DXVMDMotion::Update(DWORD startTime) {
 			XMMatrixTranslation(pos.x, pos.y, pos.z);//å≥ÇÃç¿ïWÇ…ñﬂÇ∑
 		setBoneMatrices(&node, mat);
 	}
-	BoneInitialize();
+	treeBoneCopy();
 }
 
 void DXVMDMotion::keyMotion() {

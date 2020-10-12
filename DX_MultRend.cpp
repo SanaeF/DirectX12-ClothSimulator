@@ -14,43 +14,29 @@ using namespace DirectX;
 using namespace std;
 
 bool DX_MultRend::descRange() {
-	range[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;//b
-	range[0].BaseShaderRegister = 0;//0
-	range[0].NumDescriptors = 1;
-
-	range[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//t
-	range[1].BaseShaderRegister = 0;//0
-	range[1].NumDescriptors = 1;
-
-	range[2].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//t
-	range[2].BaseShaderRegister = 1;//1
-	range[2].NumDescriptors = 1;
+	range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;//b
+	range.BaseShaderRegister = 0;//0
+	range.NumDescriptors = 1;
 
 	return true;
 }
 
 bool DX_MultRend::rootParam() {
-	rp[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//
-	rp[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rp[0].DescriptorTable.pDescriptorRanges = &range[0];
-	rp[0].DescriptorTable.NumDescriptorRanges = 1;
+	rp.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//
+	rp.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rp.DescriptorTable.pDescriptorRanges = &range;
+	rp.DescriptorTable.NumDescriptorRanges = 1;
 
-	rp[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//
-	rp[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rp[1].DescriptorTable.pDescriptorRanges = &range[1];
-	rp[1].DescriptorTable.NumDescriptorRanges = 1;
-
-	rp[2].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;//
-	rp[2].ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
-	rp[2].DescriptorTable.pDescriptorRanges = &range[2];
-	rp[2].DescriptorTable.NumDescriptorRanges = 1;
 
 	return true;
 }
 
 bool DX_MultRend::rootSignature(ComPtr< ID3D12Device> device) {
-	rsDesc.NumParameters = 0;
-	rsDesc.pParameters = 0;
+	D3D12_STATIC_SAMPLER_DESC sampler = CD3DX12_STATIC_SAMPLER_DESC(0);
+	rsDesc.NumParameters = 1;
+	rsDesc.pParameters = &rp;
+	rsDesc.NumStaticSamplers = 1;
+	rsDesc.pStaticSamplers = &sampler;
 	rsDesc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 
 	auto result = D3D12SerializeRootSignature(&rsDesc, D3D_ROOT_SIGNATURE_VERSION_1, rsBlob.ReleaseAndGetAddressOf(), errBlob.ReleaseAndGetAddressOf());
@@ -296,4 +282,8 @@ void DX_MultRend::DrawScreen(ComPtr<ID3D12Resource> ScPolyRes, ComPtr < ID3D12Gr
 
 void DX_MultRend::ScreenFlip() {
 
+}
+
+ID3D12PipelineState*DX_MultRend::getPipeline() {
+	return mScPolyPipeline.Get();
 }

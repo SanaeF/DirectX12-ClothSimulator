@@ -9,9 +9,10 @@
 
 class DX_MultRend {
 private:
-
-	D3D12_DESCRIPTOR_RANGE range[3] = {};
-	D3D12_ROOT_PARAMETER rp[3] = {};
+	D3D12_DESCRIPTOR_RANGE range = {};
+	D3D12_ROOT_PARAMETER rp = {};
+	//D3D12_DESCRIPTOR_RANGE range[3] = {};
+	//D3D12_ROOT_PARAMETER rp[3] = {};
 
 	D3D12_ROOT_SIGNATURE_DESC rsDesc = {};
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpsDesc = {};
@@ -58,6 +59,8 @@ public:
 		D3D12_RESOURCE_STATES after,
 		ComPtr < ID3D12GraphicsCommandList> _cmdList
 	);
+
+	ID3D12PipelineState*getPipeline();
 
 	DX_MultRend()
 	{

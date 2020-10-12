@@ -68,6 +68,16 @@ public:
 
 	HRESULT CreateMaterialAndTextureView(ComPtr< ID3D12Device> _dev);
 
+	D3D12_VERTEX_BUFFER_VIEW getVB_View();
+	D3D12_INDEX_BUFFER_VIEW getIB_View();
+
+	std::vector<Material> getMaterial() {
+		return _materials;
+	}
+	ComPtr<ID3D12DescriptorHeap> getMatHeap() {
+		return _materialHeap;
+	}
+
 	DXPMDMaterial(Dx12Wrapper& DX12);
 
 };

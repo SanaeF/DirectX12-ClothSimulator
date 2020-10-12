@@ -72,7 +72,7 @@ void Application::ShowWin() {
 }
 
 
-bool Application::BoneInitialize() {
+bool Application::Initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
 	//DirectX12ラッパー生成＆初期化
@@ -87,6 +87,10 @@ void Application::Run() {
 	pPMDActor = std::make_shared<DXPMDModel>(pDx12, "model/白河ことり（本校制服）ミク.pmd");
 	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
 	pPMDRenderer->AddActor(pPMDActor);
+
+	auto a = std::make_shared<DXPMDModel>(pDx12, "model/鷺澤美咲ミク.pmd");
+	a->LoadVMDFile("motion/motion.vmd", "pose");
+	pPMDRenderer->AddActor(a);
 
 	float angle = 0.0f;
 	MSG msg = {};
@@ -105,13 +109,11 @@ void Application::Run() {
 		pDx12->Update();
 		pPMDRenderer->Update();
 		pPMDRenderer->BeforeDraw();
-		//PMD用の描画パイプラインに合わせる
-		pDx12->CommandList()->SetPipelineState(pPMDRenderer->GetPipelineState());
-		//ルートシグネチャもPMD用に合わせる
-		pDx12->CommandList()->SetGraphicsRootSignature(pPMDRenderer->GetRootSignature());
-		pDx12->CommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		pDx12->SetScene();
 
+		pDx12->Draw(pPMDRenderer);
+
+
+		pDx12->SetScene();
 		pPMDActor->Update();
 		pPMDActor->Draw();
 

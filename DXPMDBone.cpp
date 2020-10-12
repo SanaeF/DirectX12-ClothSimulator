@@ -54,7 +54,7 @@ void DXPMDBone::BoneLoad(FILE* fp) {
 
 }
 
-void DXPMDBone::BoneInitialize() {
+void DXPMDBone::treeBoneCopy() {
 
 	RecursiveMatrixMultiply(&_boneNodeTable["ÉZÉìÉ^Å["], XMMatrixIdentity());
 	copy(_boneMatrices.begin(), _boneMatrices.end(), _mappedMatrices + 1);
