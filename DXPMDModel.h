@@ -9,6 +9,7 @@
 
 class Dx12Wrapper;
 class PMDRenderer;
+class DXPMDMaterial;
 
 class DXVMDMotion;
 
@@ -17,7 +18,7 @@ private:
 	//PMDRenderer& _renderer;
 	//std::shared_ptr<PMDRenderer> _renderer;
 	std::shared_ptr<Dx12Wrapper> _dx12;
-
+	std::shared_ptr <DXPMDMaterial> mMaterial;
 	//シェーダ側に投げられるマテリアルデータ
 	struct MaterialForHlsl {
 		DirectX::XMFLOAT3 diffuse; //ディフューズ色

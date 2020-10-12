@@ -1,6 +1,7 @@
 #include"DXPMDModel.h"
 #include"PMDRenderer.h"
 #include"Dx12Wrapper.h"
+#include"DXPMDMaterial.h"
 #include"DXVMDMotion.h"
 #include<d3dx12.h>
 #include<sstream>
@@ -46,12 +47,13 @@ DXPMDModel::DXPMDModel(std::shared_ptr<Dx12Wrapper> dx, const char* path) :
 	_angle(0.0f)
 {
 	Motion.reset(new DXVMDMotion());
+	mMaterial.reset(new DXPMDMaterial(*dx));
 	Motion->setTransWorld();
 	
 	LoadPMDFile(path);
 	Motion->CreateTransformView(_dx12->Device());
-	CreateMaterialData();
-	CreateMaterialAndTextureView();
+	mMaterial->CreateMaterialData(_dx12->Device()); //CreateMaterialData();
+	mMaterial->CreateMaterialAndTextureView(_dx12->Device()); //CreateMaterialAndTextureView();
 
 }
 
@@ -82,7 +84,8 @@ void DXPMDModel::LoadPMDFile(const char* path) {
 	unsigned int vertNum;//頂点数
 	fread(&vertNum, sizeof(vertNum), 1, fp);
 
-	LoadMaterial(vertNum, strModelPath, fp);
+	mMaterial->LoadMaterial(*_dx12, vertNum, strModelPath, fp);
+	//LoadMaterial(vertNum, strModelPath, fp);
 
 	Motion->BoneLoad(fp);
 }
@@ -302,63 +305,66 @@ void DXPMDModel::LoadMaterial(unsigned int vertNum, string strModelPath, FILE* f
 }
 
 HRESULT DXPMDModel::CreateMaterialData() {
-	//マテリアルバッファを作成
-	auto materialBuffSize = sizeof(MaterialForHlsl);
-	materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
-	auto result = _dx12->Device()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(materialBuffSize * _materials.size()),//勿体ないけど仕方ないですね
-		D3D12_RESOURCE_STATE_GENERIC_READ,
-		nullptr,
-		IID_PPV_ARGS(_materialBuff.ReleaseAndGetAddressOf())
-	);
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
+	mMaterial->CreateMaterialData(_dx12->Device());
 
-	//マップマテリアルにコピー
-	char* mapMaterial = nullptr;
-	result = _materialBuff->Map(0, nullptr, (void**)&mapMaterial);
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
-	for (auto& m : _materials) {
-		*((MaterialForHlsl*)mapMaterial) = m.material;//データコピー
-		mapMaterial += materialBuffSize;//次のアライメント位置まで進める
-	}
-	_materialBuff->Unmap(0, nullptr);
+	////マテリアルバッファを作成
+	//auto materialBuffSize = sizeof(MaterialForHlsl);
+	//materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
+	//auto result = _dx12->Device()->CreateCommittedResource(
+	//	&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+	//	D3D12_HEAP_FLAG_NONE,
+	//	&CD3DX12_RESOURCE_DESC::Buffer(materialBuffSize * _materials.size()),//勿体ないけど仕方ないですね
+	//	D3D12_RESOURCE_STATE_GENERIC_READ,
+	//	nullptr,
+	//	IID_PPV_ARGS(_materialBuff.ReleaseAndGetAddressOf())
+	//);
+	//if (FAILED(result)) {
+	//	assert(SUCCEEDED(result));
+	//	return result;
+	//}
+
+	////マップマテリアルにコピー
+	//char* mapMaterial = nullptr;
+	//result = _materialBuff->Map(0, nullptr, (void**)&mapMaterial);
+	//if (FAILED(result)) {
+	//	assert(SUCCEEDED(result));
+	//	return result;
+	//}
+	//for (auto& m : _materials) {
+	//	*((MaterialForHlsl*)mapMaterial) = m.material;//データコピー
+	//	mapMaterial += materialBuffSize;//次のアライメント位置まで進める
+	//}
+	//_materialBuff->Unmap(0, nullptr);
 
 	return S_OK;
 
 }
 
 HRESULT DXPMDModel::CreateMaterialAndTextureView() {
-	D3D12_DESCRIPTOR_HEAP_DESC materialDescHeapDesc = {};
-	materialDescHeapDesc.NumDescriptors = _materials.size() * 5;//マテリアル数ぶん(定数1つ、テクスチャ3つ)
-	materialDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	materialDescHeapDesc.NodeMask = 0;
+	mMaterial->CreateMaterialAndTextureView(_dx12->Device());
+	//D3D12_DESCRIPTOR_HEAP_DESC materialDescHeapDesc = {};
+	//materialDescHeapDesc.NumDescriptors = _materials.size() * 5;//マテリアル数ぶん(定数1つ、テクスチャ3つ)
+	//materialDescHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	//materialDescHeapDesc.NodeMask = 0;
 
-	materialDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;//デスクリプタヒープ種別
-	auto result = _dx12->Device()->CreateDescriptorHeap(&materialDescHeapDesc, IID_PPV_ARGS(_materialHeap.ReleaseAndGetAddressOf()));//生成
-	if (FAILED(result)) {
-		assert(SUCCEEDED(result));
-		return result;
-	}
-	auto materialBuffSize = sizeof(MaterialForHlsl);
-	materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
-	D3D12_CONSTANT_BUFFER_VIEW_DESC matCBVDesc = {};
-	matCBVDesc.BufferLocation = _materialBuff->GetGPUVirtualAddress();
-	matCBVDesc.SizeInBytes = materialBuffSize;
+	//materialDescHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;//デスクリプタヒープ種別
+	//auto result = _dx12->Device()->CreateDescriptorHeap(&materialDescHeapDesc, IID_PPV_ARGS(_materialHeap.ReleaseAndGetAddressOf()));//生成
+	//if (FAILED(result)) {
+	//	assert(SUCCEEDED(result));
+	//	return result;
+	//}
+	//auto materialBuffSize = sizeof(MaterialForHlsl);
+	//materialBuffSize = (materialBuffSize + 0xff) & ~0xff;
+	//D3D12_CONSTANT_BUFFER_VIEW_DESC matCBVDesc = {};
+	//matCBVDesc.BufferLocation = _materialBuff->GetGPUVirtualAddress();
+	//matCBVDesc.SizeInBytes = materialBuffSize;
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;//後述
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
-	srvDesc.Texture2D.MipLevels = 1;//ミップマップは使用しないので1
-	CD3DX12_CPU_DESCRIPTOR_HANDLE matDescHeapH(_materialHeap->GetCPUDescriptorHandleForHeapStart());
-	auto incSize = _dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	//srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;//後述
+	//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;//2Dテクスチャ
+	//srvDesc.Texture2D.MipLevels = 1;//ミップマップは使用しないので1
+	//CD3DX12_CPU_DESCRIPTOR_HANDLE matDescHeapH(_materialHeap->GetCPUDescriptorHandleForHeapStart());
+	//auto incSize = _dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 	//for (int i = 0; i < _materials.size(); ++i) {
 	//	//マテリアル固定バッファビュー
 	//	_dx12->Device()->CreateConstantBufferView(&matCBVDesc, matDescHeapH);
