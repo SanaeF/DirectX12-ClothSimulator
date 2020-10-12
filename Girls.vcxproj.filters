@@ -99,6 +99,9 @@
     <ClInclude Include="DXPMDMaterial.h">
       <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
     </ClInclude>
+    <ClInclude Include="DXGraph.h">
+      <Filter>ソース ファイル\DXGraphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelPolygon.hlsl">
@@ -155,6 +158,9 @@
     </ClCompile>
     <ClCompile Include="DXPMDMaterial.cpp">
       <Filter>ソース ファイル\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
+    </ClCompile>
+    <ClCompile Include="DXGraph.cpp">
+      <Filter>ソース ファイル\DXGraphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

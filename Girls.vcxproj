@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Dx12Wrapper.cpp" />
+    <ClCompile Include="DXGraph.cpp" />
     <ClCompile Include="DXHandler.cpp" />
     <ClCompile Include="DXPMDBone.cpp" />
     <ClCompile Include="DXPMDMaterial.cpp" />
@@ -138,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="Dx12Wrapper.h" />
+    <ClInclude Include="DXGraph.h" />
     <ClInclude Include="DXHandler.h" />
     <ClInclude Include="DXPMDBone.h" />
     <ClInclude Include="DXPMDMaterial.h" />

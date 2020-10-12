@@ -57,7 +57,7 @@ public:
 	ComPtr<ID3D12DescriptorHeap> getTransHeap();
 
 	void setTransWorld();
-
+	void testUpdateInBone(float angle);
 	DXPMDBone() {
 
 	}

@@ -137,3 +137,8 @@ HRESULT DXPMDBone::CreateTransformView(ComPtr< ID3D12Device> _dev) {
 
 	return S_OK;
 }
+
+void DXPMDBone::testUpdateInBone(float angle) {
+	_mappedMatrices[0] = XMMatrixRotationZ(angle);
+
+}

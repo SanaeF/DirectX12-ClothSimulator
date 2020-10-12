@@ -99,6 +99,8 @@ void DXPMDModel::PlayAnimation() {
 }
 
 void DXPMDModel::MotionUpdate() {
+	_angle += 0.001f;
+	Motion->testUpdateInBone(cos(_angle*15));
 	Motion->Update(timeGetTime());
 }
 
