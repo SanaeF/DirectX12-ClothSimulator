@@ -8,7 +8,7 @@
 class Dx12Wrapper;
 
 class DxTexture2D;
-
+class Dx2DMatrix;
 class DxIndex2D;
 class Dx2DRootSignature;
 class Dx2DPipeline;
@@ -23,11 +23,12 @@ private:
 		D3D12_VERTEX_BUFFER_VIEW mVertexBufferView;
 		D3D12_INDEX_BUFFER_VIEW mVertexIndexView;
 	};
+
 	std::map<int, GraphicData>  mGraphData;
 	std::map<int, GraphicData*> pGraphData;
 
 	std::shared_ptr<DxTexture2D>mTexture;
-
+	std::shared_ptr <Dx2DMatrix>mMatrix;
 	std::shared_ptr<DxIndex2D> mIndex;
 	std::shared_ptr<Dx2DRootSignature> mRootSignature;
 	std::shared_ptr<Dx2DPipeline> mPipeline;
@@ -43,7 +44,7 @@ public:
 
 	int Load(const wchar_t* path);
 
-	void Draw(int Handle);
+	void Draw(double Angle, int Handle);
 
 	Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
 	~Dx2DGraph();
@@ -51,5 +52,13 @@ public:
 private:
 
 	void GraphicPipeline();
+
+	void SetRS(int Handle);
+
+	void SetBuffer(int Handle);
+
+	void SetGraphicsRTB(int Handle);
+
+	void SetHandleData(int Handle);
 
 };

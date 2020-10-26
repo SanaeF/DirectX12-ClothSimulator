@@ -72,22 +72,32 @@ void DxTexture2D::mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap) {
 
 	auto result = DxWrap->Device()->CreateDescriptorHeap(
 		&mDescriptor_Heap,
-		IID_PPV_ARGS(&mTexDescHeap)
+		IID_PPV_ARGS(&mBasicDescHeap)
 	);
 }
 
 void DxTexture2D::mDescriptorRange() {
-	mDescTbl_Range.NumDescriptors = 1;
-	mDescTbl_Range.RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
-	mDescTbl_Range.BaseShaderRegister = 0;
-	mDescTbl_Range.OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+	mDescTbl_Range[0].NumDescriptors = 1;
+	mDescTbl_Range[0].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_SRV;
+	mDescTbl_Range[0].BaseShaderRegister = 0;
+	mDescTbl_Range[0].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	mDescTbl_Range[1].NumDescriptors = 1;
+	mDescTbl_Range[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+	mDescTbl_Range[1].BaseShaderRegister = 0;
+	mDescTbl_Range[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 }
 
 void DxTexture2D::mRootParameters() {
-	mRoot_Parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	mRoot_Parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	mRoot_Parameter.DescriptorTable.pDescriptorRanges = &mDescTbl_Range;
-	mRoot_Parameter.DescriptorTable.NumDescriptorRanges = 1;
+	mRoot_Parameter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	mRoot_Parameter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	mRoot_Parameter[0].DescriptorTable.pDescriptorRanges = &mDescTbl_Range[0];
+	mRoot_Parameter[0].DescriptorTable.NumDescriptorRanges = 1;
+
+	mRoot_Parameter[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	mRoot_Parameter[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
+	mRoot_Parameter[1].DescriptorTable.pDescriptorRanges = &mDescTbl_Range[1];
+	mRoot_Parameter[1].DescriptorTable.NumDescriptorRanges = 1;
 }
 
 void DxTexture2D::mSampler() {
@@ -104,23 +114,32 @@ void DxTexture2D::mSampler() {
 
 void DxTexture2D::mRootSignatureDesc() {
 	mRS_Desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	mRS_Desc.pParameters = &mRoot_Parameter;
-	mRS_Desc.NumParameters = 1;
+	mRS_Desc.pParameters = mRoot_Parameter;
+	mRS_Desc.NumParameters = 2;
 	mRS_Desc.pStaticSamplers = &mSampler_Desc;
 	mRS_Desc.NumStaticSamplers = 1;
 }
 
-void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap) {
+void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12Resource* constBuffer) {
 	mDescriptorHeap(DxWrap);
 	mSRV_Desc.Format = mMetaData.format;
 	mSRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	mSRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	mSRV_Desc.Texture2D.MipLevels = 1;
+
+	auto basicHeapHandle = mBasicDescHeap->GetCPUDescriptorHandleForHeapStart();
+
 	DxWrap->Device()->CreateShaderResourceView(
 		mTextureBuff,
 		&mSRV_Desc,
-		mTexDescHeap->GetCPUDescriptorHandleForHeapStart()
+		basicHeapHandle
 	);
+	basicHeapHandle.ptr += DxWrap->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+	cbvDesc.BufferLocation = constBuffer->GetGPUVirtualAddress();
+	cbvDesc.SizeInBytes = constBuffer->GetDesc().Width;
+	DxWrap->Device()->CreateConstantBufferView(&cbvDesc,basicHeapHandle);
 
 	mDescriptorRange();
 	mRootParameters();
@@ -136,4 +155,9 @@ DxTexture2D::getRootSigDesc() {
 ID3D12DescriptorHeap* 
 DxTexture2D::getTexDescHeap() {
 	return mTexDescHeap;
+}
+
+ID3D12DescriptorHeap*
+DxTexture2D::getBasicDescHeap() {
+	return mBasicDescHeap;
 }

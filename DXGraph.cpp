@@ -16,8 +16,8 @@ int DXGraph::Load2D(const wchar_t* path) {
 	return mDraw2D->Load(path);
 }
 
-void DXGraph::DrawPrototype2D(int Handle) {
-	mDraw2D->Draw(Handle);
+void DXGraph::DrawPrototype2D(double Angle, int Handle) {
+	mDraw2D->Draw(Angle, Handle);
 }
 
 void DXGraph::Init() {

@@ -81,8 +81,8 @@ void Application::Run2() {
 	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
 	Graph.reset(new DXGraph(mDirectX_R));
 	
-	imageHandle[0] = Graph->Load2D(L"./dat/titlechar.png");
-	imageHandle[1] = Graph->Load2D(L"./dat/shadow_wing.png");
+	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
+	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
 	
 	float angle = 0.0f;
 	MSG msg = {};
@@ -96,8 +96,9 @@ void Application::Run2() {
 		if (msg.message == WM_QUIT) {
 			break;
 		}
-		Graph->DrawPrototype2D(imageHandle[1]);
-		Graph->DrawPrototype2D(imageHandle[0]);
+		angle += 0.002f;
+		Graph->DrawPrototype2D(0, imageHandle[1]);
+		Graph->DrawPrototype2D(angle, imageHandle[0]);
 		mDirectX_R->ClearDraw();
 
 		mDirectX_R->ScreenFlip();
