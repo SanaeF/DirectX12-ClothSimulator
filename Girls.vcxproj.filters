@@ -55,9 +55,6 @@
     <Filter Include="ソース ファイル\DX12wrap\CreateScreen">
       <UniqueIdentifier>{5319f35b-416c-448a-b215-a5d3c46ddae2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DxKeyConfig">
-      <UniqueIdentifier>{bb57ac45-092d-42fc-84d2-0a4a0b767ad8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DXGraphics\Graphs2D">
       <UniqueIdentifier>{790efa2c-bcbe-47cf-8946-b04c43a2ec8b}</UniqueIdentifier>
     </Filter>
@@ -103,7 +100,10 @@
     <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DX3DRenderer">
       <UniqueIdentifier>{8f96b75e-1ef9-42a4-beb1-84ad1c009c53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\ShaderManager">
+    <Filter Include="ソース ファイル\DXKeyConfig">
+      <UniqueIdentifier>{bb57ac45-092d-42fc-84d2-0a4a0b767ad8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXShaderManager">
       <UniqueIdentifier>{c54027b5-8365-4b32-882e-6c2cd8a723d5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -163,7 +163,7 @@
       <Filter>ソース ファイル\DXGraphics\Graphs2D\Vertex</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
-      <Filter>ソース ファイル\ShaderManager</Filter>
+      <Filter>ソース ファイル\DXShaderManager</Filter>
     </ClInclude>
     <ClInclude Include="Dx2DRootSignature.h">
       <Filter>ソース ファイル\DXGraphics\Graphs2D\Pipeline\RootSignature</Filter>
@@ -184,7 +184,7 @@
       <Filter>ソース ファイル\DXSound</Filter>
     </ClInclude>
     <ClInclude Include="DxKeyConfig.h">
-      <Filter>ソース ファイル\DxKeyConfig</Filter>
+      <Filter>ソース ファイル\DXKeyConfig</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -268,7 +268,7 @@
       <Filter>ソース ファイル\DXGraphics\Graphs2D\Vertex</Filter>
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
-      <Filter>ソース ファイル\ShaderManager</Filter>
+      <Filter>ソース ファイル\DXShaderManager</Filter>
     </ClCompile>
     <ClCompile Include="Dx2DRootSignature.cpp">
       <Filter>ソース ファイル\DXGraphics\Graphs2D\Pipeline\RootSignature</Filter>
@@ -289,7 +289,7 @@
       <Filter>ソース ファイル\DXSound</Filter>
     </ClCompile>
     <ClCompile Include="DxKeyConfig.cpp">
-      <Filter>ソース ファイル\DxKeyConfig</Filter>
+      <Filter>ソース ファイル\DXKeyConfig</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
