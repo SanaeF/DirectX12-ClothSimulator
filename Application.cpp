@@ -5,6 +5,48 @@
 
 #include "DXGraph.h"
 
+bool Application::Initialize() {
+	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
+	CreateGameWindow(_hwnd, _windowClass);
+	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
+	Graph.reset(new DXGraph(mDirectX_R));
+	return true;
+}
+
+
+
+void Application::Run() {
+	int imageHandle[2];
+
+	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
+	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
+	int text_img = Graph->Load2D(L"./dat/txt.png");
+	float angle = 0.0f;
+	MSG msg = {};
+	unsigned int frame = 0;
+	while (true) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		if (msg.message == WM_QUIT) {
+			break;
+		}
+		angle += 0.002f;
+		Graph->DrawPrototype2D(0, imageHandle[1]);
+		Graph->DrawPrototype2D(angle, imageHandle[0]);
+		Graph->DrawPrototype2D(0, text_img);
+		mDirectX_R->ClearDraw();
+
+		mDirectX_R->ScreenFlip();
+
+	}
+}
+
+
+
+
 void Application::SetWindow(int width, int height, const char* window_name, const char* Name) {
 
 	mWin.cx = width;
@@ -13,6 +55,7 @@ void Application::SetWindow(int width, int height, const char* window_name, cons
 	winName[0] = window_name;
 	winName[1] = Name;
 }
+
 void Application::SetGraphMode(int width, int height) {
 	mPix.cx = width;
 	mPix.cy = height;
@@ -24,13 +67,14 @@ SIZE Application::GetWindowSize()const {
 	ret.cy = mWin.cy;//_graphSize
 	return ret;
 }
+
 SIZE Application::GetGraphicSize()const {
 	SIZE ret;
 	ret.cx = mPix.cx;
 	ret.cy = mPix.cy;
 	return ret;
 }
-//面倒だけど書かなあかんやつ
+
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (msg == WM_DESTROY) {//ウィンドウが破棄されたら呼ばれます
 		PostQuitMessage(0);//OSに対して「もうこのアプリは終わるんや」と伝える
@@ -38,6 +82,7 @@ LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	}
 	return DefWindowProc(hwnd, msg, wparam, lparam);//規定の処理を行う
 }
+
 void Application::CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass) {
 	HINSTANCE hInst = GetModuleHandle(nullptr);
 	//ウィンドウクラス生成＆登録
@@ -68,47 +113,7 @@ void Application::ShowWin() {
 	ShowWindow(_hwnd, SW_SHOW);//ウィンドウ表示
 }
 
-bool Application::Initialize() {
-	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
-	CreateGameWindow(_hwnd, _windowClass);
-	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
-	Graph.reset(new DXGraph(mDirectX_R));
-	//DirectX12ラッパー生成＆初期化
-	return true;
-}
-
-
-void Application::Run2() {
-	int imageHandle[2];
-	
-	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
-	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
-	int text_img = Graph->Load2D(L"./dat/txt.png");
-	float angle = 0.0f;
-	MSG msg = {};
-	unsigned int frame = 0;
-	while (true) {
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		if (msg.message == WM_QUIT) {
-			break;
-		}
-		angle += 0.002f;
-		Graph->DrawPrototype2D(0, imageHandle[1]);
-		Graph->DrawPrototype2D(angle, imageHandle[0]);
-		Graph->DrawPrototype2D(0, text_img);
-		mDirectX_R->ClearDraw();
-
-		mDirectX_R->ScreenFlip();
-
-	}
-}
-
-
-void Application::Run() {
+void Application::RunTest() {
 	int imageHandle;
 	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
 	mPMDRenderer.reset(new PMDRenderer(mDirectX_R)); 

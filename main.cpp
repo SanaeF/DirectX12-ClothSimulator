@@ -10,7 +10,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	}
 	app.ShowWin();
 
-	app.Run2();
+	app.Run();
 
 	app.Finaliz();
 	return 0;

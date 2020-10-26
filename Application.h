@@ -50,8 +50,8 @@ public:
 	///ƒ‹[ƒv‹N“®
 	void ShowWin();
 
+	void RunTest();
 	void Run();
-	void Run2();
 
 	///Œãˆ—
 	void Finaliz();
