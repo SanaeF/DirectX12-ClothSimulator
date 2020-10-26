@@ -1,4 +1,4 @@
-#include "Application.h"
+ï»¿#include "Application.h"
 #include"Dx12Wrapper.h"
 #include"PMDRenderer.h"
 #include"DXPMDModel.h"
@@ -14,8 +14,7 @@ bool Application::Initialize() {
 }
 
 
-
-void Application::Run() {
+void Application::Run() {//Ø®Ù„ÙŠØ· Ø¹Ø¶ÙˆÙŠ
 	int imageHandle[2];
 
 	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
@@ -77,41 +76,41 @@ SIZE Application::GetGraphicSize()const {
 }
 
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
-	if (msg == WM_DESTROY) {//ƒEƒBƒ“ƒhƒE‚ª”jŠü‚³‚ê‚½‚çŒÄ‚Î‚ê‚Ü‚·
-		PostQuitMessage(0);//OS‚É‘Î‚µ‚Äu‚à‚¤‚±‚ÌƒAƒvƒŠ‚ÍI‚í‚é‚ñ‚âv‚Æ“`‚¦‚é
+	if (msg == WM_DESTROY) {//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãŒç ´æ£„ã•ã‚ŒãŸã‚‰å‘¼ã°ã‚Œã¾ã™
+		PostQuitMessage(0);//OSã«å¯¾ã—ã¦ã€Œã‚‚ã†ã“ã®ã‚¢ãƒ—ãƒªã¯çµ‚ã‚ã‚‹ã‚“ã‚„ã€ã¨ä¼ãˆã‚‹
 		return 0;
 	}
-	return DefWindowProc(hwnd, msg, wparam, lparam);//‹K’è‚Ìˆ—‚ðs‚¤
+	return DefWindowProc(hwnd, msg, wparam, lparam);//è¦å®šã®å‡¦ç†ã‚’è¡Œã†
 }
 
 void Application::CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass) {
 	HINSTANCE hInst = GetModuleHandle(nullptr);
-	//ƒEƒBƒ“ƒhƒEƒNƒ‰ƒX¶¬•“o˜^
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚¯ãƒ©ã‚¹ç”Ÿæˆï¼†ç™»éŒ²
 	windowClass.cbSize = sizeof(WNDCLASSEX);
-	windowClass.lpfnWndProc = (WNDPROC)WindowProcedure;//ƒR[ƒ‹ƒoƒbƒNŠÖ”‚ÌŽw’è
-	windowClass.lpszClassName = _T(winName[0]);//ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX–¼(“K“–‚Å‚¢‚¢‚Å‚·)
-	windowClass.hInstance = GetModuleHandle(0);//ƒnƒ“ƒhƒ‹‚ÌŽæ“¾
-	RegisterClassEx(&windowClass);//ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX(‚±‚¤‚¢‚¤‚Ìì‚é‚©‚ç‚æ‚ë‚µ‚­‚Á‚ÄOS‚É—\‚·‚é)
+	windowClass.lpfnWndProc = (WNDPROC)WindowProcedure;//ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã®æŒ‡å®š
+	windowClass.lpszClassName = _T(winName[0]);//ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹å(é©å½“ã§ã„ã„ã§ã™)
+	windowClass.hInstance = GetModuleHandle(0);//ãƒãƒ³ãƒ‰ãƒ«ã®å–å¾—
+	RegisterClassEx(&windowClass);//ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹(ã“ã†ã„ã†ã®ä½œã‚‹ã‹ã‚‰ã‚ˆã‚ã—ãã£ã¦OSã«äºˆå‘Šã™ã‚‹)
 
-	RECT wrc = { 0,0, GetWindowSize().cx, GetWindowSize().cy };//ƒEƒBƒ“ƒhƒEƒTƒCƒY‚ðŒˆ‚ß‚é
-	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);//ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY‚Í‚¿‚å‚Á‚Æ–Ê“|‚È‚Ì‚ÅŠÖ”‚ðŽg‚Á‚Ä•â³‚·‚é
-	//ƒEƒBƒ“ƒhƒEƒIƒuƒWƒFƒNƒg‚Ì¶¬
-	hwnd = CreateWindow(windowClass.lpszClassName,//ƒNƒ‰ƒX–¼Žw’è
-		_T(winName[1]),//ƒ^ƒCƒgƒ‹ƒo[‚Ì•¶Žš
-		WS_OVERLAPPEDWINDOW,//ƒ^ƒCƒgƒ‹ƒo[‚Æ‹«ŠEü‚ª‚ ‚éƒEƒBƒ“ƒhƒE‚Å‚·
-		CW_USEDEFAULT,//•\Ž¦XÀ•W‚ÍOS‚É‚¨”C‚¹‚µ‚Ü‚·
-		CW_USEDEFAULT,//•\Ž¦YÀ•W‚ÍOS‚É‚¨”C‚¹‚µ‚Ü‚·
-		wrc.right - wrc.left,//ƒEƒBƒ“ƒhƒE•
-		wrc.bottom - wrc.top,//ƒEƒBƒ“ƒhƒE‚
-		nullptr,//eƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-		nullptr,//ƒƒjƒ…[ƒnƒ“ƒhƒ‹
-		windowClass.hInstance,//ŒÄ‚Ño‚µƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒnƒ“ƒhƒ‹
-		nullptr);//’Ç‰Áƒpƒ‰ƒ[ƒ^
+	RECT wrc = { 0,0, GetWindowSize().cx, GetWindowSize().cy };//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’æ±ºã‚ã‚‹
+	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚ºã¯ã¡ã‚‡ã£ã¨é¢å€’ãªã®ã§é–¢æ•°ã‚’ä½¿ã£ã¦è£œæ­£ã™ã‚‹
+	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç”Ÿæˆ
+	hwnd = CreateWindow(windowClass.lpszClassName,//ã‚¯ãƒ©ã‚¹åæŒ‡å®š
+		_T(winName[1]),//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã®æ–‡å­—
+		WS_OVERLAPPEDWINDOW,//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã¨å¢ƒç•Œç·šãŒã‚ã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã§ã™
+		CW_USEDEFAULT,//è¡¨ç¤ºXåº§æ¨™ã¯OSã«ãŠä»»ã›ã—ã¾ã™
+		CW_USEDEFAULT,//è¡¨ç¤ºYåº§æ¨™ã¯OSã«ãŠä»»ã›ã—ã¾ã™
+		wrc.right - wrc.left,//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦å¹…
+		wrc.bottom - wrc.top,//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦é«˜
+		nullptr,//è¦ªã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+		nullptr,//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ³ãƒ‰ãƒ«
+		windowClass.hInstance,//å‘¼ã³å‡ºã—ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ãƒãƒ³ãƒ‰ãƒ«
+		nullptr);//è¿½åŠ ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 
 }
 
 void Application::ShowWin() {
-	ShowWindow(_hwnd, SW_SHOW);//ƒEƒBƒ“ƒhƒE•\Ž¦
+	ShowWindow(_hwnd, SW_SHOW);//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦è¡¨ç¤º
 }
 
 void Application::RunTest() {
@@ -122,7 +121,7 @@ void Application::RunTest() {
 	mPMDRenderer->Init();
 	mPMDModel.reset(new DXPMDModel(mDxWr));
 
-	imageHandle = mPMDModel->LoadPMDFile("model/ëàV”üçƒ~ƒN.pmd");
+	imageHandle = mPMDModel->LoadPMDFile("model/é·ºæ¾¤ç¾Žå’²ãƒŸã‚¯.pmd");
 	mPMDModel->LoadVMDFile("motion/motion.vmd", "pose");
 
 	mPMDModel->PlayAnimation();
