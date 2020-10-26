@@ -571,7 +571,7 @@ void Dx12Wrapper::BeginDraw() {
 
 
 	////画面クリア
-	float clearColor[] = { 0.0f,0.7f,0.5f,1.0f };//白色
+	float clearColor[] = { 0.2f,0.6f,0.4f,1.0f };//白色
 	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 
 	//ビューポート、シザー矩形のセット
@@ -588,7 +588,7 @@ void Dx12Wrapper::SetScene() {
 
 }
 
-void Dx12Wrapper::EndDraw() {
+void Dx12Wrapper::ClearDraw() {
 	_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
 		D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
@@ -619,6 +619,22 @@ void Dx12Wrapper::EndDraw() {
 	_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
 }
 
+SIZE Dx12Wrapper::getWinSize() {
+	return _winSize;
+}
+
+SIZE Dx12Wrapper::getPixelSize() {
+	return _graphicSize;
+}
+
+D3D12_VIEWPORT* Dx12Wrapper::getViewPort() {
+	return _viewport.get();
+}
+
+D3D12_RECT* Dx12Wrapper::getScissorrect() {
+	return _scissorrect.get();
+}
+
 ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {
 	return _swapchain;
 }
@@ -626,5 +642,6 @@ ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {
 
 void Dx12Wrapper::ScreenFlip() {
 	auto result = _swapchain->Present(0, 0);
-	assert(SUCCEEDED(result));
+	//assert(SUCCEEDED(result));
+	BeginDraw();
 }

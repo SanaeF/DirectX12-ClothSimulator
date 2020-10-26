@@ -6,6 +6,10 @@
 #include<d3dx12.h>
 #include<sstream>
 
+#include "DXHandler.h"
+
+#include "DxPMDManager.h"
+
 using namespace Microsoft::WRL;
 using namespace std;
 using namespace DirectX;
@@ -42,25 +46,20 @@ namespace {
 	}
 }
 
-DXPMDModel::DXPMDModel(std::shared_ptr<Dx12Wrapper> dx, const char* path) :
+DXPMDModel::DXPMDModel(std::shared_ptr<Dx12Wrapper> dx) :
 	_dx12(dx),
 	_angle(0.0f)
 {
+
 	Motion.reset(new DXVMDMotion());
 	mMaterial.reset(new DXPMDMaterial(*dx));
 	Motion->setTransWorld();
-	
-	LoadPMDFile(path);
-	Motion->CreateTransformView(_dx12->Device());
-	mMaterial->CreateMaterialData(_dx12->Device()); //CreateMaterialData();
-	mMaterial->CreateMaterialAndTextureView(_dx12->Device()); //CreateMaterialAndTextureView();
-
 }
 
 DXPMDModel::~DXPMDModel(){
 }
 
-void DXPMDModel::LoadPMDFile(const char* path) {
+int DXPMDModel::LoadPMDFile(const char* path,int Handle) {
 	//PMDヘッダ構造体
 	struct PMDHeader {
 		float version; //例：00 00 80 3F == 1.00
@@ -76,7 +75,7 @@ void DXPMDModel::LoadPMDFile(const char* path) {
 	if (fp == nullptr) {
 		//エラー処理
 		assert(0);
-		return;
+		return 0;
 	}
 	fread(signature, sizeof(signature), 1, fp);
 	fread(&pmdheader, sizeof(pmdheader), 1, fp);
@@ -85,9 +84,19 @@ void DXPMDModel::LoadPMDFile(const char* path) {
 	fread(&vertNum, sizeof(vertNum), 1, fp);
 
 	mMaterial->LoadMaterial(*_dx12, vertNum, strModelPath, fp);
-	//LoadMaterial(vertNum, strModelPath, fp);
 
 	Motion->BoneLoad(fp);
+
+	Motion->CreateTransformView(_dx12->Device());
+	mMaterial->CreateMaterialData(_dx12->Device()); //CreateMaterialData();
+	mMaterial->CreateMaterialAndTextureView(_dx12->Device()); //CreateMaterialAndTextureView();
+
+	DXHandler handler;
+	PMDManager PMDdata;
+	PMDdata.vertex = mMaterial->getVB_View();
+	PMDdata.index = mMaterial->getIB_View();
+
+	return handler.CreateHandler(&PMDdata);
 }
 
 void DXPMDModel::LoadVMDFile(const char* filepath, const char* name) {
@@ -99,8 +108,8 @@ void DXPMDModel::PlayAnimation() {
 }
 
 void DXPMDModel::MotionUpdate() {
-	_angle += 0.001f;
-	Motion->testUpdateInBone(cos(_angle*15));
+	_angle += 0.1f;
+	//Motion->testUpdateInBone(cos(_angle));
 	Motion->Update(timeGetTime());
 }
 
@@ -108,7 +117,19 @@ void DXPMDModel::Update() {
 	MotionUpdate();
 }
 
-void DXPMDModel::Draw() {
+void DXPMDModel::CheckData(int Handle) {
+	DXHandler handler;
+	//PMDManager* PMDdata = (PMDManager*)handler.getHandleData()[Handle];
+
+	//if (&PMDdata->vertex == &mMaterial->getVB_View())assert(0);
+}
+void DXPMDModel::Draw(int Handle) {
+	//DXHandler handler;
+	//PMDManager* PMDdata = (PMDManager*)handler.getPMDData()[Handle];
+
+	//_dx12->CommandList()->IASetVertexBuffers(0, 1,& PMDdata->vertex);
+	//_dx12->CommandList()->IASetIndexBuffer(&PMDdata->index);
+
 	_dx12->CommandList()->IASetVertexBuffers(0, 1, &mMaterial->getVB_View());
 	_dx12->CommandList()->IASetIndexBuffer(&mMaterial->getIB_View());
 

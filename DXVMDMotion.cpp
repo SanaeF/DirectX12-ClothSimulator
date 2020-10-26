@@ -93,6 +93,7 @@ bool DXVMDMotion::Update(DWORD startTime) {
 		setBoneMatrices(&node, mat);
 	}
 	treeBoneCopy();
+	return true;
 }
 
 void DXVMDMotion::keyMotion() {

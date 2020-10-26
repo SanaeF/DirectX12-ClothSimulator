@@ -25,9 +25,6 @@
     <Filter Include="DirectXlib\DxWindow">
       <UniqueIdentifier>{e3f44038-831a-4f85-83ef-5e6fc6286f29}</UniqueIdentifier>
     </Filter>
-    <Filter Include="リソース ファイル\Shader">
-      <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\Dx12Wrapper\RenderTargetView">
       <UniqueIdentifier>{ed01f120-1ebe-4337-846a-d3c8468c415c}</UniqueIdentifier>
     </Filter>
@@ -61,8 +58,44 @@
     <Filter Include="ソース ファイル\DXGraphics">
       <UniqueIdentifier>{173db223-9681-4d80-9715-58dbcebb6db3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\3DModel">
+    <Filter Include="ソース ファイル\DXHandler\Manager">
+      <UniqueIdentifier>{6ebdc9ca-511b-4e97-b367-186e7b832d62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph">
+      <UniqueIdentifier>{790efa2c-bcbe-47cf-8946-b04c43a2ec8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\3DGraph">
       <UniqueIdentifier>{b160fe52-92be-4a99-b700-f89f9219b9f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader3D">
+      <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader2D">
+      <UniqueIdentifier>{346b8fb7-55b4-4c87-a416-5c8b430f0dec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\ShaderManager">
+      <UniqueIdentifier>{c54027b5-8365-4b32-882e-6c2cd8a723d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\ShaderMultiRender">
+      <UniqueIdentifier>{d43b5029-21d9-400a-a83c-08ba0ca7d7c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph\Pipeline">
+      <UniqueIdentifier>{f89a6ec2-3f85-4656-8171-19bd9dccbef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph\Vertex">
+      <UniqueIdentifier>{b1684b2f-09f6-4f81-8245-59efb6bf2be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph\Vertex\Index">
+      <UniqueIdentifier>{ef58877a-0594-4763-9998-70031c0729f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph\Pipeline\RootSignature">
+      <UniqueIdentifier>{c5619be6-f528-4daf-bec7-ac686ea63c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph\Texture">
+      <UniqueIdentifier>{a719192a-8920-473c-b656-9d3135525f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\2DGraph\Matrix">
+      <UniqueIdentifier>{8536a38b-25af-4b7d-9756-57b33ebd881a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -102,27 +135,69 @@
     <ClInclude Include="DXGraph.h">
       <Filter>ソース ファイル\DXGraphics</Filter>
     </ClInclude>
+    <ClInclude Include="DX3DGraph.h">
+      <Filter>ソース ファイル\DXGraphics\3DGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="DxHandleManager.h">
+      <Filter>ソース ファイル\DXHandler\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="DxPMDManager.h">
+      <Filter>ソース ファイル\PMD</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx2DGraph.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx2DPipeline.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex2D.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>ソース ファイル\DXGraphics\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx2DRootSignature.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Pipeline\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="DxIndex2D.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Vertex\Index</Filter>
+    </ClInclude>
+    <ClInclude Include="DxTexture2D.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Dx2DMatrix.h">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Matrix</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PixelPolygon.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
+      <Filter>リソース ファイル\Shader3D</Filter>
     </FxCompile>
     <FxCompile Include="VertexPolygon.hlsl">
-      <Filter>リソース ファイル\Shader</Filter>
+      <Filter>リソース ファイル\Shader3D</Filter>
+    </FxCompile>
+    <FxCompile Include="Vertex2D.hlsl">
+      <Filter>リソース ファイル\Shader2D</Filter>
+    </FxCompile>
+    <FxCompile Include="Pixel2D.hlsl">
+      <Filter>リソース ファイル\Shader2D</Filter>
     </FxCompile>
     <FxCompile Include="BasicPixelShader.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ShaderMultiRender</Filter>
     </FxCompile>
     <FxCompile Include="BasicVertexShader.hlsl">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ShaderMultiRender</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="HeaderPolygon.hlsli">
-      <Filter>リソース ファイル\Shader</Filter>
+      <Filter>リソース ファイル\Shader3D</Filter>
     </None>
     <None Include="BasicShaderHeader.hlsli">
-      <Filter>リソース ファイル</Filter>
+      <Filter>リソース ファイル\ShaderMultiRender</Filter>
+    </None>
+    <None Include="Header2D.hlsli">
+      <Filter>リソース ファイル\Shader2D</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +236,33 @@
     </ClCompile>
     <ClCompile Include="DXGraph.cpp">
       <Filter>ソース ファイル\DXGraphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DX3DGraph.cpp">
+      <Filter>ソース ファイル\DXGraphics\3DGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx2DGraph.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx2DPipeline.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex2D.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>ソース ファイル\DXGraphics\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx2DRootSignature.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Pipeline\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="DxIndex2D.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Vertex\Index</Filter>
+    </ClCompile>
+    <ClCompile Include="DxTexture2D.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Dx2DMatrix.cpp">
+      <Filter>ソース ファイル\DXGraphics\2DGraph\Matrix</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

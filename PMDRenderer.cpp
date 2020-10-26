@@ -21,11 +21,7 @@ namespace {
 
 PMDRenderer::PMDRenderer(shared_ptr<Dx12Wrapper> dx12) :_dx12(dx12)
 {
-	//assert(SUCCEEDED(CreateRootSignature()));
-	//assert(SUCCEEDED(CreateGraphicsPipelineForPMD()));
-	//_whiteTex = CreateWhiteTexture();
-	//_blackTex = CreateBlackTexture();
-	//_gradTex = CreateGrayGradationTexture();
+
 }
 
 
@@ -33,13 +29,20 @@ PMDRenderer::~PMDRenderer()
 {
 }
 
+void PMDRenderer::AddActor(std::shared_ptr<DXPMDModel> actor) {
+	_actors.emplace_back(shared_ptr<DXPMDModel>(actor));
+}
+
+void PMDRenderer::AddActor(const char* filepath) {
+	AddActor(make_shared<DXPMDModel>(_dx12));
+}
+
 
 void PMDRenderer::Update() {
 
 }
 
-void
-PMDRenderer::BeforeDraw() {
+void PMDRenderer::BeforeDraw() {
 	auto cmdlist = _dx12->CommandList();
 	cmdlist->SetPipelineState(_pipeline.Get());
 	cmdlist->SetGraphicsRootSignature(_rootSignature.Get());
@@ -48,7 +51,7 @@ PMDRenderer::BeforeDraw() {
 
 void PMDRenderer::Draw() {
 	for (auto& actor : _actors) {
-		actor->Draw();
+		//actor->Draw();
 	}
 }
 
@@ -61,13 +64,6 @@ void PMDRenderer::AnimationStart() {
 	for (auto& actor : _actors) {
 		actor->PlayAnimation();
 	}
-}
-
-void PMDRenderer::AddActor(std::shared_ptr<DXPMDModel> actor) {
-	_actors.emplace_back(shared_ptr<DXPMDModel>(actor));
-}
-void PMDRenderer::AddActor(const char* filepath) {
-	AddActor(make_shared<DXPMDModel>(_dx12, filepath));
 }
 
 ID3D12Resource* PMDRenderer::CreateDefaultTexture(size_t width, size_t height) {

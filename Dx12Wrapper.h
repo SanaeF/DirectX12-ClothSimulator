@@ -19,7 +19,7 @@ class Dx12Wrapper{
 
 	HWND _hwnd;
 	UINT64 _fenceValue;
-	SIZE _winSize,_graphicSize;
+	SIZE _winSize, _graphicSize;
 	template<typename T>
 	using ComPtr = Microsoft::WRL::ComPtr<T>;
 
@@ -90,7 +90,7 @@ public:
 	void Draw(std::shared_ptr<PMDRenderer> renderer);
 	void Update();
 	void BeginDraw();
-	void EndDraw();
+	void ClearDraw();
 	///テクスチャパスから必要なテクスチャバッファへのポインタを返す
 	///@param texpath テクスチャファイルパス
 	ComPtr<ID3D12Resource> GetTextureByPath(const char* texpath);
@@ -99,7 +99,14 @@ public:
 	ComPtr < ID3D12GraphicsCommandList> CommandList();//コマンドリスト
 	ComPtr < IDXGISwapChain4> Swapchain();//スワップチェイン
 
+	D3D12_VIEWPORT* getViewPort();//ビューポート
+	D3D12_RECT* getScissorrect();//シザー矩形
+
 	void SetScene();
 
 	void ScreenFlip();
+
+	SIZE getWinSize();
+
+	SIZE getPixelSize();
 };

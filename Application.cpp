@@ -3,6 +3,8 @@
 #include"PMDRenderer.h"
 #include"DXPMDModel.h"
 
+#include "DXGraph.h"
+
 void Application::SetWindow(int width, int height, const char* window_name, const char* Name) {
 
 	mWin.cx = width;
@@ -16,22 +18,18 @@ void Application::SetGraphMode(int width, int height) {
 	mPix.cy = height;
 }
 
-
-
 SIZE Application::GetWindowSize()const {
 	SIZE ret;
 	ret.cx = mWin.cx;
 	ret.cy = mWin.cy;//_graphSize
 	return ret;
 }
-
 SIZE Application::GetGraphicSize()const {
 	SIZE ret;
 	ret.cx = mPix.cx;
 	ret.cy = mPix.cy;
 	return ret;
 }
-
 //面倒だけど書かなあかんやつ
 LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	if (msg == WM_DESTROY) {//ウィンドウが破棄されたら呼ばれます
@@ -66,11 +64,9 @@ void Application::CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass) {
 
 }
 
-
 void Application::ShowWin() {
 	ShowWindow(_hwnd, SW_SHOW);//ウィンドウ表示
 }
-
 
 bool Application::Initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -79,14 +75,50 @@ bool Application::Initialize() {
 	return true;
 }
 
-void Application::Run() {
-	pDx12.reset(new Dx12Wrapper(_hwnd));
-	pPMDRenderer.reset(new PMDRenderer(pDx12)); 
 
-	pPMDRenderer->Init();
-	pPMDActor = std::make_shared<DXPMDModel>(pDx12, "model/鷺澤美咲ミク.pmd");
-	pPMDActor->LoadVMDFile("motion/motion.vmd", "pose");
-	pPMDRenderer->AddActor(pPMDActor);
+void Application::Run2() {
+	int imageHandle[2];
+	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
+	Graph.reset(new DXGraph(mDirectX_R));
+	
+	imageHandle[0] = Graph->Load2D(L"./dat/titlechar.png");
+	imageHandle[1] = Graph->Load2D(L"./dat/shadow_wing.png");
+	
+	float angle = 0.0f;
+	MSG msg = {};
+	unsigned int frame = 0;
+	while (true) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		if (msg.message == WM_QUIT) {
+			break;
+		}
+		Graph->DrawPrototype2D(imageHandle[1]);
+		Graph->DrawPrototype2D(imageHandle[0]);
+		mDirectX_R->ClearDraw();
+
+		mDirectX_R->ScreenFlip();
+
+	}
+}
+
+
+void Application::Run() {
+	int imageHandle;
+	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
+	mPMDRenderer.reset(new PMDRenderer(mDirectX_R)); 
+
+	mPMDRenderer->Init();
+	mPMDModel.reset(new DXPMDModel(mDirectX_R));
+
+	imageHandle = mPMDModel->LoadPMDFile("model/鷺澤美咲ミク.pmd");
+	mPMDModel->LoadVMDFile("motion/motion.vmd", "pose");
+
+	mPMDModel->PlayAnimation();
+	//mPMDRenderer->AddActor(mPMDModel);
 
 	float angle = 0.0f;
 	MSG msg = {};
@@ -96,47 +128,44 @@ void Application::Run() {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		//もうアプリケーションが終わるって時にmessageがWM_QUITになる
+		
 		if (msg.message == WM_QUIT) {
 			break;
 		}
-		//全体の描画準備
-		pDx12->BeginDraw();
-		pDx12->Update();
-		pPMDRenderer->Update();
-		pPMDRenderer->BeforeDraw();
 
-		pDx12->Draw(pPMDRenderer);
+		mDirectX_R->BeginDraw();
 
+		mDirectX_R->Update();
 
-		pDx12->SetScene();
-		pPMDActor->Update();
-		pPMDActor->Draw();
+		mPMDRenderer->Update();
 
-		pDx12->EndDraw();
-		//pDx12->Draw(pPMDRenderer);
-		//フリップ
-		pDx12->ScreenFlip();
-		//pDx12->Swapchain()->Present(1, 0);
+		mPMDRenderer->BeforeDraw();
+
+		mDirectX_R->Draw(mPMDRenderer);
+
+		mDirectX_R->SetScene();
+
+		mPMDModel->Update();
+		mPMDModel->Draw(imageHandle);
+
+		mDirectX_R->ClearDraw();
+
+		mDirectX_R->ScreenFlip();
+
 	}
 }
-
 
 void Application::Finaliz() {
 	UnregisterClass(_windowClass.lpszClassName, _windowClass.hInstance);
 }
-
 
 Application& Application::Instance() {
 	static Application instance;
 	return instance;
 }
 
-
 Application::Application(){
 }
-
-
 
 Application::~Application()
 {

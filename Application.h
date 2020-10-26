@@ -16,6 +16,8 @@ class Dx12Wrapper;
 class PMDRenderer;
 class DXPMDModel;
 
+class DXGraph;
+
 ///シングルトンクラス
 class Application{
 private:
@@ -27,10 +29,10 @@ private:
 	//ウィンドウ周り
 	WNDCLASSEX _windowClass;
 	HWND _hwnd;
-	std::shared_ptr<Dx12Wrapper> pDx12;
-	std::shared_ptr<PMDRenderer> pPMDRenderer;
-	std::shared_ptr<DXPMDModel> pPMDActor;
-
+	std::shared_ptr<Dx12Wrapper> mDirectX_R;
+	std::shared_ptr<PMDRenderer> mPMDRenderer;
+	std::shared_ptr<DXPMDModel> mPMDModel;
+	std::shared_ptr<DXGraph>Graph;
 	//ゲーム用ウィンドウの生成
 	void CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass);
 
@@ -49,6 +51,7 @@ public:
 	void ShowWin();
 
 	void Run();
+	void Run2();
 
 	///後処理
 	void Finaliz();

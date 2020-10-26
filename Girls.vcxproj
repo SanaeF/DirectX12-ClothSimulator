@@ -115,6 +115,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>F:\DirectX\DirectXTex-master\DirectXTex</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -124,7 +125,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Dx2DMatrix.cpp" />
+    <ClCompile Include="Dx2DRootSignature.cpp" />
+    <ClCompile Include="DxIndex2D.cpp" />
+    <ClCompile Include="DxTexture2D.cpp" />
+    <ClCompile Include="ShaderManager.cpp" />
+    <ClCompile Include="Vertex2D.cpp" />
     <ClCompile Include="Dx12Wrapper.cpp" />
+    <ClCompile Include="Dx2DGraph.cpp" />
+    <ClCompile Include="Dx2DPipeline.cpp" />
+    <ClCompile Include="DX3DGraph.cpp" />
     <ClCompile Include="DXGraph.cpp" />
     <ClCompile Include="DXHandler.cpp" />
     <ClCompile Include="DXPMDBone.cpp" />
@@ -138,14 +148,25 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Dx2DMatrix.h" />
+    <ClInclude Include="Dx2DRootSignature.h" />
+    <ClInclude Include="DxIndex2D.h" />
+    <ClInclude Include="DxTexture2D.h" />
+    <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Vertex2D.h" />
     <ClInclude Include="Dx12Wrapper.h" />
+    <ClInclude Include="Dx2DGraph.h" />
+    <ClInclude Include="Dx2DPipeline.h" />
+    <ClInclude Include="DX3DGraph.h" />
     <ClInclude Include="DXGraph.h" />
     <ClInclude Include="DXHandler.h" />
     <ClInclude Include="DXPMDBone.h" />
+    <ClInclude Include="DxPMDManager.h" />
     <ClInclude Include="DXPMDMaterial.h" />
     <ClInclude Include="DXResource.h" />
     <ClInclude Include="GIDirectLib\DirectX12lib.h" />
     <ClInclude Include="DXPMDModel.h" />
+    <ClInclude Include="DxHandleManager.h" />
     <ClInclude Include="PMDRenderer.h" />
     <ClInclude Include="DX_MultRend.h" />
     <ClInclude Include="DXVMDMotion.h" />
@@ -155,11 +176,27 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BasicPS</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BasicPS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="BasicVertexShader.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BasicVS</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BasicVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="Pixel2D.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel2D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel2D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="PixelPolygon.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -170,6 +207,16 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ps</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Vertex2D.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex2D</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex2D</EntryPointName>
     </FxCompile>
     <FxCompile Include="VertexPolygon.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
@@ -184,6 +231,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli" />
+    <None Include="Header2D.hlsli" />
     <None Include="HeaderPolygon.hlsli">
       <FileType>Document</FileType>
     </None>
