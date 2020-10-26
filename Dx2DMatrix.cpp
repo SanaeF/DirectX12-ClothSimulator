@@ -23,13 +23,9 @@ void Dx2DMatrix::createBuffer(Dx12Wrapper& DxWrap,int Handle) {
 }
 
 void Dx2DMatrix::Rotation(double RotaX, double RotaY, double RotaZ, int Handle) {
-	XMVECTOR scaling = XMVectorSet(1.f, 1.f, 0.0f, 0.0f);
-	XMVECTOR origin = XMVectorSet(0, 0, 0.0f, 0.0f);
-	XMVECTOR translation = XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
-	mWorlMat = DirectX::XMMatrixAffineTransformation2D(scaling, origin, RotaZ, translation);
 	//mWorlMat = XMMatrixRotationX(RotaX);
 	//mWorlMat = XMMatrixRotationY(RotaY);
-	//mWorlMat = XMMatrixRotationZ(RotaZ);
+	mWorlMat = XMMatrixRotationZ(RotaZ);
 	*pMapMatrix[Handle] = mWorlMat;
 
 }

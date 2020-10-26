@@ -10,7 +10,6 @@ void DxTexture2D::LoadWIC(const wchar_t* path) {
 		&mMetaData,
 		mScratch_Image
 	);
-	
 	auto img = mScratch_Image.GetImage(0, 0, 0);
 	mImg = *img;
 }
@@ -139,8 +138,7 @@ void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 	cbvDesc.BufferLocation = constBuffer->GetGPUVirtualAddress();
 	cbvDesc.SizeInBytes = constBuffer->GetDesc().Width;
-	DxWrap->Device()->CreateConstantBufferView(&cbvDesc,basicHeapHandle);
-
+	DxWrap->Device()->CreateConstantBufferView(&cbvDesc, basicHeapHandle);
 	mDescriptorRange();
 	mRootParameters();
 	mSampler();

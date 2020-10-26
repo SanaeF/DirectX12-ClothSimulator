@@ -54,7 +54,7 @@ void Dx2DPipeline::RasterizerState() {
 }
 
 void Dx2DPipeline::BlendState() {
-	mGraph_Pipeline.BlendState.AlphaToCoverageEnable = false;
+	mGraph_Pipeline.BlendState.AlphaToCoverageEnable = true;
 	mGraph_Pipeline.BlendState.IndependentBlendEnable = false;
 
 	mRTB_Desc.BlendEnable = true;
@@ -76,7 +76,6 @@ void Dx2DPipeline::BlendState() {
 void Dx2DPipeline::Layout() {
 	mGraph_Pipeline.InputLayout.pInputElementDescs = inputLayout;
 	mGraph_Pipeline.InputLayout.NumElements = _countof(inputLayout);
-
 	mGraph_Pipeline.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
 	mGraph_Pipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 }

@@ -83,7 +83,7 @@ void Application::Run2() {
 	
 	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
-	
+	int text_img = Graph->Load2D(L"./dat/txt.png");
 	float angle = 0.0f;
 	MSG msg = {};
 	unsigned int frame = 0;
@@ -99,6 +99,7 @@ void Application::Run2() {
 		angle += 0.002f;
 		Graph->DrawPrototype2D(0, imageHandle[1]);
 		Graph->DrawPrototype2D(angle, imageHandle[0]);
+		Graph->DrawPrototype2D(0, text_img);
 		mDirectX_R->ClearDraw();
 
 		mDirectX_R->ScreenFlip();

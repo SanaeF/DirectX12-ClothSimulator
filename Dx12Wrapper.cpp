@@ -642,6 +642,6 @@ ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {
 
 void Dx12Wrapper::ScreenFlip() {
 	auto result = _swapchain->Present(0, 0);
-	//assert(SUCCEEDED(result));
+	assert(SUCCEEDED(result));
 	BeginDraw();
 }
