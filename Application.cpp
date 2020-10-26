@@ -8,8 +8,8 @@
 bool Application::Initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
-	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
-	Graph.reset(new DXGraph(mDirectX_R));
+	mDxWr.reset(new Dx12Wrapper(_hwnd));
+	Graph.reset(new DXGraph(mDxWr));
 	return true;
 }
 
@@ -33,13 +33,14 @@ void Application::Run() {
 		if (msg.message == WM_QUIT) {
 			break;
 		}
+	
 		angle += 0.002f;
 		Graph->DrawPrototype2D(0, imageHandle[1]);
 		Graph->DrawPrototype2D(angle, imageHandle[0]);
 		Graph->DrawPrototype2D(0, text_img);
-		mDirectX_R->ClearDraw();
-
-		mDirectX_R->ScreenFlip();
+		
+		mDxWr->ClearDraw();
+		mDxWr->ScreenFlip();
 
 	}
 }
@@ -115,11 +116,11 @@ void Application::ShowWin() {
 
 void Application::RunTest() {
 	int imageHandle;
-	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
-	mPMDRenderer.reset(new PMDRenderer(mDirectX_R)); 
+	mDxWr.reset(new Dx12Wrapper(_hwnd));
+	mPMDRenderer.reset(new PMDRenderer(mDxWr)); 
 
 	mPMDRenderer->Init();
-	mPMDModel.reset(new DXPMDModel(mDirectX_R));
+	mPMDModel.reset(new DXPMDModel(mDxWr));
 
 	imageHandle = mPMDModel->LoadPMDFile("model/ëàV”üçƒ~ƒN.pmd");
 	mPMDModel->LoadVMDFile("motion/motion.vmd", "pose");
@@ -140,24 +141,24 @@ void Application::RunTest() {
 			break;
 		}
 
-		mDirectX_R->BeginDraw();
+		mDxWr->BeginDraw();
 
-		mDirectX_R->Update();
+		mDxWr->Update();
 
 		mPMDRenderer->Update();
 
 		mPMDRenderer->BeforeDraw();
 
-		mDirectX_R->Draw(mPMDRenderer);
+		mDxWr->Draw(mPMDRenderer);
 
-		mDirectX_R->SetScene();
+		mDxWr->SetScene();
 
 		mPMDModel->Update();
 		mPMDModel->Draw(imageHandle);
 
-		mDirectX_R->ClearDraw();
+		mDxWr->ClearDraw();
 
-		mDirectX_R->ScreenFlip();
+		mDxWr->ScreenFlip();
 
 	}
 }

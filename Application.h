@@ -29,7 +29,7 @@ private:
 	//ウィンドウ周り
 	WNDCLASSEX _windowClass;
 	HWND _hwnd;
-	std::shared_ptr<Dx12Wrapper> mDirectX_R;
+	std::shared_ptr<Dx12Wrapper> mDxWr;
 	std::shared_ptr<PMDRenderer> mPMDRenderer;
 	std::shared_ptr<DXPMDModel> mPMDModel;
 	std::shared_ptr<DXGraph>Graph;
