@@ -71,6 +71,8 @@ void Application::ShowWin() {
 bool Application::Initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
+	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
+	Graph.reset(new DXGraph(mDirectX_R));
 	//DirectX12ƒ‰ƒbƒp[¶¬•‰Šú‰»
 	return true;
 }
@@ -78,8 +80,6 @@ bool Application::Initialize() {
 
 void Application::Run2() {
 	int imageHandle[2];
-	mDirectX_R.reset(new Dx12Wrapper(_hwnd));
-	Graph.reset(new DXGraph(mDirectX_R));
 	
 	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
