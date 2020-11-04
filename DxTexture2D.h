@@ -8,6 +8,8 @@ class DxTexture2D {
 private:
 
 	D3D12_HEAP_PROPERTIES mHeap_Prop = {};
+	D3D12_HEAP_PROPERTIES mUploadHeap_Prop = {};
+
 	D3D12_RESOURCE_DESC mResource_Desc = {};
 	D3D12_DESCRIPTOR_HEAP_DESC mDescriptor_Heap = {};
 	D3D12_SHADER_RESOURCE_VIEW_DESC mSRV_Desc = {};
@@ -29,8 +31,6 @@ public:
 
 	void CreateResource(std::shared_ptr<Dx12Wrapper> DxWrap);
 
-	void GPUtransfer();
-
 	void ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12Resource* constBuffer);
 
 	D3D12_ROOT_SIGNATURE_DESC* getRootSigDesc();
@@ -39,11 +39,17 @@ public:
 
 	ID3D12DescriptorHeap* getBasicDescHeap();
 
+	DirectX::Image getImage();
+
+	DirectX::TexMetadata getMetaData();
+
 private:
 
 	void mHeapProp();
 
 	void mResourceDesc();
+
+	void mGPUtransfer();
 
 	void mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap);
 

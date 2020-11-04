@@ -106,6 +106,18 @@
     <Filter Include="ソース ファイル\DXShaderManager">
       <UniqueIdentifier>{c54027b5-8365-4b32-882e-6c2cd8a723d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Texture\DxUploadTex2D">
+      <UniqueIdentifier>{986c3363-cdb6-458a-8956-cab5dbce3e07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DxHelper">
+      <UniqueIdentifier>{22791bea-ea2e-4761-baff-96fea7e7feec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\DxViewPort">
+      <UniqueIdentifier>{41d9b496-cfc9-49ec-95fb-acb63f0fb0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\DXSound\WavData">
+      <UniqueIdentifier>{7944ec6f-4d17-491a-b838-b7fc051d6f14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx12Wrapper.h">
@@ -185,6 +197,18 @@
     </ClInclude>
     <ClInclude Include="DxKeyConfig.h">
       <Filter>ソース ファイル\DXKeyConfig</Filter>
+    </ClInclude>
+    <ClInclude Include="DxUploadTex2D.h">
+      <Filter>ソース ファイル\DXGraphics\Graphs2D\Texture\DxUploadTex2D</Filter>
+    </ClInclude>
+    <ClInclude Include="DxHelper.h">
+      <Filter>ソース ファイル\DxHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="DxViewPort2D.h">
+      <Filter>ソース ファイル\DXGraphics\Graphs2D\DxViewPort</Filter>
+    </ClInclude>
+    <ClInclude Include="DxWavData.h">
+      <Filter>ソース ファイル\DXSound\WavData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -290,6 +314,18 @@
     </ClCompile>
     <ClCompile Include="DxKeyConfig.cpp">
       <Filter>ソース ファイル\DXKeyConfig</Filter>
+    </ClCompile>
+    <ClCompile Include="DxUploadTex2D.cpp">
+      <Filter>ソース ファイル\DXGraphics\Graphs2D\Texture\DxUploadTex2D</Filter>
+    </ClCompile>
+    <ClCompile Include="DxHelper.cpp">
+      <Filter>ソース ファイル\DxHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="DxViewPort2D.cpp">
+      <Filter>ソース ファイル\DXGraphics\Graphs2D\DxViewPort</Filter>
+    </ClCompile>
+    <ClCompile Include="DxWavData.cpp">
+      <Filter>ソース ファイル\DXSound\WavData</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

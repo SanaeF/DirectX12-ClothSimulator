@@ -3,6 +3,7 @@
 #include<d3d12.h>
 #include<DirectXMath.h>
 
+#include<DirectXTex.h>
 
 class Dx12Wrapper;
 
@@ -14,11 +15,18 @@ private:
 	};
 
 	Vertex vertex[4] = {
-	{{ -1.f,-1.f,0.f},{0.f,1.f}},
-	{{ -1.f, 1.f,0.f},{0.f,0.f}},
-	{{  1.f,-1.f,0.f},{1.f,1.f}},
-	{{  1.f, 1.f,0.f},{1.f,0.f}}
+{{ -1.f,-1.f,0.f},{0.f,1.f}},
+{{ -1.f, 1.f,0.f},{0.f,0.f}},
+{{  1.f,-1.f,0.f},{1.f,1.f}},
+{{  1.f, 1.f,0.f},{1.f,0.f}}
 	};
+
+//	Vertex vertex[4] = {
+//{{  0.f, 0.f,0.f},{0.f,1.f}},
+//{{  0.f, 0.f,0.f},{0.f,0.f}},
+//{{  0.f, 0.f,0.f},{1.f,1.f}},
+//{{  0.f, 0.f,0.f},{1.f,0.f}}
+//	};
 
 	D3D12_HEAP_PROPERTIES mHeap_prop = {};
 
@@ -40,6 +48,7 @@ public:
 
 	void setResourceDesc(D3D12_RESOURCE_DESC Resource_desc);
 
+	void setPolygonSize(DirectX::TexMetadata data);
 
 	D3D12_HEAP_PROPERTIES getHeap_prop();
 

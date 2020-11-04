@@ -9,9 +9,9 @@ class Dx2DMatrix {
 private:
 	ID3D12Resource* mConstBuffer = nullptr;
 
-	std::map<int, DirectX::XMMATRIX> mMatrix;
-
-	std::map<int, DirectX::XMMATRIX*> pMapMatrix;
+	std::vector<DirectX::XMMATRIX*> mConstMatrix;
+	std::vector<DirectX::XMMATRIX> mMatrix;
+	std::vector<DirectX::XMMATRIX*> pMapMatrix;
 
 	DirectX::XMMATRIX mWorlMat;
 

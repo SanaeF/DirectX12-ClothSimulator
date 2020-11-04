@@ -12,6 +12,10 @@ DXGraph::~DXGraph() {
 
 }
 
+void DXGraph::SetDrawArea(int top, int left, int right, int bottom) {
+	mDraw2D->SetDrawArea(top, left, right, bottom);
+}
+
 int DXGraph::Load2D(const wchar_t* path) {
 	return mDraw2D->Load(path);
 }

@@ -5,10 +5,14 @@
 
 #include "DXGraph.h"
 
+#include "DxSound.h"
+
 bool Application::Initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
 	mDxWr.reset(new Dx12Wrapper(_hwnd));
+	mDxWr->Init(mPix);
+	Sound.reset(new DxSound(_hwnd));
 	Graph.reset(new DXGraph(mDxWr));
 	return true;
 }
@@ -16,10 +20,18 @@ bool Application::Initialize() {
 
 void Application::Run() {//خليط عضوي
 	int imageHandle[2];
+	int MusicHandle;
 
 	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
-	int text_img = Graph->Load2D(L"./dat/txt.png");
+	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
+
+
+	MusicHandle = Sound->LoadFile("./dat/music.wav");
+	Sound->SetVolume(-2700, MusicHandle);
+	Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
+
+
 	float angle = 0.0f;
 	MSG msg = {};
 	unsigned int frame = 0;
@@ -32,13 +44,14 @@ void Application::Run() {//خليط عضوي
 		if (msg.message == WM_QUIT) {
 			break;
 		}
-	
-		angle += 0.002f;
+		mDxWr->ClearScreen();
+		Graph->SetDrawArea(0, 0, 1920, 1440);
+		angle += 0.001f;
 		Graph->DrawPrototype2D(0, imageHandle[1]);
 		Graph->DrawPrototype2D(angle, imageHandle[0]);
 		Graph->DrawPrototype2D(0, text_img);
 		
-		mDxWr->ClearDraw();
+		
 		mDxWr->ScreenFlip();
 
 	}
@@ -94,12 +107,17 @@ void Application::CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass) {
 
 	RECT wrc = { 0,0, GetWindowSize().cx, GetWindowSize().cy };//ウィンドウサイズを決める
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);//ウィンドウのサイズはちょっと面倒なので関数を使って補正する
+
+	int x = GetSystemMetrics(SM_CXSCREEN);
+	int y = GetSystemMetrics(SM_CYSCREEN);
+	x = x - (wrc.right - wrc.left);
+	y = y - (wrc.bottom - wrc.top);
 	//ウィンドウオブジェクトの生成
 	hwnd = CreateWindow(windowClass.lpszClassName,//クラス名指定
 		_T(winName[1]),//タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,//タイトルバーと境界線があるウィンドウです
-		CW_USEDEFAULT,//表示X座標はOSにお任せします
-		CW_USEDEFAULT,//表示Y座標はOSにお任せします
+		x/2,//表示X座標はOSにお任せします
+		y/2,//表示Y座標はOSにお任せします
 		wrc.right - wrc.left,//ウィンドウ幅
 		wrc.bottom - wrc.top,//ウィンドウ高
 		nullptr,//親ウィンドウハンドル
@@ -140,7 +158,7 @@ void Application::RunTest() {
 			break;
 		}
 
-		mDxWr->BeginDraw();
+		mDxWr->ClearScreen();
 
 		mDxWr->Update();
 
@@ -155,7 +173,7 @@ void Application::RunTest() {
 		mPMDModel->Update();
 		mPMDModel->Draw(imageHandle);
 
-		mDxWr->ClearDraw();
+		mDxWr->CommandClear();
 
 		mDxWr->ScreenFlip();
 

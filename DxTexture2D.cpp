@@ -14,7 +14,6 @@ void DxTexture2D::LoadWIC(const wchar_t* path) {
 	mImg = *img;
 }
 
-
 void DxTexture2D::mHeapProp() {
 	mHeap_Prop.Type = D3D12_HEAP_TYPE_CUSTOM;
 	mHeap_Prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
@@ -36,6 +35,16 @@ void DxTexture2D::mResourceDesc() {
 	mResource_Desc.Flags = D3D12_RESOURCE_FLAG_NONE;
 }
 
+void DxTexture2D::mGPUtransfer() {
+	auto result = mTextureBuff->WriteToSubresource(
+		0,
+		nullptr,
+		mImg.pixels,
+		mImg.rowPitch,
+		mImg.slicePitch
+	);
+}
+
 void DxTexture2D::CreateResource(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	mHeapProp();
 	mResourceDesc();
@@ -51,16 +60,7 @@ void DxTexture2D::CreateResource(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	if (!SUCCEEDED(result)) {
 		assert(0 && "CreateCommittedResource Error!");
 	}
-}
-
-void DxTexture2D::GPUtransfer() {
-	auto result = mTextureBuff->WriteToSubresource(
-		0,
-		nullptr,
-		mImg.pixels,
-		mImg.rowPitch,
-		mImg.slicePitch
-	);
+	mGPUtransfer();
 }
 
 void DxTexture2D::mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap) {
@@ -73,6 +73,10 @@ void DxTexture2D::mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap) {
 		&mDescriptor_Heap,
 		IID_PPV_ARGS(&mBasicDescHeap)
 	);
+
+	if (!SUCCEEDED(result)) {
+		assert(0 && "BasicDescHeap Error!");
+	}
 }
 
 void DxTexture2D::mDescriptorRange() {
@@ -149,13 +153,20 @@ D3D12_ROOT_SIGNATURE_DESC*
 DxTexture2D::getRootSigDesc() {
 	return &mRS_Desc;
 }
-
 ID3D12DescriptorHeap* 
 DxTexture2D::getTexDescHeap() {
 	return mTexDescHeap;
 }
-
 ID3D12DescriptorHeap*
 DxTexture2D::getBasicDescHeap() {
 	return mBasicDescHeap;
+}
+DirectX::Image
+DxTexture2D::getImage() {
+	return mImg;
+}
+
+DirectX::TexMetadata 
+DxTexture2D::getMetaData() {
+	return mMetaData;
 }

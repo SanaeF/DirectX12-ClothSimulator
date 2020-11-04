@@ -15,8 +15,6 @@
 using namespace Microsoft::WRL;
 using namespace std;
 using namespace DirectX;
-
-
 namespace {
 	std::string GetTexturePathFromModelAndTexPath(const std::string& modelPath, const char* texPath) {
 		int pathIndex1 = modelPath.rfind('/');
@@ -73,73 +71,63 @@ namespace {
 	}
 }
 
-Dx12Wrapper::Dx12Wrapper(HWND hwnd) {
-#ifdef _DEBUG
-	//デバッグレイヤーをオンに
-	EnableDebugLayer();
-#endif
-
-	Resource.reset(new DXResource());
-	Render.reset(new DX_MultRend());
-
-	auto& app = Application::Instance();
-	_winSize = app.GetGraphicSize();
-
+bool Dx12Wrapper::Init(SIZE pix) {
+	setPixelSize(pix);
 	//DirectX12関連初期化
 	if (FAILED(InitializeDXGIDevice())) {
 		assert(0);
-		return;
+		return false;
 	}
 	if (FAILED(InitializeCommand())) {
 		assert(0);
-		return;
+		return false;
 	}
-	if (FAILED(CreateSwapChain(hwnd))) {
+	if (FAILED(CreateSwapChain(_hwnd,pix))) {
 		assert(0);
-		return;
+		return false;
 	}
 	if (FAILED(CreateFinalRenderTargets())) {
 		assert(0);
-		return;
+		return false;
 	}
 
-	if (FAILED(CreateSceneView())) {
-		assert(0);
-		return;
-	}
+	//if (FAILED(CreateSceneView())) {
+	//	assert(0);
+	//	return false;
+	//}
 
 	//テクスチャローダー関連初期化
-	CreateTextureLoaderTable();
+	//CreateTextureLoaderTable();
 
 	//深度バッファ作成
 	if (FAILED(CreateDepthStencilView())) {
 		assert(0);
-		return;
+		return false;
 	}
 
 	//フェンスの作成
 	if (FAILED(_dev->CreateFence(_fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(_fence.ReleaseAndGetAddressOf())))) {
 		assert(0);
-		return;
+		return false;
 	}
 
 	if (FAILED(
-		Resource->CreateScreenResAndView(_dev,_rtvHeaps,_dsvHeap,_cmdList,_backBuffers)
+		Resource->CreateScreenResAndView(_dev, _rtvHeaps, _dsvHeap, _cmdList, _backBuffers)
 	)) {
 		assert(0);
-		return;
+		return false;
 	}
 	if (FAILED(
 		Render->createScreenPolygon(_dev)
 	)) {
 		assert(0);
-		return;
+		return false;
 	}
 	if (FAILED(
 		Render->pipeline(_dev)
 	)) {
 		assert(0);
-		return;
+		return false;
 	}
 }
 
@@ -193,85 +181,6 @@ HRESULT Dx12Wrapper::CreateDepthStencilView() {
 	_dev->CreateDepthStencilView(_depthBuffer.Get(), &dsvDesc, _dsvHeap->GetCPUDescriptorHandleForHeapStart());
 }
 
-
-Dx12Wrapper::~Dx12Wrapper()
-{
-}
-
-
-ComPtr<ID3D12Resource> Dx12Wrapper::GetTextureByPath(const char* texpath) {
-	auto it = _textureTable.find(texpath);
-	if (it != _textureTable.end()) {
-		//テーブルに内にあったらロードするのではなくマップ内の
-		//リソースを返す
-		return _textureTable[texpath];
-	}
-	else {
-		return ComPtr<ID3D12Resource>(CreateTextureFromFile(texpath));
-	}
-
-}
-
-//テクスチャローダテーブルの作成
-void Dx12Wrapper::CreateTextureLoaderTable() {
-	_loadLambdaTable["sph"] = _loadLambdaTable["spa"] = _loadLambdaTable["bmp"] = _loadLambdaTable["png"] = _loadLambdaTable["jpg"] = [](const wstring& path, TexMetadata* meta, ScratchImage& img)->HRESULT {
-		return LoadFromWICFile(path.c_str(), 0, meta, img);
-	};
-
-	_loadLambdaTable["tga"] = [](const wstring& path, TexMetadata* meta, ScratchImage& img)->HRESULT {
-		return LoadFromTGAFile(path.c_str(), meta, img);
-	};
-
-	_loadLambdaTable["dds"] = [](const wstring& path, TexMetadata* meta, ScratchImage& img)->HRESULT {
-		return LoadFromDDSFile(path.c_str(), 0, meta, img);
-	};
-}
-//テクスチャ名からテクスチャバッファ作成、中身をコピー
-ID3D12Resource* Dx12Wrapper::CreateTextureFromFile(const char* texpath) {
-	string texPath = texpath;
-	//テクスチャのロード
-	TexMetadata metadata = {};
-	ScratchImage scratchImg = {};
-	auto wtexpath = GetWideStringFromString(texPath);//テクスチャのファイルパス
-	auto ext = GetExtension(texPath);//拡張子を取得
-	auto result = _loadLambdaTable[ext](wtexpath,
-		&metadata,
-		scratchImg);
-	if (FAILED(result)) {
-		return nullptr;
-	}
-	auto img = scratchImg.GetImage(0, 0, 0);//生データ抽出
-
-	//WriteToSubresourceで転送する用のヒープ設定
-	auto texHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
-	auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(metadata.format, metadata.width, metadata.height, metadata.arraySize, metadata.mipLevels);
-
-	ID3D12Resource* texbuff = nullptr;
-	result = _dev->CreateCommittedResource(
-		&texHeapProp,
-		D3D12_HEAP_FLAG_NONE,//特に指定なし
-		&resDesc,
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		nullptr,
-		IID_PPV_ARGS(&texbuff)
-	);
-
-	if (FAILED(result)) {
-		return nullptr;
-	}
-	result = texbuff->WriteToSubresource(0,
-		nullptr,//全領域へコピー
-		img->pixels,//元データアドレス
-		img->rowPitch,//1ラインサイズ
-		img->slicePitch//全サイズ
-	);
-	if (FAILED(result)) {
-		return nullptr;
-	}
-
-	return texbuff;
-}
-
 HRESULT Dx12Wrapper::InitializeDXGIDevice() {
 	UINT flagsDXGI = 0;
 	flagsDXGI |= DXGI_CREATE_FACTORY_DEBUG;
@@ -313,16 +222,15 @@ HRESULT Dx12Wrapper::InitializeDXGIDevice() {
 	}
 	return result;
 }
-
 ///スワップチェイン生成関数
-HRESULT Dx12Wrapper::CreateSwapChain(const HWND& hwnd) {
+HRESULT Dx12Wrapper::CreateSwapChain(const HWND& hwnd,SIZE pix) {
 	RECT rc = {};
 	::GetWindowRect(hwnd, &rc);
 
 
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc = {};
-	swapchainDesc.Width = _winSize.cx;
-	swapchainDesc.Height = _winSize.cy;
+	swapchainDesc.Width = pix.cx;
+	swapchainDesc.Height = pix.cy;
 	swapchainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapchainDesc.Stereo = false;
 	swapchainDesc.SampleDesc.Count = 1;
@@ -344,7 +252,6 @@ HRESULT Dx12Wrapper::CreateSwapChain(const HWND& hwnd) {
 	assert(SUCCEEDED(result));
 	return result;
 }
-
 //コマンドまわり初期化
 HRESULT Dx12Wrapper::InitializeCommand() {
 	auto result = _dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_cmdAllocator.ReleaseAndGetAddressOf()));
@@ -367,7 +274,6 @@ HRESULT Dx12Wrapper::InitializeCommand() {
 	assert(SUCCEEDED(result));
 	return result;
 }
-
 //ビュープロジェクション用ビューの生成
 HRESULT Dx12Wrapper::CreateSceneView() {
 	DXGI_SWAP_CHAIN_DESC1 desc = {};
@@ -459,79 +365,19 @@ HRESULT Dx12Wrapper::CreateFinalRenderTargets() {
 	return result;
 }
 
-//bool Dx12Wrapper::CreateScreenResAndView() {
-//	auto heapDesc = _rtvHeaps->GetDesc();
-//	auto& bbuff = _backBuffers[0];
-//	auto resDesc = bbuff->GetDesc();
-//	D3D12_HEAP_PROPERTIES heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-//
-//	float clsClr[4] = { 0.5,0.5,0.5,1.0 };
-//	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(DXGI_FORMAT_R8G8B8A8_UNORM, clsClr);
-//
-//	auto result = _dev->CreateCommittedResource(
-//		&heapProp,
-//		D3D12_HEAP_FLAG_NONE,
-//		&resDesc,
-//		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-//		&clearValue,
-//		IID_PPV_ARGS(mScPolyRes.ReleaseAndGetAddressOf())
-//	);
-//	if (FAILED(result)) {
-//		assert(0);
-//		return false;
-//	}
-//	//D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-//	heapDesc.NumDescriptors = 1;
-//
-//	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolyRTV_Heap.ReleaseAndGetAddressOf())))) {
-//		assert(0);
-//		return false;
-//	}
-//
-//	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
-//
-//	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
-//	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//	_dev->CreateRenderTargetView(
-//		mScPolyRes.Get(),
-//		&rtvDesc,
-//		mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart()
-//	);
-//	heapDesc.NumDescriptors = 1;
-//	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-//	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-//
-//	if (FAILED(_dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(mScPolySRV_Heap.ReleaseAndGetAddressOf())))) {
-//		assert(0);
-//		return false;
-//	}
-//
-//	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-//
-//	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-//	srvDesc.Format = rtvDesc.Format;
-//	srvDesc.Texture2D.MipLevels = 1;
-//	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-//
-//	_dev->CreateShaderResourceView(
-//		mScPolyRes.Get(),
-//		&srvDesc,
-//		mScPolySRV_Heap->GetCPUDescriptorHandleForHeapStart()
-//	);
-//	auto rtvHeapPointer = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
-//
-//	_cmdList->OMSetRenderTargets(
-//		1,
-//		&rtvHeapPointer,
-//		false,
-//		&_dsvHeap->GetCPUDescriptorHandleForHeapStart()
-//	);
-//}
-ComPtr< ID3D12Device> Dx12Wrapper::Device() {
-	return _dev;
-}
-ComPtr < ID3D12GraphicsCommandList> Dx12Wrapper::CommandList() {
-	return _cmdList;
+//テクスチャローダテーブルの作成
+void Dx12Wrapper::CreateTextureLoaderTable() {
+	_loadLambdaTable["sph"] = _loadLambdaTable["spa"] = _loadLambdaTable["bmp"] = _loadLambdaTable["png"] = _loadLambdaTable["jpg"] = [](const wstring& path, TexMetadata* meta, ScratchImage& img)->HRESULT {
+		return LoadFromWICFile(path.c_str(), 0, meta, img);
+	};
+
+	_loadLambdaTable["tga"] = [](const wstring& path, TexMetadata* meta, ScratchImage& img)->HRESULT {
+		return LoadFromTGAFile(path.c_str(), meta, img);
+	};
+
+	_loadLambdaTable["dds"] = [](const wstring& path, TexMetadata* meta, ScratchImage& img)->HRESULT {
+		return LoadFromDDSFile(path.c_str(), 0, meta, img);
+	};
 }
 
 void Dx12Wrapper::Update() {
@@ -549,7 +395,7 @@ void Dx12Wrapper::Draw(shared_ptr<PMDRenderer> renderer) {
 	_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void Dx12Wrapper::BeginDraw() {
+void Dx12Wrapper::ClearScreen() {
 	////DirectX処理
 
 	//バックバッファのインデックスを取得
@@ -571,12 +417,8 @@ void Dx12Wrapper::BeginDraw() {
 
 
 	////画面クリア
-	float clearColor[] = { 0.2f,0.6f,0.4f,1.0f };//白色
+	float clearColor[] = { 0.0f,0.0f,0.0f,1.0f };//白色
 	_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
-
-	//ビューポート、シザー矩形のセット
-	_cmdList->RSSetViewports(1, _viewport.get());
-	_cmdList->RSSetScissorRects(1, _scissorrect.get());
 
 }
 
@@ -588,7 +430,7 @@ void Dx12Wrapper::SetScene() {
 
 }
 
-void Dx12Wrapper::ClearDraw() {
+void Dx12Wrapper::CommandClear() {
 	_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
 		D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
@@ -619,6 +461,17 @@ void Dx12Wrapper::ClearDraw() {
 	_cmdList->Reset(_cmdAllocator.Get(), nullptr);//再びコマンドリストをためる準備
 }
 
+void Dx12Wrapper::setPixelSize(SIZE pix) {
+	_graphicSize = pix;
+}
+
+void Dx12Wrapper::ScreenFlip() {
+	CommandClear();
+	auto result = _swapchain->Present(0, 0);
+	assert(SUCCEEDED(result));
+	//BeginDraw();
+}
+
 SIZE Dx12Wrapper::getWinSize() {
 	return _winSize;
 }
@@ -634,14 +487,91 @@ D3D12_VIEWPORT* Dx12Wrapper::getViewPort() {
 D3D12_RECT* Dx12Wrapper::getScissorrect() {
 	return _scissorrect.get();
 }
+//テクスチャ名からテクスチャバッファ作成、中身をコピー
+ID3D12Resource* Dx12Wrapper::CreateTextureFromFile(const char* texpath) {
+	string texPath = texpath;
+	//テクスチャのロード
+	TexMetadata metadata = {};
+	ScratchImage scratchImg = {};
+	auto wtexpath = GetWideStringFromString(texPath);//テクスチャのファイルパス
+	auto ext = GetExtension(texPath);//拡張子を取得
+	auto result = _loadLambdaTable[ext](wtexpath,
+		&metadata,
+		scratchImg);
+	if (FAILED(result)) {
+		return nullptr;
+	}
+	auto img = scratchImg.GetImage(0, 0, 0);//生データ抽出
+
+	//WriteToSubresourceで転送する用のヒープ設定
+	auto texHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_CPU_PAGE_PROPERTY_WRITE_BACK, D3D12_MEMORY_POOL_L0);
+	auto resDesc = CD3DX12_RESOURCE_DESC::Tex2D(metadata.format, metadata.width, metadata.height, metadata.arraySize, metadata.mipLevels);
+
+	ID3D12Resource* texbuff = nullptr;
+	result = _dev->CreateCommittedResource(
+		&texHeapProp,
+		D3D12_HEAP_FLAG_NONE,//特に指定なし
+		&resDesc,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		nullptr,
+		IID_PPV_ARGS(&texbuff)
+	);
+
+	if (FAILED(result)) {
+		return nullptr;
+	}
+	result = texbuff->WriteToSubresource(0,
+		nullptr,//全領域へコピー
+		img->pixels,//元データアドレス
+		img->rowPitch,//1ラインサイズ
+		img->slicePitch//全サイズ
+	);
+	if (FAILED(result)) {
+		return nullptr;
+	}
+
+	return texbuff;
+}
 
 ComPtr < IDXGISwapChain4> Dx12Wrapper::Swapchain() {
 	return _swapchain;
 }
 
+ComPtr< ID3D12Device> Dx12Wrapper::Device() {
+	return _dev;
+}
 
-void Dx12Wrapper::ScreenFlip() {
-	auto result = _swapchain->Present(0, 0);
-	assert(SUCCEEDED(result));
-	BeginDraw();
+ComPtr < ID3D12GraphicsCommandList> Dx12Wrapper::CommandList() {
+	return _cmdList;
+}
+
+ComPtr<ID3D12Resource> Dx12Wrapper::GetTextureByPath(const char* texpath) {
+	auto it = _textureTable.find(texpath);
+	if (it != _textureTable.end()) {
+		//テーブルに内にあったらロードするのではなくマップ内の
+		//リソースを返す
+		return _textureTable[texpath];
+	}
+	else {
+		return ComPtr<ID3D12Resource>(CreateTextureFromFile(texpath));
+	}
+
+}
+
+
+Dx12Wrapper::Dx12Wrapper(HWND hwnd) :
+	_hwnd(hwnd) {
+#ifdef _DEBUG
+	//デバッグレイヤーをオンに
+	EnableDebugLayer();
+#endif
+	Resource.reset(new DXResource());
+	Render.reset(new DX_MultRend());
+
+	auto& app = Application::Instance();
+	_winSize = app.GetGraphicSize();
+
+}
+
+Dx12Wrapper::~Dx12Wrapper() {
 }

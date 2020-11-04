@@ -12,7 +12,7 @@ class DXResource;
 class DX_MultRend;
 class PMDRenderer;
 
-class Dx12Wrapper{
+class Dx12Wrapper {
 
 	std::shared_ptr<DX_MultRend>Render;
 	std::shared_ptr<DXResource>Resource;
@@ -55,42 +55,23 @@ class Dx12Wrapper{
 	ComPtr<ID3D12Fence> _fence = nullptr;
 	UINT64 _fenceVal = 0;
 
-	//最終的なレンダーターゲットの生成
-	HRESULT	CreateFinalRenderTargets();
-	//デプスステンシルビューの生成
-	HRESULT CreateDepthStencilView();
-
-	//スワップチェインの生成
-	HRESULT CreateSwapChain(const HWND& hwnd);
-
-	//DXGIまわり初期化
-	HRESULT InitializeDXGIDevice();
-
-
-
-	//コマンドまわり初期化
-	HRESULT InitializeCommand();
-
-	//ビュープロジェクション用ビューの生成
-	HRESULT CreateSceneView();
-
 	//ロード用テーブル
 	using LoadLambda_t = std::function<HRESULT(const std::wstring& path, DirectX::TexMetadata*, DirectX::ScratchImage&)>;
 	std::map < std::string, LoadLambda_t> _loadLambdaTable;
 	//テクスチャテーブル
 	std::unordered_map<std::string, ComPtr<ID3D12Resource>> _textureTable;
-	//テクスチャローダテーブルの作成
-	void CreateTextureLoaderTable();
-	//テクスチャ名からテクスチャバッファ作成、中身をコピー
-	ID3D12Resource* CreateTextureFromFile(const char* texpath);
 
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
+
+	bool Init(SIZE pix);
+
 	void Draw(std::shared_ptr<PMDRenderer> renderer);
 	void Update();
-	void BeginDraw();
-	void ClearDraw();
+	void ClearScreen();
+	void CommandClear();
+
 	///テクスチャパスから必要なテクスチャバッファへのポインタを返す
 	///@param texpath テクスチャファイルパス
 	ComPtr<ID3D12Resource> GetTextureByPath(const char* texpath);
@@ -106,7 +87,37 @@ public:
 
 	void ScreenFlip();
 
+	void setPixelSize(SIZE pix);
+
+	int GetCallFunctionCount();
+
 	SIZE getWinSize();
 
 	SIZE getPixelSize();
+
+private:
+
+	//最終的なレンダーターゲットの生成
+	HRESULT	CreateFinalRenderTargets();
+	//デプスステンシルビューの生成
+	HRESULT CreateDepthStencilView();
+
+	//スワップチェインの生成
+	HRESULT CreateSwapChain(const HWND& hwnd,SIZE pix);
+
+	//DXGIまわり初期化
+	HRESULT InitializeDXGIDevice();
+
+
+
+	//コマンドまわり初期化
+	HRESULT InitializeCommand();
+
+	//ビュープロジェクション用ビューの生成
+	HRESULT CreateSceneView();
+
+	//テクスチャローダテーブルの作成
+	void CreateTextureLoaderTable();
+	//テクスチャ名からテクスチャバッファ作成、中身をコピー
+	ID3D12Resource* CreateTextureFromFile(const char* texpath);
 };

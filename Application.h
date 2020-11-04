@@ -18,6 +18,8 @@ class DXPMDModel;
 
 class DXGraph;
 
+class DxSound;
+
 ///シングルトンクラス
 class Application{
 private:
@@ -33,6 +35,7 @@ private:
 	std::shared_ptr<PMDRenderer> mPMDRenderer;
 	std::shared_ptr<DXPMDModel> mPMDModel;
 	std::shared_ptr<DXGraph>Graph;
+	std::shared_ptr<DxSound>Sound;
 	//ゲーム用ウィンドウの生成
 	void CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass);
 

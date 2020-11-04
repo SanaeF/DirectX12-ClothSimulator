@@ -1,6 +1,22 @@
 #include "Vertex2D.h"
 #include "Dx12Wrapper.h"
 
+
+void Vertex2D::setPolygonSize(DirectX::TexMetadata data) {
+	float aspect = static_cast<float>(data.width) / static_cast<float>(data.height);
+	//vertex[0].pos.y = vertex[0].pos.x / aspect;
+	//vertex[2].pos.y = vertex[0].pos.x / aspect;
+	vertex[0].pos.x = vertex[0].pos.y * aspect;
+	vertex[1].pos.x = vertex[0].pos.y * aspect;
+	vertex[2].pos.x = vertex[3].pos.y * aspect;
+	vertex[3].pos.x = vertex[3].pos.y * aspect;
+	//vertex[0].pos.y = data.height;
+	//vertex[2].pos.x = data.width;
+	//vertex[2].pos.y = data.height;
+
+	//vertex[3].pos.x = data.width;
+}
+
 void Vertex2D::mHeapProp() {
 	mHeap_prop.Type = D3D12_HEAP_TYPE_UPLOAD;
 	mHeap_prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
