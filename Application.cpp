@@ -34,7 +34,7 @@ void Application::Run() {//خليط عضوي
 
 	float angle = 0.0f;
 	MSG msg = {};
-	unsigned int frame = 0;
+	int count = 0;
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -45,13 +45,17 @@ void Application::Run() {//خليط عضوي
 			break;
 		}
 		mDxWr->ClearScreen();
-		Graph->SetDrawArea(0, 0, 1920, 1440);
-		angle += 0.001f;
+		if (count < 500)Graph->SetDrawArea(0, 0, 1920 - (count % 500), 1440);
+		if (500<=count&& count < 1000)Graph->SetDrawArea(0, 0, 1920, 940 + (count % 500));
+		if (1000 <= count && count < 1500)Graph->SetDrawArea((count % 500), 0, 1920, 1440);
+		if (1500 <= count && count < 2000)Graph->SetDrawArea(0, (count % 500), 1920, 1440);
 		Graph->DrawPrototype2D(0, imageHandle[1]);
 		Graph->DrawPrototype2D(angle, imageHandle[0]);
 		Graph->DrawPrototype2D(0, text_img);
-		
-		
+
+		angle += 0.001f;
+		count++;
+		if (count == 2000)count = 0;
 		mDxWr->ScreenFlip();
 
 	}
