@@ -5,15 +5,11 @@
 
 using namespace DirectX;
 
-void Dx2DMatrix::createBuffer(Dx12Wrapper& DxWrap,int Handle) {
-	mMatrix.resize(Handle + 1);
-	pMapMatrix.resize(Handle + 1);
-	mMatrix[Handle] = XMMatrixIdentity();
+void Dx2DMatrix::createBuffer(Dx12Wrapper& DxWrap) {
+	mMatrix = XMMatrixIdentity();
+	mMatrix.r[0].m128_f32[0] = 2.0f / DxWrap.getPixelSize().cx;
+	mMatrix.r[1].m128_f32[1] = -2.0f / DxWrap.getPixelSize().cy;
 
-	mMatrix[Handle].r[0].m128_f32[0] = 2.0f / DxWrap.getPixelSize().cx;
-	mMatrix[Handle].r[1].m128_f32[1] = -2.0f / DxWrap.getPixelSize().cy;
-	//mMatrix[Handle].r[0];
-	//mMatrix[Handle].r[1];
 	RotaInitialize();
 	DxWrap.Device()->CreateCommittedResource(
 		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
@@ -24,16 +20,32 @@ void Dx2DMatrix::createBuffer(Dx12Wrapper& DxWrap,int Handle) {
 		IID_PPV_ARGS(&mConstBuffer)
 	);
 
-	auto result = mConstBuffer->Map(0, nullptr, (void**)&pMapMatrix[Handle]);
-	*pMapMatrix[Handle] = mWorlMat * mLookAt * mPerspectiveFov;
+	auto result = mConstBuffer->Map(0, nullptr, (void**)&pMapMatrix);
+	*pMapMatrix = mLookAt * mPerspectiveFov;
+	mConstBuffer->Unmap(0, nullptr);
 }
 
-void Dx2DMatrix::Rotation(double RotaX, double RotaY, double RotaZ, int Handle) {
-	//mWorlMat = XMMatrixRotationX(RotaX);
-	//mWorlMat = XMMatrixRotationY(RotaY);
+void Dx2DMatrix::Rotation(
+	DirectX::XMMATRIX& pMatrix,
+	double RotaX,
+	double RotaY,
+	double RotaZ
+) {
 	mWorlMat = XMMatrixRotationZ(RotaZ);
-	*pMapMatrix[Handle] = mWorlMat * mLookAt * mPerspectiveFov;
 
+	pMatrix = mWorlMat * mLookAt * mPerspectiveFov * XMMatrixIdentity();
+
+}
+
+void Dx2DMatrix::TransMove(
+	DirectX::XMMATRIX& pMatrix,
+	double RotaX,
+	double RotaY,
+	double RotaZ
+) {
+	mWorlMat = XMMatrixTranslation(RotaX, RotaY, RotaZ);
+
+	pMatrix = mWorlMat * pMatrix;
 }
 
 void Dx2DMatrix::RotaInitialize() {
@@ -55,6 +67,12 @@ void Dx2DMatrix::RotaInitialize() {
 }
 
 ID3D12Resource* 
-Dx2DMatrix::getConstBuffer(int Handle) {
+Dx2DMatrix::getConstBuffer() {
 	return mConstBuffer;
+}
+
+DirectX::XMMATRIX* 
+Dx2DMatrix::getMatDefault() {
+
+	return pMapMatrix;
 }

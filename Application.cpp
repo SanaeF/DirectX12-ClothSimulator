@@ -23,22 +23,21 @@ bool Application::Initialize() {
 
 void Application::Run() {
 	int imageHandle[2];
+	int HandleLif;
 	int MusicHandle;
-
 	imageHandle[0] = Graph->Load2D(L"./dat/back.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
+	HandleLif = Graph->Load2D(L"./dat/Lifekakera.png");
 	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
-
-
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
 	Sound->SetVolume(-3000, MusicHandle);
 	Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
-
-
 	float angle = 0.0f;
 	int spd = 1;
 	MSG msg = {};
 	int count = 0;
+
+
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -54,18 +53,21 @@ void Application::Run() {
 		if (500<=count&& count < 1000)Graph->SetDrawArea(0, 0, 1920, 940 + (count % 500));
 		if (1000 <= count && count < 1500)Graph->SetDrawArea((count % 500), 0, 1920, 1440);
 		if (1500 <= count && count < 2000)Graph->SetDrawArea(0, (count % 500), 1920, 1440);
-		Graph->DrawPrototype2D(0, imageHandle[1]);
+
+		Graph->DrawPrototype2D(0, 0, 0, imageHandle[1]);
+
 		Graph->SetDrawArea(0, 0, 1920, 1440);
-		Graph->DrawPrototype2D(angle, imageHandle[0]);
-		Graph->DrawPrototype2D(0, text_img);
+		Graph->DrawPrototype2D(0, 0, angle, imageHandle[0]);
+		Graph->DrawPrototype2D(0, 0, -angle, HandleLif);
+
 		mDxWr->ScreenFlip();
 		
 
 		Key->CheckAll();
 		if (Key->CheckHitKey(DIK_C) == 1)spd = 3;
 		else spd = 1;
-		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.001f * spd;
-		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.001f * spd;
+		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * spd;
+		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * spd;
 		count++;
 		if (count == 2000)count = 0;
 

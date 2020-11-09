@@ -57,7 +57,7 @@ void Vertex2D::mCopyBuffer() {
 		std::end(vertex),
 		mVertexMap
 	);
-
+	
 	mVertex_Buff->Unmap(0, nullptr);
 }
 

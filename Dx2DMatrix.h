@@ -9,9 +9,9 @@ class Dx2DMatrix {
 private:
 	ID3D12Resource* mConstBuffer = nullptr;
 
-	std::vector<DirectX::XMMATRIX*> mConstMatrix;
-	std::vector<DirectX::XMMATRIX> mMatrix;
-	std::vector<DirectX::XMMATRIX*> pMapMatrix;
+	DirectX::XMMATRIX* mConstMatrix;
+	DirectX::XMMATRIX mMatrix;
+	DirectX::XMMATRIX* pMapMatrix;
 
 	DirectX::XMMATRIX mWorlMat;
 
@@ -21,11 +21,25 @@ private:
 
 public:
 
-	void createBuffer(Dx12Wrapper& DxWrap, int Handle);
+	void createBuffer(Dx12Wrapper& DxWrap);
 
-	void Rotation(double RotaX, double RotaY, double RotaZ, int Handle);
+	void Rotation(
+		DirectX::XMMATRIX& pMatrix,
+		double RotaX,
+		double RotaY,
+		double RotaZ
+	);
 
-	ID3D12Resource* getConstBuffer(int Handle);
+	void TransMove(
+		DirectX::XMMATRIX& pMatrix,
+		double RotaX,
+		double RotaY,
+		double RotaZ
+	);
+
+	ID3D12Resource* getConstBuffer();
+
+	DirectX::XMMATRIX* getMatDefault();
 
 private:
 

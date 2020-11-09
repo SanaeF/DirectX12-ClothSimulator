@@ -4,7 +4,7 @@
 #include<map>
 #include<DirectXMath.h>
 #include<d3dx12.h>
-
+#include<DirectXTex.h>
 class Dx12Wrapper;
 
 class DxViewPort2D;
@@ -24,6 +24,9 @@ private:
 	};
 
 	struct GraphicData {
+		DirectX::XMMATRIX* mMatrix;
+		ID3D12Resource* mResBuf;
+
 		ID3D12DescriptorHeap* mTexDescHeap;
 		ID3D12PipelineState* mPipelineState;
 		ID3D12RootSignature* mRootSignature;
@@ -31,6 +34,7 @@ private:
 		D3D12_INDEX_BUFFER_VIEW mVertexIndexView;
 		D3D12_VIEWPORT mViewPort = {};
 		D3D12_RECT mScissorrect = {};
+		DirectX::TexMetadata mMetaData = {};
 		//D3D12_RESOURCE_BARRIER mBarrier = {};
 		int CopyType;
 	};
@@ -63,7 +67,7 @@ public:
 
 	void SetDrawArea(int top, int left, int right, int bottom);
 
-	void Draw(double Angle, int Handle);
+	void Draw(double x, double y, double Angle, int Handle);
 
 	Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
 	~Dx2DGraph();
