@@ -5,7 +5,7 @@ class Dx12Wrapper;
 
 class Dx2DGraph;
 
-class DXGraph{
+class DxGraph {
 private:
 
 	std::shared_ptr<Dx2DGraph>mDraw2D;
@@ -21,6 +21,7 @@ public:
 	int Load2D(const wchar_t* path);
 
 
-	DXGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
-	~DXGraph();
+	DxGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
+	~DxGraph();
+
 };

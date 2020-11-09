@@ -569,7 +569,7 @@ Dx12Wrapper::Dx12Wrapper(HWND hwnd) :
 	Render.reset(new DX_MultRend());
 
 	auto& app = Application::Instance();
-	_winSize = app.GetGraphicSize();
+	//_winSize = app.GetGraphicSize();
 
 }
 

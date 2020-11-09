@@ -3,8 +3,8 @@
 #include"PMDRenderer.h"
 #include"DXPMDModel.h"
 
-#include "DXGraph.h"
-
+#include "DxGraph.h"
+#include "DxKeyConfig.h"
 #include "DxSound.h"
 
 bool Application::Initialize() {
@@ -13,26 +13,30 @@ bool Application::Initialize() {
 	mDxWr.reset(new Dx12Wrapper(_hwnd));
 	mDxWr->Init(mPix);
 	Sound.reset(new DxSound(_hwnd));
-	Graph.reset(new DXGraph(mDxWr));
+	Key.reset(new DxKeyConfig(_hwnd,_windowClass));
+	Graph.reset(new DxGraph(mDxWr));
+
+	Key->KeyInit(0);
 	return true;
 }
 
 
-void Application::Run() {//خليط عضوي
+void Application::Run() {
 	int imageHandle[2];
 	int MusicHandle;
 
-	imageHandle[0] = Graph->Load2D(L"./dat/backB.png");
+	imageHandle[0] = Graph->Load2D(L"./dat/back.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
 	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
 
 
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
-	Sound->SetVolume(-2700, MusicHandle);
+	Sound->SetVolume(-3000, MusicHandle);
 	Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
 
 
 	float angle = 0.0f;
+	int spd = 1;
 	MSG msg = {};
 	int count = 0;
 	while (true) {
@@ -44,19 +48,26 @@ void Application::Run() {//خليط عضوي
 		if (msg.message == WM_QUIT) {
 			break;
 		}
+
 		mDxWr->ClearScreen();
 		if (count < 500)Graph->SetDrawArea(0, 0, 1920 - (count % 500), 1440);
 		if (500<=count&& count < 1000)Graph->SetDrawArea(0, 0, 1920, 940 + (count % 500));
 		if (1000 <= count && count < 1500)Graph->SetDrawArea((count % 500), 0, 1920, 1440);
 		if (1500 <= count && count < 2000)Graph->SetDrawArea(0, (count % 500), 1920, 1440);
 		Graph->DrawPrototype2D(0, imageHandle[1]);
+		Graph->SetDrawArea(0, 0, 1920, 1440);
 		Graph->DrawPrototype2D(angle, imageHandle[0]);
 		Graph->DrawPrototype2D(0, text_img);
+		mDxWr->ScreenFlip();
+		
 
-		angle += 0.001f;
+		Key->CheckAll();
+		if (Key->CheckHitKey(DIK_C) == 1)spd = 3;
+		else spd = 1;
+		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.001f * spd;
+		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.001f * spd;
 		count++;
 		if (count == 2000)count = 0;
-		mDxWr->ScreenFlip();
 
 	}
 }

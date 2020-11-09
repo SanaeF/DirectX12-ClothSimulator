@@ -48,7 +48,7 @@ public:
 
 	void setResourceDesc(D3D12_RESOURCE_DESC Resource_desc);
 
-	void setPolygonSize(DirectX::TexMetadata data);
+	void setPolygonSize(SIZE size, DirectX::TexMetadata data);
 
 	D3D12_HEAP_PROPERTIES getHeap_prop();
 

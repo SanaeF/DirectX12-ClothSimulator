@@ -118,6 +118,9 @@
     <Filter Include="ソース ファイル\DXSound\WavData">
       <UniqueIdentifier>{7944ec6f-4d17-491a-b838-b7fc051d6f14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\DirectXLib">
+      <UniqueIdentifier>{e099ab01-26af-4bf8-84af-0429e27b45aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Dx12Wrapper.h">
@@ -128,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>ソース ファイル\Application</Filter>
-    </ClInclude>
-    <ClInclude Include="GIDirectLib\DirectX12lib.h">
-      <Filter>DirectXlib</Filter>
     </ClInclude>
     <ClInclude Include="DX_MultRend.h">
       <Filter>ソース ファイル\DX12wrap\RenderTargetView</Filter>
@@ -152,9 +152,6 @@
     </ClInclude>
     <ClInclude Include="DXPMDMaterial.h">
       <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
-    </ClInclude>
-    <ClInclude Include="DXGraph.h">
-      <Filter>ソース ファイル\DXGraphics</Filter>
     </ClInclude>
     <ClInclude Include="DX3DGraph.h">
       <Filter>ソース ファイル\DXGraphics\Graphs3D</Filter>
@@ -209,6 +206,12 @@
     </ClInclude>
     <ClInclude Include="DxWavData.h">
       <Filter>ソース ファイル\DXSound\WavData</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib.h">
+      <Filter>ソース ファイル\DirectXLib</Filter>
+    </ClInclude>
+    <ClInclude Include="DxGraph.h">
+      <Filter>ソース ファイル\DXGraphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -276,9 +279,6 @@
     <ClCompile Include="DXPMDMaterial.cpp">
       <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
     </ClCompile>
-    <ClCompile Include="DXGraph.cpp">
-      <Filter>ソース ファイル\DXGraphics</Filter>
-    </ClCompile>
     <ClCompile Include="DX3DGraph.cpp">
       <Filter>ソース ファイル\DXGraphics\Graphs3D</Filter>
     </ClCompile>
@@ -326,6 +326,12 @@
     </ClCompile>
     <ClCompile Include="DxWavData.cpp">
       <Filter>ソース ファイル\DXSound\WavData</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib.cpp">
+      <Filter>ソース ファイル\DirectXLib</Filter>
+    </ClCompile>
+    <ClCompile Include="DxGraph.cpp">
+      <Filter>ソース ファイル\DXGraphics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

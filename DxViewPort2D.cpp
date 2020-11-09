@@ -2,9 +2,9 @@
 
 #include"Dx12Wrapper.h"
 
-void DxViewPort2D::CreateViewPort(DirectX::TexMetadata MetaData) {
-	mViewPort.Width = MetaData.width;
-	mViewPort.Height = MetaData.height;
+void DxViewPort2D::CreateViewPort(SIZE size, DirectX::TexMetadata MetaData) {
+	mViewPort.Width = size.cx;
+	mViewPort.Height = size.cy;
 	mViewPort.TopLeftX = 0;
 	mViewPort.TopLeftY = 0;
 	mViewPort.MaxDepth = 1.0f;

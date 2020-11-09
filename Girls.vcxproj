@@ -125,6 +125,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="DirectXLib.cpp" />
     <ClCompile Include="Dx2DMatrix.cpp" />
     <ClCompile Include="Dx2DRootSignature.cpp" />
     <ClCompile Include="DxHelper.cpp" />
@@ -142,7 +143,7 @@
     <ClCompile Include="Dx2DGraph.cpp" />
     <ClCompile Include="Dx2DPipeline.cpp" />
     <ClCompile Include="DX3DGraph.cpp" />
-    <ClCompile Include="DXGraph.cpp" />
+    <ClCompile Include="DxGraph.cpp" />
     <ClCompile Include="DXHandler.cpp" />
     <ClCompile Include="DXPMDBone.cpp" />
     <ClCompile Include="DXPMDMaterial.cpp" />
@@ -155,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="DirectXLib.h" />
     <ClInclude Include="Dx2DMatrix.h" />
     <ClInclude Include="Dx2DRootSignature.h" />
     <ClInclude Include="DxHelper.h" />
@@ -172,13 +174,12 @@
     <ClInclude Include="Dx2DGraph.h" />
     <ClInclude Include="Dx2DPipeline.h" />
     <ClInclude Include="DX3DGraph.h" />
-    <ClInclude Include="DXGraph.h" />
+    <ClInclude Include="DxGraph.h" />
     <ClInclude Include="DXHandler.h" />
     <ClInclude Include="DXPMDBone.h" />
     <ClInclude Include="DxPMDManager.h" />
     <ClInclude Include="DXPMDMaterial.h" />
     <ClInclude Include="DXResource.h" />
-    <ClInclude Include="GIDirectLib\DirectX12lib.h" />
     <ClInclude Include="DXPMDModel.h" />
     <ClInclude Include="DxHandleManager.h" />
     <ClInclude Include="PMDRenderer.h" />

@@ -10,7 +10,7 @@ private:
 	D3D12_RECT mScissorrect = {};
 public:
 
-	void CreateViewPort(DirectX::TexMetadata MetaData);
+	void CreateViewPort(SIZE size, DirectX::TexMetadata MetaData);
 
 	void Scissor(std::shared_ptr<Dx12Wrapper> DxWrap);
 

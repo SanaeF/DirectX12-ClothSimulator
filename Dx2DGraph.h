@@ -43,7 +43,7 @@ private:
 
 	std::shared_ptr<DxUploadTex2D>mTexture;
 	std::shared_ptr <Dx2DMatrix>mMatrix;
-	std::shared_ptr<DxIndex2D> mIndex;
+	//std::shared_ptr<DxIndex2D> mIndex;
 	std::shared_ptr<Dx2DRootSignature> mRootSignature;
 	std::shared_ptr<Dx2DPipeline> mPipeline;
 

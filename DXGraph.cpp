@@ -1,29 +1,29 @@
-#include "DXGraph.h"
+#include "DxGraph.h"
 
 #include"Dx12Wrapper.h"
 #include "Dx2DGraph.h"
 
-DXGraph::DXGraph(std::shared_ptr<Dx12Wrapper> DxWrap)
+DxGraph::DxGraph(std::shared_ptr<Dx12Wrapper> DxWrap)
 {
 	mDraw2D.reset(new Dx2DGraph(DxWrap));
 }
 
-DXGraph::~DXGraph() {
+DxGraph::~DxGraph() {
 
 }
 
-void DXGraph::SetDrawArea(int top, int left, int right, int bottom) {
+void DxGraph::SetDrawArea(int top, int left, int right, int bottom) {
 	mDraw2D->SetDrawArea(top, left, right, bottom);
 }
 
-int DXGraph::Load2D(const wchar_t* path) {
+int DxGraph::Load2D(const wchar_t* path) {
 	return mDraw2D->Load(path);
 }
 
-void DXGraph::DrawPrototype2D(double Angle, int Handle) {
+void DxGraph::DrawPrototype2D(double Angle, int Handle) {
 	mDraw2D->Draw(Angle, Handle);
 }
 
-void DXGraph::Init() {
+void DxGraph::Init() {
 
 }

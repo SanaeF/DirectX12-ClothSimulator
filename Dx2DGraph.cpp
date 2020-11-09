@@ -11,20 +11,26 @@
 int Dx2DGraph::mHandleCount = 0;
 
 int Dx2DGraph::Load(const wchar_t* path) {
+	DxIndex2D mIndex;
+
 	int HandleID = mHandleCount;
+	mGraphData.resize(HandleID + 1);
 	//CopyType = eTYPE_DMA;
 
 	mMatrix->createBuffer(*mDxWrap,HandleID);//
 	mTexture->LoadWIC(path);
-	mIndex->setPolygonSize(mTexture->getMetaData());
-	mIndex->CreateIndexBufferView(*mDxWrap);
+	mIndex.setPolygonSize(mDxWrap->getPixelSize(), mTexture->getMetaData());
+	mIndex.CreateIndexBufferView(*mDxWrap);
 	CopyTex(eTYPE_UMA, HandleID);
 
 	GraphicPipeline();
 
-	mViewPort->CreateViewPort(mTexture->getMetaData());
+	mViewPort->CreateViewPort(mDxWrap->getPixelSize(), mTexture->getMetaData());
 
 	SetHandleData(HandleID);
+	mGraphData[HandleID].mVertexBufferView = mIndex.getvertexBufferView();
+	mGraphData[HandleID].mVertexIndexView = mIndex.getIndexView();
+
 
 	return HandleID;
 }
@@ -92,12 +98,11 @@ void Dx2DGraph::GraphicPipeline() {
 }
 
 void Dx2DGraph::SetHandleData(int Handle) {
-	mGraphData.resize(Handle + 1);
 	mGraphData[Handle].mTexDescHeap = mTexture->getBasicDescHeap();
 	mGraphData[Handle].mPipelineState = mPipeline->getPipelineState();
 	mGraphData[Handle].mRootSignature = mRootSignature->getRootSignature();
-	mGraphData[Handle].mVertexBufferView = mIndex->getvertexBufferView();
-	mGraphData[Handle].mVertexIndexView = mIndex->getIndexView();
+	//mGraphData[Handle].mVertexBufferView = mIndex->getvertexBufferView();
+	//mGraphData[Handle].mVertexIndexView = mIndex->getIndexView();
 	mGraphData[Handle].mViewPort = mViewPort->getViewPort();
 	mGraphData[Handle].CopyType = CopyType;
 	mHandleCount++;
@@ -110,7 +115,7 @@ Dx2DGraph::Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap) :
 {
 	mTexture.reset(new DxUploadTex2D());
 	mMatrix.reset(new Dx2DMatrix());
-	mIndex.reset(new DxIndex2D());
+	//mIndex.reset(new DxIndex2D());
 	mPipeline.reset(new Dx2DPipeline());
 	mRootSignature.reset(new Dx2DRootSignature());
 	mViewPort.reset(new(DxViewPort2D));
