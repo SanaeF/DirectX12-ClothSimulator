@@ -61,6 +61,8 @@ class Dx12Wrapper {
 	//テクスチャテーブル
 	std::unordered_map<std::string, ComPtr<ID3D12Resource>> _textureTable;
 
+	std::vector<int> mFuncCount;
+
 public:
 	Dx12Wrapper(HWND hwnd);
 	~Dx12Wrapper();
@@ -72,16 +74,24 @@ public:
 	void ClearScreen();
 	void CommandClear();
 
+	void SetNextCommand();
+
 	///テクスチャパスから必要なテクスチャバッファへのポインタを返す
 	///@param texpath テクスチャファイルパス
 	ComPtr<ID3D12Resource> GetTextureByPath(const char* texpath);
 
 	ComPtr< ID3D12Device> Device();//デバイス
-	ComPtr < ID3D12GraphicsCommandList> CommandList();//コマンドリスト
+	ComPtr < ID3D12GraphicsCommandList> CmdList();//コマンドリスト
 	ComPtr < IDXGISwapChain4> Swapchain();//スワップチェイン
 
 	D3D12_VIEWPORT* getViewPort();//ビューポート
 	D3D12_RECT* getScissorrect();//シザー矩形
+
+	void setCount(int Handle,int num);
+
+	int getCount(int Handle);
+
+	void ClearCount();
 
 	void SetScene();
 

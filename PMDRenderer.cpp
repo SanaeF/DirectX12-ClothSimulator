@@ -43,7 +43,7 @@ void PMDRenderer::Update() {
 }
 
 void PMDRenderer::BeforeDraw() {
-	auto cmdlist = _dx12->CommandList();
+	auto cmdlist = _dx12->CmdList();
 	cmdlist->SetPipelineState(_pipeline.Get());
 	cmdlist->SetGraphicsRootSignature(_rootSignature.Get());
 

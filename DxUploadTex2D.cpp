@@ -137,7 +137,7 @@ void DxUploadTex2D::TextureCopy(std::shared_ptr<Dx12Wrapper> DxWrap) {
 }
 
 void DxUploadTex2D::BarrierDescProp(std::shared_ptr<Dx12Wrapper> DxWrap) {
-	DxWrap->CommandList()->CopyTextureRegion(
+	DxWrap->CmdList()->CopyTextureRegion(
 		&mDST, 0, 0, 0, &mSRC, nullptr
 	);
 
@@ -147,10 +147,10 @@ void DxUploadTex2D::BarrierDescProp(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	mBarrier_Desc.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
 	mBarrier_Desc.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
 	mBarrier_Desc.Transition.StateAfter = D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE;
-
-	DxWrap->CommandList()->ResourceBarrier(1, &mBarrier_Desc);
-	DxWrap->CommandClear();
-
+	DxWrap->CmdList()->ResourceBarrier(1, &mBarrier_Desc);
+	DxWrap->CmdList()->Close();
+	auto result = DxWrap->Device()->GetDeviceRemovedReason();
+	if (SUCCEEDED(result))assert(0);
 }
 
 void DxUploadTex2D::ShaderResourceViewforUpload(std::shared_ptr<Dx12Wrapper> DxWrap) {
@@ -159,6 +159,7 @@ void DxUploadTex2D::ShaderResourceViewforUpload(std::shared_ptr<Dx12Wrapper> DxW
 	descHeapDesc.NodeMask = 0;//マスクは0
 	descHeapDesc.NumDescriptors = 1;//ビューは今のところ１つだけ
 	descHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;//シェーダリソースビュー(および定数、UAVも)
+
 	auto result = DxWrap->Device()->CreateDescriptorHeap(&descHeapDesc, IID_PPV_ARGS(&mTexture_DescHeap));//生成
 
 	//通常テクスチャビュー作成

@@ -25,6 +25,15 @@ D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 	D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
 	0
 },
+{
+	"SV_InstanceID",
+	0,
+	DXGI_FORMAT_R32_UINT,
+	1,
+	D3D12_APPEND_ALIGNED_ELEMENT,
+	D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,
+	1
+},
 };
 
 void Dx2DPipeline::LoadShader() {
@@ -95,8 +104,7 @@ void Dx2DPipeline::RootSignatureState(
 	Dx2DRootSignature& mRootSig,
 	D3D12_ROOT_SIGNATURE_DESC* RS_Desuc
 ) {
-	mRootSig.CreateRootSignature(*DxWrap, RS_Desuc);
-	mGraph_Pipeline.pRootSignature = mRootSig.getRootSignature();
+	mGraph_Pipeline.pRootSignature = mRootSig.CreateRootSignature(*DxWrap, RS_Desuc);
 }
 
 void Dx2DPipeline::CreateGraphicsPipeline(std::shared_ptr<Dx12Wrapper> DxWrap) {
@@ -104,6 +112,7 @@ void Dx2DPipeline::CreateGraphicsPipeline(std::shared_ptr<Dx12Wrapper> DxWrap) {
 		&mGraph_Pipeline,
 		IID_PPV_ARGS(&mPipeline_State)
 	);
+	
 	if (!SUCCEEDED(result)) {
 		assert(0 && "CreateGraphicsPipelineState Error!");
 	}
@@ -121,6 +130,7 @@ void Dx2DPipeline::setRTBDesc(D3D12_RENDER_TARGET_BLEND_DESC RTB_Desc) {
 	this->mRTB_Desc = RTB_Desc;
 }
 
-ID3D12PipelineState* Dx2DPipeline::getPipelineState() {
+ID3D12PipelineState* 
+Dx2DPipeline::getPipelineState() {
 	return mPipeline_State;
 }

@@ -92,15 +92,11 @@ void DxTexture2D::mDescriptorRange() {
 }
 
 void DxTexture2D::mRootParameters() {
-	mRoot_Parameter[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	mRoot_Parameter[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
-	mRoot_Parameter[0].DescriptorTable.pDescriptorRanges = &mDescTbl_Range[0];
-	mRoot_Parameter[0].DescriptorTable.NumDescriptorRanges = 1;
+	mRoot_Parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
+	mRoot_Parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
+	mRoot_Parameter.DescriptorTable.pDescriptorRanges = mDescTbl_Range;
+	mRoot_Parameter.DescriptorTable.NumDescriptorRanges = 2;
 
-	mRoot_Parameter[1].ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
-	mRoot_Parameter[1].ShaderVisibility = D3D12_SHADER_VISIBILITY_VERTEX;
-	mRoot_Parameter[1].DescriptorTable.pDescriptorRanges = &mDescTbl_Range[1];
-	mRoot_Parameter[1].DescriptorTable.NumDescriptorRanges = 1;
 }
 
 void DxTexture2D::mSampler() {
@@ -117,14 +113,15 @@ void DxTexture2D::mSampler() {
 
 void DxTexture2D::mRootSignatureDesc() {
 	mRS_Desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
-	mRS_Desc.pParameters = mRoot_Parameter;
-	mRS_Desc.NumParameters = 2;
+	mRS_Desc.pParameters = &mRoot_Parameter;
+	mRS_Desc.NumParameters = 1;
 	mRS_Desc.pStaticSamplers = &mSampler_Desc;
 	mRS_Desc.NumStaticSamplers = 1;
+
 }
 
 void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12Resource* constBuffer) {
-	mDescriptorHeap(DxWrap);
+	//mDescriptorHeap(DxWrap);
 	mSRV_Desc.Format = mMetaData.format;
 	mSRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	mSRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
@@ -149,7 +146,14 @@ void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12
 	mRootSignatureDesc();
 }
 
-D3D12_ROOT_SIGNATURE_DESC* 
+void DxTexture2D::ConstBuffViwe(
+	std::shared_ptr<Dx12Wrapper> DxWrap, 
+	ID3D12Resource* constBuffer
+) {
+
+}
+
+D3D12_ROOT_SIGNATURE_DESC*
 DxTexture2D::getRootSigDesc() {
 	return &mRS_Desc;
 }

@@ -130,26 +130,26 @@ void DXPMDModel::Draw(int Handle) {
 	//_dx12->CommandList()->IASetVertexBuffers(0, 1,& PMDdata->vertex);
 	//_dx12->CommandList()->IASetIndexBuffer(&PMDdata->index);
 
-	_dx12->CommandList()->IASetVertexBuffers(0, 1, &mMaterial->getVB_View());
-	_dx12->CommandList()->IASetIndexBuffer(&mMaterial->getIB_View());
+	_dx12->CmdList()->IASetVertexBuffers(0, 1, &mMaterial->getVB_View());
+	_dx12->CmdList()->IASetIndexBuffer(&mMaterial->getIB_View());
 
 	ID3D12DescriptorHeap* transheaps[] = { Motion->getTransHeap().Get() };
-	_dx12->CommandList()->SetDescriptorHeaps(1, transheaps);
-	_dx12->CommandList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
+	_dx12->CmdList()->SetDescriptorHeaps(1, transheaps);
+	_dx12->CmdList()->SetGraphicsRootDescriptorTable(1, Motion->getTransHeap()->GetGPUDescriptorHandleForHeapStart());
 
 
 
 	ID3D12DescriptorHeap* mdh[] = { mMaterial->getMatHeap().Get() };
 	//ƒ}ƒeƒŠƒAƒ‹
-	_dx12->CommandList()->SetDescriptorHeaps(1, mdh);
+	_dx12->CmdList()->SetDescriptorHeaps(1, mdh);
 
 	auto materialH = mMaterial->getMatHeap()->GetGPUDescriptorHandleForHeapStart();
 	unsigned int idxOffset = 0;
 
 	auto cbvsrvIncSize = _dx12->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV) * 5;
 	for (auto& m : mMaterial->getMaterial()) {
-		_dx12->CommandList()->SetGraphicsRootDescriptorTable(2, materialH);
-		_dx12->CommandList()->DrawIndexedInstanced(m.indicesNum, 1, idxOffset, 0, 0);
+		_dx12->CmdList()->SetGraphicsRootDescriptorTable(2, materialH);
+		_dx12->CmdList()->DrawIndexedInstanced(m.indicesNum, 1, idxOffset, 0, 0);
 		materialH.ptr += cbvsrvIncSize;
 		idxOffset += m.indicesNum;
 	}

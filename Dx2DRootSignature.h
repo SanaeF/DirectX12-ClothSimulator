@@ -22,7 +22,7 @@ private:
 
 public:
 
-	void CreateRootSignature(Dx12Wrapper& DxWrap, D3D12_ROOT_SIGNATURE_DESC* mRootSigunatureDesuc);
+	ID3D12RootSignature* CreateRootSignature(Dx12Wrapper& DxWrap, D3D12_ROOT_SIGNATURE_DESC* mRootSigunatureDesuc);
 
 	ID3D12RootSignature* getRootSignature();
 

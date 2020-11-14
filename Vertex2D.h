@@ -14,6 +14,10 @@ private:
 		DirectX::XMFLOAT2 uv;
 	};
 
+	struct InstanceVertex {
+		DirectX::XMFLOAT3 pos;
+	};
+
 	Vertex vertex[4] = {
 {{ -1.f,-1.f,0.f},{0.f,1.f}},
 {{ -1.f, 1.f,0.f},{0.f,0.f}},
@@ -49,6 +53,8 @@ public:
 	void setResourceDesc(D3D12_RESOURCE_DESC Resource_desc);
 
 	void setPolygonSize(SIZE size, DirectX::TexMetadata data);
+
+	void changePol(float x, float y);
 
 	D3D12_HEAP_PROPERTIES getHeap_prop();
 

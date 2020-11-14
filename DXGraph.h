@@ -16,7 +16,7 @@ public:
 
 	void Init();
 
-	void DrawPrototype2D(double x, double y, double Angle, int Handle);
+	void DrawPrototype2D(float x, float y, float size, float Angle, int Handle);
 
 	int Load2D(const wchar_t* path);
 

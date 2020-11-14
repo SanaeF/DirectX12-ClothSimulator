@@ -10,8 +10,9 @@ private:
 	ID3D12Resource* mConstBuffer = nullptr;
 
 	DirectX::XMMATRIX* mConstMatrix;
-	DirectX::XMMATRIX mMatrix;
-	DirectX::XMMATRIX* pMapMatrix;
+	DirectX::XMMATRIX mMatrix[10];
+	DirectX::XMMATRIX* mMapMatrix;
+
 
 	DirectX::XMMATRIX mWorlMat;
 
@@ -23,7 +24,17 @@ public:
 
 	void createBuffer(Dx12Wrapper& DxWrap);
 
+	void ChangeMatrix(
+		int InstID,
+		DirectX::XMMATRIX* pMatrix,
+		float x,
+		float y,
+		float size,
+		float RotaZ
+	);
+
 	void Rotation(
+		int InstID,
 		DirectX::XMMATRIX& pMatrix,
 		double RotaX,
 		double RotaY,
@@ -39,7 +50,7 @@ public:
 
 	ID3D12Resource* getConstBuffer();
 
-	DirectX::XMMATRIX* getMatDefault();
+	DirectX::XMMATRIX* getMatData();
 
 private:
 

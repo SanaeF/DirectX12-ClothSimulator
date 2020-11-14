@@ -49,23 +49,24 @@ void Application::Run() {
 		}
 
 		mDxWr->ClearScreen();
-		if (count < 500)Graph->SetDrawArea(0, 0, 1920 - (count % 500), 1440);
-		if (500<=count&& count < 1000)Graph->SetDrawArea(0, 0, 1920, 940 + (count % 500));
+		/*if (count < 500)Graph->SetDrawArea(0, 0, 1920 - (count % 500), 1440);
+		if (500 <= count && count < 1000)Graph->SetDrawArea(0, 0, 1920, 940 + (count % 500));
 		if (1000 <= count && count < 1500)Graph->SetDrawArea((count % 500), 0, 1920, 1440);
-		if (1500 <= count && count < 2000)Graph->SetDrawArea(0, (count % 500), 1920, 1440);
+		if (1500 <= count && count < 2000)Graph->SetDrawArea(0, (count % 500), 1920, 1440);*/
 
-		Graph->DrawPrototype2D(0, 0, 0, imageHandle[1]);
+		Graph->DrawPrototype2D(0, 0, 1, 0, imageHandle[1]);
 
-		Graph->SetDrawArea(0, 0, 1920, 1440);
-		Graph->DrawPrototype2D(0, 0, angle, imageHandle[0]);
-		Graph->DrawPrototype2D(0, 0, -angle, HandleLif);
+		//Graph->SetDrawArea(0, 0, 1920, 1440);
+		Graph->DrawPrototype2D(0, 0, 1, angle, imageHandle[0]);
+		Graph->DrawPrototype2D(0, 0, 1, -angle, HandleLif);
 
+		Graph->DrawPrototype2D(0, 0, 1, angle, HandleLif);//for (int i = 0; i < 4000;i++)
 		mDxWr->ScreenFlip();
 		
 
 		Key->CheckAll();
-		if (Key->CheckHitKey(DIK_C) == 1)spd = 3;
-		else spd = 1;
+		if (Key->CheckHitKey(DIK_C) == 1)spd = 20;
+		else spd = 10;
 		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * spd;
 		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * spd;
 		count++;

@@ -442,9 +442,9 @@ void Dx12Wrapper::CommandClear() {
 
 	//命令のクローズ
 	_cmdList->Close();
+}
 
-
-
+void Dx12Wrapper::SetNextCommand() {
 	//コマンドリストの実行
 	ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
 	_cmdQueue->ExecuteCommandLists(1, cmdlists);
@@ -466,10 +466,32 @@ void Dx12Wrapper::setPixelSize(SIZE pix) {
 }
 
 void Dx12Wrapper::ScreenFlip() {
+	//_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	//_cmdList->DrawIndexedInstanced(6, getCount(), 0, 0, 0);
+	ClearCount();
 	CommandClear();
+	SetNextCommand();
 	auto result = _swapchain->Present(0, 0);
 	assert(SUCCEEDED(result));
 	//BeginDraw();
+}
+
+void Dx12Wrapper::ClearCount() {
+	mFuncCount.clear();
+}
+
+void Dx12Wrapper::setCount(int Handle,int num) {
+	int VectorSize = Handle;
+	if (VectorSize > 0)mFuncCount.resize(VectorSize + 1);
+	else {
+		mFuncCount.resize(1);
+	}
+	mFuncCount[Handle] = num;
+}
+
+int Dx12Wrapper::getCount(int Handle) {
+	if (mFuncCount.size() > Handle)return mFuncCount[Handle];
+	return 0;
 }
 
 SIZE Dx12Wrapper::getWinSize() {
@@ -541,7 +563,7 @@ ComPtr< ID3D12Device> Dx12Wrapper::Device() {
 	return _dev;
 }
 
-ComPtr < ID3D12GraphicsCommandList> Dx12Wrapper::CommandList() {
+ComPtr < ID3D12GraphicsCommandList> Dx12Wrapper::CmdList() {
 	return _cmdList;
 }
 
@@ -560,7 +582,7 @@ ComPtr<ID3D12Resource> Dx12Wrapper::GetTextureByPath(const char* texpath) {
 
 
 Dx12Wrapper::Dx12Wrapper(HWND hwnd) :
-	_hwnd(hwnd) {
+	_hwnd(hwnd), mFuncCount(0){
 #ifdef _DEBUG
 	//デバッグレイヤーをオンに
 	EnableDebugLayer();
