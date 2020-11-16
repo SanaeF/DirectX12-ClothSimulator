@@ -8,7 +8,7 @@ Texture2D<float4>tex:register(t0);
 SamplerState smp : register(s0);
 
 cbuffer cbuff0:register(b0) {
-	matrix mMat[30];
+	matrix mMat[30];//Max 2048...1024
 };
 
 struct InstanceData {
