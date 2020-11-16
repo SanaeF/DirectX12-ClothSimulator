@@ -9,8 +9,10 @@ class Dx2DMatrix {
 private:
 	ID3D12Resource* mConstBuffer = nullptr;
 
+	//ID3D12Resource* mInstBuffer = nullptr;
+
 	DirectX::XMMATRIX* mConstMatrix;
-	DirectX::XMMATRIX mMatrix[10];
+	DirectX::XMMATRIX mMatrix;
 	DirectX::XMMATRIX* mMapMatrix;
 
 
@@ -19,6 +21,8 @@ private:
 	DirectX::XMMATRIX mLookAt;
 
 	DirectX::XMMATRIX mPerspectiveFov;
+
+	D3D12_SHADER_RESOURCE_VIEW_DESC mInstSRV_Desc = {};
 
 public:
 

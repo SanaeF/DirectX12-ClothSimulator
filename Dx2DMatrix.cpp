@@ -7,24 +7,24 @@ using namespace DirectX;
 
 void Dx2DMatrix::createBuffer(Dx12Wrapper& DxWrap) {
 	RotaInitialize();
-	for (int i = 0; i < 10; i++) {
-		mMatrix[i] = XMMatrixIdentity();
-		mMatrix[i].r[0].m128_f32[0] = 2.0f / DxWrap.getPixelSize().cx;
-		mMatrix[i].r[1].m128_f32[1] = -2.0f / DxWrap.getPixelSize().cy;
+	int instNum = 30;
 
-	}
+	mMatrix = XMMatrixIdentity();
+	mMatrix.r[0].m128_f32[0] = 2.0f / DxWrap.getPixelSize().cx;
+	mMatrix.r[1].m128_f32[1] = -2.0f / DxWrap.getPixelSize().cy;
+
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);//Helper\‘¢‘Ì
+	auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(mMatrix) * instNum + 0xff) & ~0xff);//Helper\‘¢‘Ì
 	DxWrap.Device()->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(*mMatrix) * 10 + 0xff) & ~0xff),
+		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&mConstBuffer)
 	);
 	auto result = mConstBuffer->Map(0, nullptr, (void**)&mMapMatrix);
-	for (int i = 0; i < 10; i++) {
-		mMapMatrix[i] = mLookAt * mPerspectiveFov;
-	}
+
 }
 
 void Dx2DMatrix::ChangeMatrix(
@@ -35,30 +35,44 @@ void Dx2DMatrix::ChangeMatrix(
 	float size,
 	float RotaZ
 ) {
-	DirectX::XMMATRIX TransMat = XMMatrixTranslation(x, y, 0);
-	DirectX::XMMATRIX SizeMat = XMMatrixScaling(size, size, size);
-	DirectX::XMMATRIX RotaMat = XMMatrixRotationZ(RotaZ);
-	mWorlMat = TransMat * SizeMat * RotaMat;
+	float Angler = 0.0f;
 
-	for (int i = 0; i < 10; i++) {
+	XMVECTOR PosisitonOrigin = XMVectorSet(x, y, 0, 0);
+	mWorlMat = DirectX::XMMatrixTransformation2D(
+		PosisitonOrigin,
+		0,
+		XMVectorSet(size, size, 0, 0),
+		PosisitonOrigin,
+		RotaZ,
+		PosisitonOrigin
+	);
+	for (int i = 0; i < 30; i++) {
+		float addRand = 0.0f;
 		if (i == 0) {
-			SizeMat = XMMatrixScaling(size, size, size);
-			RotaMat = XMMatrixRotationZ(RotaZ);
-			TransMat = XMMatrixTranslation(x, y, 0);
+			PosisitonOrigin = XMVectorSet(x, y, 0, 0);
 		}
 		else {
-			SizeMat = XMMatrixScaling(size, size, size);
-			
-			if (i <= 5) {
-				RotaMat = XMMatrixRotationZ(-RotaZ);
-				TransMat = XMMatrixTranslation(x - static_cast <float>(350 * i) / static_cast <float>(1920), y, 0);
+			if (i % 2 == 1)addRand = static_cast <float>(-100 + (rand() % 200)) / static_cast <float>(1440);
+			else addRand = 0.0f;
+			if (i <= 10) {
+				PosisitonOrigin = XMVectorSet(x - static_cast <float>(200 * i) / static_cast <float>(1920), y + addRand, 0, 0);
 			}
 			else {
-				RotaMat = XMMatrixRotationZ(RotaZ);
-				TransMat = XMMatrixTranslation(x + static_cast <float>(350 * (i - 5)) / static_cast <float>(1920), y, 0);
+				PosisitonOrigin = XMVectorSet(x + static_cast <float>(120 * (i - 10)) / static_cast <float>(1920), y + addRand, 0, 0);
 			}
+			
 		}
-		mWorlMat = TransMat * SizeMat * RotaMat;
+		if (i % 2 == 1)Angler = -RotaZ;
+		else Angler = RotaZ;
+		mWorlMat = DirectX::XMMatrixTransformation2D(
+			PosisitonOrigin,
+			0,
+			XMVectorSet(size, size, 0, 0),
+			XMVectorSet(0, 0, 0, 0),
+			Angler,
+			PosisitonOrigin
+		);
+		//mWorlMat = (TransMat * SizeMat * RotaMat);
 		pMatrix[i] = mWorlMat * mLookAt * mPerspectiveFov;
 	}
 }

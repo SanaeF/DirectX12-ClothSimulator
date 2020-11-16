@@ -92,10 +92,13 @@ HRESULT DXPMDBone::CreateTransformView(ComPtr< ID3D12Device> _dev) {
 	//GPUバッファ作成
 	auto buffSize = sizeof(XMMATRIX) * (1 + _boneMatrices.size());
 	buffSize = (buffSize + 0xff) & ~0xff;
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(buffSize);
+
 	auto result = _dev->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(buffSize),
+		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(_transformBuff.ReleaseAndGetAddressOf())

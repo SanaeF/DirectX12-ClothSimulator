@@ -126,12 +126,14 @@ void DXPMDModel::CheckData(int Handle) {
 void DXPMDModel::Draw(int Handle) {
 	//DXHandler handler;
 	//PMDManager* PMDdata = (PMDManager*)handler.getPMDData()[Handle];
-
-	//_dx12->CommandList()->IASetVertexBuffers(0, 1,& PMDdata->vertex);
-	//_dx12->CommandList()->IASetIndexBuffer(&PMDdata->index);
-
-	_dx12->CmdList()->IASetVertexBuffers(0, 1, &mMaterial->getVB_View());
-	_dx12->CmdList()->IASetIndexBuffer(&mMaterial->getIB_View());
+	auto vertex = mMaterial->getVB_View();
+	auto index = mMaterial->getIB_View();
+	_dx12->CmdList()->IASetVertexBuffers(0, 1,&vertex);
+	_dx12->CmdList()->IASetIndexBuffer(&index);
+	auto getMatVBView = mMaterial->getVB_View();
+	auto getMatIBView = mMaterial->getIB_View();
+	_dx12->CmdList()->IASetVertexBuffers(0, 1, &getMatVBView);
+	_dx12->CmdList()->IASetIndexBuffer(&getMatIBView);
 
 	ID3D12DescriptorHeap* transheaps[] = { Motion->getTransHeap().Get() };
 	_dx12->CmdList()->SetDescriptorHeaps(1, transheaps);

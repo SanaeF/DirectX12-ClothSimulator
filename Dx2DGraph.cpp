@@ -75,11 +75,11 @@ void inline Dx2DGraph::mDrawCommand(int InstancedCount, int Handle) {
 	mDxWrap->CmdList()->SetGraphicsRootSignature(mGraphData[Handle].mRootSignature);
 	mDxWrap->CmdList()->SetDescriptorHeaps(1, &texDH);
 	mDxWrap->CmdList()->SetGraphicsRootDescriptorTable(0, texDH->GetGPUDescriptorHandleForHeapStart());
-	mDxWrap->CmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	mDxWrap->CmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);//TRIANGLELIST
 
 	mDxWrap->CmdList()->IASetVertexBuffers(0, 1, &mGraphData[Handle].mVertexBufferView);
 	mDxWrap->CmdList()->IASetIndexBuffer(&mGraphData[Handle].mVertexIndexView);
-	if(InstancedCount>1)mDxWrap->CmdList()->DrawIndexedInstanced(6, 200, 0, 0, 0);
+	if(InstancedCount>1)mDxWrap->CmdList()->DrawIndexedInstanced(6, 210, 0, 0, 0);
 	else mDxWrap->CmdList()->DrawIndexedInstanced(6, InstancedCount, 0, 0, 0);
 	
 
@@ -103,7 +103,8 @@ void Dx2DGraph::Draw(float x, float y, float size, double Angle, int Handle) {
 
 void Dx2DGraph::SetDrawArea(int top, int left, int right, int bottom) {
 	mViewPort->Scissor(top, left, right, bottom);
-	mDxWrap->CmdList()->RSSetScissorRects(1, &mViewPort->getScissorrect());
+	auto getScissor = mViewPort->getScissorrect();
+	mDxWrap->CmdList()->RSSetScissorRects(1, &getScissor);
 }
 
 void inline Dx2DGraph::GraphicPipeline() {

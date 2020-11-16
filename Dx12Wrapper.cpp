@@ -279,11 +279,13 @@ HRESULT Dx12Wrapper::CreateSceneView() {
 	DXGI_SWAP_CHAIN_DESC1 desc = {};
 	auto result = _swapchain->GetDesc1(&desc);
 
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto resDesc = CD3DX12_RESOURCE_DESC::Buffer((sizeof(SceneData) + 0xff) & ~0xff);
 	//定数バッファ作成
 	result = _dev->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer((sizeof(SceneData) + 0xff) & ~0xff),
+		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(_sceneConstBuff.ReleaseAndGetAddressOf())
@@ -400,10 +402,13 @@ void Dx12Wrapper::ClearScreen() {
 
 	//バックバッファのインデックスを取得
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	auto resBuff = CD3DX12_RESOURCE_BARRIER::Transition(
+		_backBuffers[bbIdx],
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
 
-	_cmdList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
-			D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+	_cmdList->ResourceBarrier(1, &resBuff);
 
 
 	////レンダーターゲットを指定
@@ -436,9 +441,13 @@ void Dx12Wrapper::CommandClear() {
 
 
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
-	_cmdList->ResourceBarrier(1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(_backBuffers[bbIdx],
-			D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+	auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		_backBuffers[bbIdx],
+		D3D12_RESOURCE_STATE_RENDER_TARGET, 
+		D3D12_RESOURCE_STATE_PRESENT
+	);
+
+	_cmdList->ResourceBarrier(1, &resBarrier);
 
 	//命令のクローズ
 	_cmdList->Close();

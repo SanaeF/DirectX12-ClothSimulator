@@ -171,20 +171,22 @@ bool DXResource::mTarget(
 
 	auto rtvHeapPointer = mScPolyRTV_Heap->GetCPUDescriptorHandleForHeapStart();
 
+	auto descriptHandle = dsvHeap->GetCPUDescriptorHandleForHeapStart();
+
 	cmdList->OMSetRenderTargets(
 		1,
 		&rtvHeapPointer,
 		false,
-		&dsvHeap->GetCPUDescriptorHandleForHeapStart()
+		&descriptHandle
 	);
-
+	auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		mScPolyRes.Get(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_RENDER_TARGET
+	);
 	cmdList->ResourceBarrier(
 		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(
-			mScPolyRes.Get(),
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_RENDER_TARGET
-		)
+		&resBarrier
 	);
 	return true;
 }

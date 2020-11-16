@@ -7,11 +7,13 @@ void DxIndex2D::CreateBuffer(Dx12Wrapper& DxWrap) {
 	D3D12_RESOURCE_DESC mResource_desc = {};
 	mResource_desc.Width = sizeof(index);
 	setResourceDesc(mResource_desc);
-	auto result = DxWrap.Device()->CreateCommittedResource(
-		&getHeap_prop(),
-		D3D12_HEAP_FLAG_NONE,
-		&getResource_desc(),
-		D3D12_RESOURCE_STATE_GENERIC_READ,
+	auto heapProp = getHeap_prop();
+	auto resDesc = getResource_desc();
+	auto result = DxWrap.Device()->CreateCommittedResource(//
+		&heapProp,//
+		D3D12_HEAP_FLAG_NONE,//
+		&resDesc,//
+		D3D12_RESOURCE_STATE_GENERIC_READ,//
 		nullptr,
 		IID_PPV_ARGS(&mIndex_Buff)
 	);

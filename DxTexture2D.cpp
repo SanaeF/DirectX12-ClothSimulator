@@ -68,7 +68,7 @@ void DxTexture2D::mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	mDescriptor_Heap.NodeMask = 0;
 	mDescriptor_Heap.NumDescriptors = 2;
 	mDescriptor_Heap.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-
+	
 	auto result = DxWrap->Device()->CreateDescriptorHeap(
 		&mDescriptor_Heap,
 		IID_PPV_ARGS(&mBasicDescHeap)
@@ -126,7 +126,6 @@ void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12
 	mSRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	mSRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	mSRV_Desc.Texture2D.MipLevels = 1;
-
 	auto basicHeapHandle = mBasicDescHeap->GetCPUDescriptorHandleForHeapStart();
 
 	DxWrap->Device()->CreateShaderResourceView(

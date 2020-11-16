@@ -219,16 +219,13 @@ void DX_MultRend::barrier(
 	D3D12_RESOURCE_STATES after,
 	ComPtr < ID3D12GraphicsCommandList> cmdList
 ) {
-
-	cmdList->ResourceBarrier(
-		1,
-		&CD3DX12_RESOURCE_BARRIER::Transition(
-			p,
-			before,
-			after,
-			0
-		)
+	auto resBarrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		p,
+		before,
+		after,
+		0
 	);
+	cmdList->ResourceBarrier(1, &resBarrier);
 
 }
 
@@ -246,10 +243,13 @@ bool DX_MultRend::createScreenPolygon(ComPtr< ID3D12Device> _dev) {
 		{{ 1, 1,0.1},{1,0}}
 	};
 
+	auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	auto resDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeof(sPol));
+
 	auto result = _dev->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
-		&CD3DX12_RESOURCE_DESC::Buffer(sizeof(sPol)),
+		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(mScPolyVB.ReleaseAndGetAddressOf())

@@ -27,7 +27,7 @@ void Application::Run() {
 	int MusicHandle;
 	imageHandle[0] = Graph->Load2D(L"./dat/back.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
-	HandleLif = Graph->Load2D(L"./dat/Lifekakera.png");
+	HandleLif = Graph->Load2D(L"./dat/Bullet02.png");
 	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
 	Sound->SetVolume(-3000, MusicHandle);
@@ -36,7 +36,7 @@ void Application::Run() {
 	int spd = 1;
 	MSG msg = {};
 	int count = 0;
-
+	float Move[2] = { 0,0 };
 
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -48,34 +48,36 @@ void Application::Run() {
 			break;
 		}
 
-		mDxWr->ClearScreen();
-		/*if (count < 500)Graph->SetDrawArea(0, 0, 1920 - (count % 500), 1440);
-		if (500 <= count && count < 1000)Graph->SetDrawArea(0, 0, 1920, 940 + (count % 500));
-		if (1000 <= count && count < 1500)Graph->SetDrawArea((count % 500), 0, 1920, 1440);
-		if (1500 <= count && count < 2000)Graph->SetDrawArea(0, (count % 500), 1920, 1440);*/
-
-		Graph->DrawPrototype2D(0, 0, 1, 0, imageHandle[1]);
-
-		//Graph->SetDrawArea(0, 0, 1920, 1440);
-		Graph->DrawPrototype2D(0, 0, 1, angle, imageHandle[0]);
-		Graph->DrawPrototype2D(0, 0, 1, -angle, HandleLif);
-
-		Graph->DrawPrototype2D(0, 0, 1, angle, HandleLif);//for (int i = 0; i < 4000;i++)
-		mDxWr->ScreenFlip();
-		
-
+		if (Key->CheckHitKey(DIK_UP) == 1)Move[0] += 2;
+		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[0] -= 2;
+		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[1] += 2;
+		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[1] -= 2;
 		Key->CheckAll();
 		if (Key->CheckHitKey(DIK_C) == 1)spd = 20;
+		else if (Key->CheckHitKey(DIK_LSHIFT) == 1)spd = 1;
 		else spd = 10;
 		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * spd;
 		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * spd;
-		count++;
-		if (count == 2000)count = 0;
+		if (Key->CheckHitKey(DIK_C) == 0)count++;
+		if (count == 1920)count = 0;
 
+		mDxWr->ClearScreen();
+		1920;
+		if (count < 960)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
+		if (960 < count)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
+		Graph->DrawPrototype2D(0, 0, 1, 0, imageHandle[1]);
+
+		Graph->SetArea(0, 0, 1920, 1440);
+		Graph->DrawPrototype2D(0, 0, 1, -angle, HandleLif);
+		Graph->DrawPrototype2D(0, 0, 1, angle, HandleLif);//for (int i = 0; i < 4000;i++)
+
+		if (count < 960)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
+		if (960 < count)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
+		Graph->DrawPrototype2D(Move[1] / 1920.f, Move[0] / 1440.f, 1, angle, imageHandle[0]);
+
+		mDxWr->ScreenFlip();
 	}
 }
-
-
 
 
 void Application::SetWindow(int width, int height, const char* window_name, const char* Name) {

@@ -87,9 +87,9 @@ bool DXVMDMotion::Update(DWORD startTime) {
 			rotation = XMMatrixRotationQuaternion(rit->quaternion);
 		}
 		auto& pos = node.startPos;
-		auto mat = XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *//å¥ì_Ç…ñﬂÇµ
-			rotation *//âÒì]
-			XMMatrixTranslation(pos.x, pos.y, pos.z);//å≥ÇÃç¿ïWÇ…ñﬂÇ∑
+		auto mat = XMMatrixTranslation(-pos.x, -pos.y, -pos.z) *
+			rotation *
+			XMMatrixTranslation(pos.x, pos.y, pos.z);
 		setBoneMatrices(&node, mat);
 	}
 	treeBoneCopy();

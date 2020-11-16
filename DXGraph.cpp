@@ -12,8 +12,8 @@ DxGraph::~DxGraph() {
 
 }
 
-void DxGraph::SetDrawArea(int top, int left, int right, int bottom) {
-	mDraw2D->SetDrawArea(top, left, right, bottom);
+void DxGraph::SetArea(int x1, int y1, int x2, int y2) {
+	mDraw2D->SetDrawArea(y1, x1, x2, y2);
 }
 
 int DxGraph::Load2D(const wchar_t* path) {

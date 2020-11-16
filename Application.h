@@ -73,4 +73,5 @@ public:
 
 	static Application& Instance();
 	~Application();
+
 };

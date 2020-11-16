@@ -12,7 +12,7 @@ private:
 
 public:
 
-	void SetDrawArea(int top, int left, int right, int bottom);
+	void SetArea(int x1, int y1, int x2, int y2);
 
 	void Init();
 
