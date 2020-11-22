@@ -15,7 +15,6 @@ private:
 	DirectX::XMMATRIX mMatrix;
 	DirectX::XMMATRIX* mMapMatrix;
 
-
 	DirectX::XMMATRIX mWorlMat;
 
 	DirectX::XMMATRIX mLookAt;
@@ -26,11 +25,20 @@ private:
 
 public:
 
+
 	void createBuffer(Dx12Wrapper& DxWrap);
 
 	void ChangeMatrix(
-		int InstID,
+		int InstID, 
 		DirectX::XMMATRIX* pMatrix,
+		float x,
+		float y,
+		float size,
+		float RotaZ
+	);
+
+	void BasicChangeMatrix(
+		int InstID,
 		float x,
 		float y,
 		float size,
@@ -52,12 +60,14 @@ public:
 		double RotaZ
 	);
 
+	void setMatrix(DirectX::XMMATRIX* pMatrix);
+
 	ID3D12Resource* getConstBuffer();
 
 	DirectX::XMMATRIX* getMatData();
 
 private:
 
-	void RotaInitialize();
+	void RotaInitialize(Dx12Wrapper& DxWrap);
 
 };

@@ -34,6 +34,42 @@ D3D12_INPUT_ELEMENT_DESC inputLayout[] = {
 	D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,
 	1
 },
+//{
+//	"MATRIX",
+//	0,
+//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+//	1,
+//	0,
+//	D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,
+//	1
+//},
+//{
+//	"MATRIX",
+//	1,
+//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+//	1,
+//	16,
+//	D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,
+//	1
+//},
+//{
+//	"MATRIX",
+//	2,
+//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+//	1,
+//	32,
+//	D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,
+//	1
+//},
+//{
+//	"MATRIX",
+//	3,
+//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+//	1,
+//	48,
+//	D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA,
+//	1
+//},
 };
 
 void Dx2DPipeline::LoadShader() {
@@ -101,13 +137,19 @@ void Dx2DPipeline::AntiAiliasing() {
 
 void Dx2DPipeline::RootSignatureState(
 	std::shared_ptr<Dx12Wrapper> DxWrap,
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline,
+	Dx2DRootSignature& mRootSig,
+	D3D12_ROOT_SIGNATURE_DESC* RS_Desuc
+) {
+	gpipeline.pRootSignature = mRootSig.CreateRootSignature(*DxWrap, RS_Desuc);
+}
+
+void Dx2DPipeline::CreateGraphicsPipeline(
+	std::shared_ptr<Dx12Wrapper> DxWrap,
 	Dx2DRootSignature& mRootSig,
 	D3D12_ROOT_SIGNATURE_DESC* RS_Desuc
 ) {
 	mGraph_Pipeline.pRootSignature = mRootSig.CreateRootSignature(*DxWrap, RS_Desuc);
-}
-
-void Dx2DPipeline::CreateGraphicsPipeline(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	auto result = DxWrap->Device()->CreateGraphicsPipelineState(
 		&mGraph_Pipeline,
 		IID_PPV_ARGS(&mPipeline_State)
@@ -128,6 +170,11 @@ void Dx2DPipeline::setGraphPipeline(D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline
 
 void Dx2DPipeline::setRTBDesc(D3D12_RENDER_TARGET_BLEND_DESC RTB_Desc) {
 	this->mRTB_Desc = RTB_Desc;
+}
+
+D3D12_GRAPHICS_PIPELINE_STATE_DESC
+Dx2DPipeline::getPipeline() {
+	return mGraph_Pipeline;
 }
 
 ID3D12PipelineState* 

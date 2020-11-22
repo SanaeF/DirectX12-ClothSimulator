@@ -7,6 +7,10 @@ class Dx12Wrapper;
 class DxTexture2D {
 private:
 
+	std::shared_ptr<Dx12Wrapper> mDxWrap;
+
+	D3D12_CPU_DESCRIPTOR_HANDLE mDescHandle;
+
 	D3D12_HEAP_PROPERTIES mHeap_Prop = {};
 	D3D12_HEAP_PROPERTIES mUploadHeap_Prop = {};
 
@@ -36,13 +40,34 @@ public:
 
 	void CreateResource(std::shared_ptr<Dx12Wrapper> DxWrap);
 
-	void mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap);
+	void mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap, D3D12_DESCRIPTOR_HEAP_DESC DexcriptorHeap);
 
-	void ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12Resource* constBuffer);
+	void ShaderResourceView(
+		std::shared_ptr<Dx12Wrapper> DxWrap,
+		D3D12_SHADER_RESOURCE_VIEW_DESC ShaderResourceView,
+		ID3D12Resource* TextureBuffer,
+		ID3D12DescriptorHeap* HeapHandle
+	);
 
-	void ConstBuffViwe(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12Resource* constBuffer);
+	void ConstBuffViwe(
+		std::shared_ptr<Dx12Wrapper> DxWrap, 
+		ID3D12Resource* constBuffer,
+		D3D12_CPU_DESCRIPTOR_HANDLE DescHandle
+	);
+
+	void DescriptorHeap();
+
+	void RootSignatureDesc();
+
+	void ShaderResourceViewDesc();
+
+	D3D12_DESCRIPTOR_HEAP_DESC getDescriptorHeap();
+	D3D12_CPU_DESCRIPTOR_HANDLE getDescHandle();
+	D3D12_SHADER_RESOURCE_VIEW_DESC getShaderResourceWierDesc();
 
 	D3D12_ROOT_SIGNATURE_DESC* getRootSigDesc();
+
+	ID3D12Resource* getTextureBuff();
 
 	ID3D12DescriptorHeap* getTexDescHeap();
 
@@ -64,7 +89,6 @@ private:
 
 	void mRootParameters();
 
-	void mRootSignatureDesc();
 
 	void mSampler();
 

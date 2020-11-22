@@ -1,4 +1,5 @@
 ﻿#include "Application.h"
+#include<thread>
 #include"Dx12Wrapper.h"
 #include"PMDRenderer.h"
 #include"DXPMDModel.h"
@@ -28,10 +29,10 @@ void Application::Run() {
 	imageHandle[0] = Graph->Load2D(L"./dat/back.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
 	HandleLif = Graph->Load2D(L"./dat/Bullet02.png");
-	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
+	//int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
 	Sound->SetVolume(-3000, MusicHandle);
-	Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
+	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
 	float angle = 0.0f;
 	int spd = 1;
 	MSG msg = {};
@@ -60,20 +61,25 @@ void Application::Run() {
 		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * spd;
 		if (Key->CheckHitKey(DIK_C) == 0)count++;
 		if (count == 1920)count = 0;
-
 		mDxWr->ClearScreen();
-		1920;
+		Graph->BasicDraw2D();
+
 		if (count < 960)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
 		if (960 < count)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
 		Graph->DrawPrototype2D(0, 0, 1, 0, imageHandle[1]);
 
 		Graph->SetArea(0, 0, 1920, 1440);
-		Graph->DrawPrototype2D(0, 0, 1, -angle, HandleLif);
-		Graph->DrawPrototype2D(0, 0, 1, angle, HandleLif);//for (int i = 0; i < 4000;i++)
+
+		Graph->DrawPrototype2D(-Move[1], Move[0], 1, angle, HandleLif);
+		Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);
+
+		//std::thread Draw([&]() {
+		//	});
 
 		if (count < 960)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
 		if (960 < count)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
-		Graph->DrawPrototype2D(Move[1] / 1920.f, Move[0] / 1440.f, 1, angle, imageHandle[0]);
+		Graph->DrawPrototype2D(Move[1], Move[0], 1, angle, imageHandle[0]);
+		//Graph->setMatrix();
 
 		mDxWr->ScreenFlip();
 	}

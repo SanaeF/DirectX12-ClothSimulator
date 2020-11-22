@@ -63,14 +63,19 @@ void DxTexture2D::CreateResource(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	mGPUtransfer();
 }
 
-void DxTexture2D::mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap) {
+void DxTexture2D::DescriptorHeap() {
 	mDescriptor_Heap.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	mDescriptor_Heap.NodeMask = 0;
 	mDescriptor_Heap.NumDescriptors = 2;
 	mDescriptor_Heap.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	
+}
+
+void DxTexture2D::mDescriptorHeap(
+	std::shared_ptr<Dx12Wrapper> DxWrap, 
+	D3D12_DESCRIPTOR_HEAP_DESC DexcriptorHeap
+) {
 	auto result = DxWrap->Device()->CreateDescriptorHeap(
-		&mDescriptor_Heap,
+		&DexcriptorHeap,
 		IID_PPV_ARGS(&mBasicDescHeap)
 	);
 
@@ -78,6 +83,33 @@ void DxTexture2D::mDescriptorHeap(std::shared_ptr<Dx12Wrapper> DxWrap) {
 		assert(0 && "BasicDescHeap Error!");
 	}
 }
+
+
+void DxTexture2D::ShaderResourceViewDesc() {
+	mSRV_Desc.Format = mMetaData.format;
+	mSRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	mSRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	mSRV_Desc.Texture2D.MipLevels = 1;
+}
+
+void DxTexture2D::ShaderResourceView(
+	std::shared_ptr<Dx12Wrapper> DxWrap, 
+	D3D12_SHADER_RESOURCE_VIEW_DESC ShaderResourceView, 
+	ID3D12Resource* TextureBuffer,
+	ID3D12DescriptorHeap* HeapHandle
+) {
+
+	auto basicHeapHandle = HeapHandle->GetCPUDescriptorHandleForHeapStart();
+
+	DxWrap->Device()->CreateShaderResourceView(
+		TextureBuffer,
+		&ShaderResourceView,
+		basicHeapHandle
+	);
+	basicHeapHandle.ptr += DxWrap->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	mDescHandle = basicHeapHandle;
+}
+
 
 void DxTexture2D::mDescriptorRange() {
 	mDescTbl_Range[0].NumDescriptors = 1;
@@ -92,6 +124,7 @@ void DxTexture2D::mDescriptorRange() {
 }
 
 void DxTexture2D::mRootParameters() {
+	mDescriptorRange();
 	mRoot_Parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	mRoot_Parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	mRoot_Parameter.DescriptorTable.pDescriptorRanges = mDescTbl_Range;
@@ -111,7 +144,9 @@ void DxTexture2D::mSampler() {
 	mSampler_Desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 }
 
-void DxTexture2D::mRootSignatureDesc() {
+void DxTexture2D::RootSignatureDesc() {
+	mRootParameters();
+	mSampler();
 	mRS_Desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	mRS_Desc.pParameters = &mRoot_Parameter;
 	mRS_Desc.NumParameters = 1;
@@ -120,36 +155,39 @@ void DxTexture2D::mRootSignatureDesc() {
 
 }
 
-void DxTexture2D::ShaderResourceView(std::shared_ptr<Dx12Wrapper> DxWrap, ID3D12Resource* constBuffer) {
-	//mDescriptorHeap(DxWrap);
-	mSRV_Desc.Format = mMetaData.format;
-	mSRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	mSRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	mSRV_Desc.Texture2D.MipLevels = 1;
-	auto basicHeapHandle = mBasicDescHeap->GetCPUDescriptorHandleForHeapStart();
-
-	DxWrap->Device()->CreateShaderResourceView(
-		mTextureBuff,
-		&mSRV_Desc,
-		basicHeapHandle
-	);
-	basicHeapHandle.ptr += DxWrap->Device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
+void DxTexture2D::ConstBuffViwe(
+	std::shared_ptr<Dx12Wrapper> DxWrap, 
+	ID3D12Resource* constBuffer,
+	D3D12_CPU_DESCRIPTOR_HANDLE DescHandle
+) {
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 	cbvDesc.BufferLocation = constBuffer->GetGPUVirtualAddress();
 	cbvDesc.SizeInBytes = constBuffer->GetDesc().Width;
-	DxWrap->Device()->CreateConstantBufferView(&cbvDesc, basicHeapHandle);
-	mDescriptorRange();
-	mRootParameters();
-	mSampler();
-	mRootSignatureDesc();
+	DxWrap->Device()->CreateConstantBufferView(&cbvDesc, DescHandle);
+	//mDescriptorRange();
+	//mRootParameters();
+	//mSampler();
+	//mRootSignatureDesc();
 }
 
-void DxTexture2D::ConstBuffViwe(
-	std::shared_ptr<Dx12Wrapper> DxWrap, 
-	ID3D12Resource* constBuffer
-) {
+D3D12_DESCRIPTOR_HEAP_DESC 
+DxTexture2D::getDescriptorHeap() {
+	return mDescriptor_Heap;
+}
 
+D3D12_CPU_DESCRIPTOR_HANDLE 
+DxTexture2D::getDescHandle() {
+	return mDescHandle;
+}
+
+D3D12_SHADER_RESOURCE_VIEW_DESC 
+DxTexture2D::getShaderResourceWierDesc() {
+	return mSRV_Desc;
+}
+
+ID3D12Resource* 
+DxTexture2D::getTextureBuff() {
+	return mTextureBuff;
 }
 
 D3D12_ROOT_SIGNATURE_DESC*

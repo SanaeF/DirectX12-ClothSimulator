@@ -24,6 +24,14 @@ void DxGraph::DrawPrototype2D(float x, float y, float size, float Angle, int Han
 	mDraw2D->Draw(x, y, size, Angle, Handle);
 }
 
+void DxGraph::BasicDraw2D() {
+	mDraw2D->BeingDraw();
+}
+
+void DxGraph::setMatrix(){
+	mDraw2D->setMatrix();
+}
+
 void DxGraph::Init() {
 
 }

@@ -15,12 +15,17 @@ private:
 
 public:
 
-	void CreateGraphicsPipeline(std::shared_ptr<Dx12Wrapper> DxWrap);
+	void CreateGraphicsPipeline(
+		std::shared_ptr<Dx12Wrapper> DxWrap,
+		Dx2DRootSignature& mRootSig,
+		D3D12_ROOT_SIGNATURE_DESC* RS_Desuc
+	);
 
 	void LoadShader()override;
 
 	void RootSignatureState(
 		std::shared_ptr<Dx12Wrapper> DxWrap,
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC gpipeline,
 		Dx2DRootSignature& mRootSig,
 		D3D12_ROOT_SIGNATURE_DESC* RS_Desuc
 	);
@@ -50,6 +55,8 @@ public:
 	void setRTBDesc(
 		D3D12_RENDER_TARGET_BLEND_DESC RTB_Desc
 	);
+
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC getPipeline();
 
 	ID3D12PipelineState* getPipelineState();
 

@@ -4,6 +4,7 @@
 
 ID3D12RootSignature* Dx2DRootSignature::CreateRootSignature(Dx12Wrapper& DxWrap, D3D12_ROOT_SIGNATURE_DESC* mRootSigunatureDesuc) {
 	//mRootSigBlob->Release();
+
 	auto result = D3D12SerializeRootSignature(
 		mRootSigunatureDesuc,
 		D3D_ROOT_SIGNATURE_VERSION_1_0,

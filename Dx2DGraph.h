@@ -11,7 +11,7 @@ class DxViewPort2D;
 
 class DxUploadTex2D;
 class Dx2DMatrix;
-//class DxIndex2D;
+class DxIndex2D;
 class Dx2DRootSignature;
 class Dx2DPipeline;
 
@@ -24,13 +24,18 @@ private:
 	};
 
 	struct GraphicData {
+		DirectX::TexMetadata mTextureData;
 		DirectX::XMMATRIX* mMatrix;
 		ID3D12DescriptorHeap* mTexDescHeap;
+		ID3D12Resource* mTextureBuffer;
+		D3D12_CPU_DESCRIPTOR_HANDLE mDescHandle;
 		ID3D12PipelineState* mPipelineState;
 		ID3D12RootSignature* mRootSignature;
 		D3D12_VERTEX_BUFFER_VIEW mVertexBufferView;
 		D3D12_INDEX_BUFFER_VIEW mVertexIndexView;
 		D3D12_VIEWPORT mViewPort = {};
+		D3D12_DESCRIPTOR_HEAP_DESC mDescriptorHeap = {};
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC mPipeline = {};
 	};
 
 	struct DrawGraphParam {
@@ -48,7 +53,7 @@ private:
 
 	std::shared_ptr<DxUploadTex2D>mTexture;
 	std::shared_ptr <Dx2DMatrix>mMatrix;
-	//std::shared_ptr<DxIndex2D> mIndex;
+	std::shared_ptr<DxIndex2D> mIndex;
 	std::shared_ptr<Dx2DRootSignature> mRootSignature;
 	std::shared_ptr<Dx2DPipeline> mPipeline;
 
@@ -70,6 +75,10 @@ public:
 
 	void Draw(float x, float y, float size, double Angle, int Handle);
 
+	void BeingDraw();
+
+	void setMatrix();
+
 	Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
 	~Dx2DGraph();
 
@@ -77,7 +86,7 @@ private:
 
 	void GraphicPipeline();
 
-	void CopyTex(int num, int Handle);
+	void CopyTex(int num);
 
 	void mDrawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle);
 

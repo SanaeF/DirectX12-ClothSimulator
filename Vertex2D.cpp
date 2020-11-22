@@ -3,14 +3,14 @@
 
 
 void Vertex2D::setPolygonSize(SIZE size, DirectX::TexMetadata data) {
-	/*vertex[0].pos.x = -1;
+	vertex[0].pos.x = -1;
 	vertex[0].pos.y = -1;
 	vertex[1].pos.x = -1;
 	vertex[1].pos.y = 1;
 	vertex[2].pos.x = 1;
 	vertex[2].pos.y = -1;
 	vertex[3].pos.x = 1;
-	vertex[3].pos.y = 1;*/
+	vertex[3].pos.y = 1;
 
 	float widthProp = (static_cast<float>(data.width) / 1920);
 	float heightProp = (static_cast<float>(data.height) / 1440);
@@ -22,7 +22,7 @@ void Vertex2D::setPolygonSize(SIZE size, DirectX::TexMetadata data) {
 }
 
 void Vertex2D::changePol(float x, float y) {
-	float posX = x/ static_cast < float>(1920);
+	float posX = x/ static_cast <float>(1920);
 	float posY = y / static_cast <float>(1440);
 	for (int i = 0; i < 4; i++) {
 		vertex[i].pos.x = vertex[i].pos.x + posX;

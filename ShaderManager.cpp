@@ -28,7 +28,6 @@ void ShaderManager::LoadVertexShaderFile(
 	}
 }
 
-
 void ShaderManager::LoadPixelShaderFile(
 	LPCWSTR Path,
 	LPCSTR function,

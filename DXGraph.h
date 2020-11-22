@@ -20,6 +20,9 @@ public:
 
 	int Load2D(const wchar_t* path);
 
+	void setMatrix();
+
+	void BasicDraw2D();
 
 	DxGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
 	~DxGraph();
