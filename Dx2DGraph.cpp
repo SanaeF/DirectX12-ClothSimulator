@@ -11,75 +11,56 @@
 int Dx2DGraph::mHandleCount = 0;
 //リソース管理の扱い ポール復帰
 
-void inline Dx2DGraph::CopyTex(int num) {
-	if (num == eTYPE_UMA) {
-		mTexture->CreateResource(mDxWrap);
-		mTexture->mDescriptorHeap(mDxWrap, mTexture->getDescriptorHeap());
-		mTexture->ShaderResourceView(
-			mDxWrap,
-			mTexture->getShaderResourceWierDesc(),
-			mTexture->getTextureBuff(),
-			mTexture->getBasicDescHeap()
-		);
-	}
-	if (num == eTYPE_DMA) {
-		mTexture->CreateTexBuffer(mDxWrap);
-		mTexture->ResourceUpload();
-		mTexture->TextureCopy(mDxWrap);
-		mTexture->BarrierDescProp(mDxWrap);
-		mTexture->ShaderResourceViewforUpload(mDxWrap);
-	}
-}
-
 int Dx2DGraph::Load(const wchar_t* path) {
-	const int Max = 500;
-	int HandleID = mHandleCount; mHandleCount += Max; mGraphData.resize(HandleID + Max + 1);
-
+	int HandleID = mHandleCount; 
+	mHandleCount++;
+	mGraphData.resize(mHandleCount);
 	mTexture->LoadWIC(path);
 	mTexture->CreateResource(mDxWrap);
-
-	for (int i = 0; i < Max; i++) {
-		mTexture->mDescriptorHeap(mDxWrap, mTexture->getDescriptorHeap());
-		mTexture->ShaderResourceView(
-			mDxWrap,
-			mTexture->getShaderResourceWierDesc(),
-			mTexture->getTextureBuff(),
-			mTexture->getBasicDescHeap()
-		);
-		mMatrix->createBuffer(*mDxWrap);//
-		mTexture->ConstBuffViwe(
-			mDxWrap,
-			mMatrix->getConstBuffer(),
-			mTexture->getDescHandle()
-		);
-		mGraphData[HandleID + i].mTexDescHeap = mTexture->getBasicDescHeap();
-		mGraphData[HandleID + i].mMatrix = mMatrix->getMatData();
-	}
-
 	mPipeline->CreateGraphicsPipeline(mDxWrap, *mRootSignature, mTexture->getRootSigDesc());
 	mIndex->setPolygonSize(mDxWrap->getPixelSize(), mTexture->getMetaData());
 	mIndex->CreateIndexBufferView(*mDxWrap);
 	mViewPort->CreateViewPort(mDxWrap->getPixelSize(), mTexture->getMetaData());
+	mGraphData[HandleID].mTextureBuffer = mTexture->getTextureBuff();
 	mGraphData[HandleID].mVertexBufferView = mIndex->getvertexBufferView();
 	mGraphData[HandleID].mViewPort = mViewPort->getViewPort();
-
-
 	return HandleID;
 }
 
+void Dx2DGraph::mCreateMatrix(int Handle, int num) {
+	int ArrySize = num + 1;
+	if (mGraphData[Handle].TexDescHeapArry.size() <= num &&
+		mGraphData[Handle].MatrixArry.size() <= num) {
+		mGraphData[Handle].TexDescHeapArry.resize(ArrySize);
+		mGraphData[Handle].MatrixArry.resize(ArrySize);
+	}
+	else return;
 
-void inline Dx2DGraph::mDrawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle) {
+	mTexture->mDescriptorHeap(mDxWrap, mTexture->getDescriptorHeap());
+	mTexture->ShaderResourceView(
+		mDxWrap,
+		mTexture->getShaderResourceWierDesc(),
+		mGraphData[Handle].mTextureBuffer,
+		mTexture->getBasicDescHeap()
+	);
+	mMatrix->createBuffer(*mDxWrap);//
+	mTexture->ConstBuffViwe(
+		mDxWrap,
+		mMatrix->getConstBuffer(),
+		mTexture->getDescHandle()
+	);
+	mGraphData[Handle].TexDescHeapArry[num] = mTexture->getBasicDescHeap();
+	mGraphData[Handle].MatrixArry[num] = mMatrix->getMatData();
+}
 
-	//mMatrix->BasicChangeMatrix(
-	//	InstancedCount,
-	//	Paramater.x,
-	//	Paramater.y,
-	//	Paramater.size,
-	//	Paramater.angle
-	//);
+void Dx2DGraph::mDrawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle) {
+	if (Paramater.x == 0 &&
+		Paramater.y == 0 && 
+		Paramater.size == 1 &&
+		Paramater.angle == 0
+		)return;
 	mMatrix->ChangeMatrix(
-		InstancedCount, 
-		mGraphData[Handle+ InstancedCount-1].mMatrix,
+		mGraphData[Handle].MatrixArry[InstancedCount],
 		Paramater.x, 
 		Paramater.y, 
 		Paramater.size, 
@@ -87,8 +68,8 @@ void inline Dx2DGraph::mDrawMatrix(DrawGraphParam Paramater, int InstancedCount,
 	);
 }
 
-void inline Dx2DGraph::mDrawCommand(int InstancedCount, int Handle) {
-	ID3D12DescriptorHeap* texDH = mGraphData[Handle + InstancedCount - 1].mTexDescHeap;
+void Dx2DGraph::mDrawCommand(int InstancedCount, int Handle) {
+	ID3D12DescriptorHeap* texDH = mGraphData[Handle].TexDescHeapArry[InstancedCount];
 	mDxWrap->CmdList()->RSSetViewports(1, &mGraphData[Handle].mViewPort);
 	mDxWrap->CmdList()->SetDescriptorHeaps(1, &texDH);
 	mDxWrap->CmdList()->SetGraphicsRootDescriptorTable(0, texDH->GetGPUDescriptorHandleForHeapStart());
@@ -105,11 +86,11 @@ void Dx2DGraph::Draw(float x, float y, float size, double Angle, int Handle) {
 	Param.size = size;
 	Param.angle = Angle;
 
-	mDxWrap->setCount(Handle, mDxWrap->getCount(Handle) + 1);
-
+	mCreateMatrix(Handle, mDxWrap->getCount(Handle));
 	mDrawMatrix(Param, mDxWrap->getCount(Handle), Handle);
 	mDrawCommand(mDxWrap->getCount(Handle), Handle);
 
+	mDxWrap->setCount(Handle, mDxWrap->getCount(Handle) + 1);
 }
 
 void Dx2DGraph::BeingDraw() {
@@ -124,17 +105,13 @@ void Dx2DGraph::BeingDraw() {
 	mDxWrap->CmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);//TRIANGLELIST
 }
 
-void Dx2DGraph::setMatrix() {
-	//for(int i=0;i< mGraphData.size();i++)mMatrix->setMatrix(mGraphData[i].mMatrix);
-}
-
 void Dx2DGraph::SetDrawArea(int top, int left, int right, int bottom) {
 	mViewPort->Scissor(top, left, right, bottom);
 	auto getScissor = mViewPort->getScissorrect();
 	mDxWrap->CmdList()->RSSetScissorRects(1, &getScissor);
 }
 
-void inline Dx2DGraph::GraphicPipeline() {
+void Dx2DGraph::GraphicPipeline_Prop() {
 	mPipeline->LoadShader();
 	mPipeline->ShaderState();
 	mPipeline->SampleMaskState();
@@ -143,8 +120,6 @@ void inline Dx2DGraph::GraphicPipeline() {
 	mPipeline->Layout();
 	mPipeline->RenderTargets();
 	mPipeline->AntiAiliasing();
-	//mPipeline->RootSignatureState(mDxWrap, *mRootSignature, mTexture->getRootSigDesc());
-	//mPipeline->CreateGraphicsPipeline(mDxWrap);
 }
 
 Dx2DGraph::Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap) :
@@ -157,24 +132,14 @@ Dx2DGraph::Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap) :
 	mPipeline.reset(new Dx2DPipeline());
 	mRootSignature.reset(new Dx2DRootSignature());
 	mViewPort.reset(new(DxViewPort2D));
-	//mTexture->getDirectXWrap(mDxWrap);
-	mTexture->DescriptorHeap();
-	mTexture->RootSignatureDesc();
-	mTexture->ShaderResourceViewDesc();
-	GraphicPipeline();
+	mIndex->Heap_Prop();
+	mTexture->DescriptorHeap_Prop();
+	mTexture->RootSignatureDesc_Prop();
+	mTexture->ShaderResourceViewDesc_Prop();
+	GraphicPipeline_Prop();
 	SetDrawArea(0, 0, 1920, 1440);
 }
 
 Dx2DGraph::~Dx2DGraph() {
 
 }
-
-//mTexture->ConstBuffViwe(mDxWrap, mMatrix->getConstBuffer(), mTexture->getDescHandle());
-//mGraphData[HandleID].mDescriptorHeap = mTexture->getDescriptorHeap();
-//mGraphData[HandleID].mTextureData = mTexture->getMetaData();
-//mGraphData[HandleID].mViewPort = mViewPort->getViewPort();
-//mGraphData[HandleID].mRootSignature = mRootSignature->getRootSignature();
-//mGraphData[HandleID].mPipeline = mPipeline->getPipeline();
-//mGraphData[HandleID].mTextureBuffer = mTexture->getTextureBuff();
-//mGraphData[HandleID].mTexDescHeap = mTexture->getBasicDescHeap();
-//mGraphData[HandleID].mDescHandle = mTexture->getDescHandle();

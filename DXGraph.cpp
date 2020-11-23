@@ -3,7 +3,8 @@
 #include"Dx12Wrapper.h"
 #include "Dx2DGraph.h"
 
-DxGraph::DxGraph(std::shared_ptr<Dx12Wrapper> DxWrap)
+DxGraph::DxGraph(std::shared_ptr<Dx12Wrapper> DxWrap):
+	mDxWrap(DxWrap)
 {
 	mDraw2D.reset(new Dx2DGraph(DxWrap));
 }
@@ -24,12 +25,13 @@ void DxGraph::DrawPrototype2D(float x, float y, float size, float Angle, int Han
 	mDraw2D->Draw(x, y, size, Angle, Handle);
 }
 
-void DxGraph::BasicDraw2D() {
+void DxGraph::ClearDraw() {
+	mDxWrap->ClearScreen();
 	mDraw2D->BeingDraw();
 }
 
-void DxGraph::setMatrix(){
-	mDraw2D->setMatrix();
+void DxGraph::ScreenFlip() {
+	mDxWrap->ScreenFlip();
 }
 
 void DxGraph::Init() {

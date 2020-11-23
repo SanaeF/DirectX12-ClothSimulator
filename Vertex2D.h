@@ -56,13 +56,14 @@ public:
 
 	void changePol(float x, float y);
 
+	void Heap_Prop();
+
 	D3D12_HEAP_PROPERTIES getHeap_prop();
 
 	D3D12_RESOURCE_DESC getResource_desc();
 
 private:
 
-	void mHeapProp();
 
 	void mResourceDesc();
 

@@ -490,8 +490,8 @@ void Dx12Wrapper::ClearCount() {
 }
 
 void Dx12Wrapper::setCount(int Handle,int num) {
-	int VectorSize = Handle;
-	if (VectorSize > 0)mFuncCount.resize(VectorSize + 1);
+	int VectorSize = Handle + 1;
+	if (Handle > 0)mFuncCount.resize(VectorSize);
 	else {
 		mFuncCount.resize(1);
 	}

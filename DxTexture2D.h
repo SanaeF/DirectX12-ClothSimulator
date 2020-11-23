@@ -55,11 +55,11 @@ public:
 		D3D12_CPU_DESCRIPTOR_HANDLE DescHandle
 	);
 
-	void DescriptorHeap();
+	void DescriptorHeap_Prop();
 
-	void RootSignatureDesc();
+	void RootSignatureDesc_Prop();
 
-	void ShaderResourceViewDesc();
+	void ShaderResourceViewDesc_Prop();
 
 	D3D12_DESCRIPTOR_HEAP_DESC getDescriptorHeap();
 	D3D12_CPU_DESCRIPTOR_HANDLE getDescHandle();

@@ -63,7 +63,7 @@ void DxTexture2D::CreateResource(std::shared_ptr<Dx12Wrapper> DxWrap) {
 	mGPUtransfer();
 }
 
-void DxTexture2D::DescriptorHeap() {
+void DxTexture2D::DescriptorHeap_Prop() {
 	mDescriptor_Heap.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 	mDescriptor_Heap.NodeMask = 0;
 	mDescriptor_Heap.NumDescriptors = 2;
@@ -85,7 +85,7 @@ void DxTexture2D::mDescriptorHeap(
 }
 
 
-void DxTexture2D::ShaderResourceViewDesc() {
+void DxTexture2D::ShaderResourceViewDesc_Prop() {
 	mSRV_Desc.Format = mMetaData.format;
 	mSRV_Desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	mSRV_Desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
@@ -144,7 +144,7 @@ void DxTexture2D::mSampler() {
 	mSampler_Desc.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
 }
 
-void DxTexture2D::RootSignatureDesc() {
+void DxTexture2D::RootSignatureDesc_Prop() {
 	mRootParameters();
 	mSampler();
 	mRS_Desc.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
@@ -164,10 +164,6 @@ void DxTexture2D::ConstBuffViwe(
 	cbvDesc.BufferLocation = constBuffer->GetGPUVirtualAddress();
 	cbvDesc.SizeInBytes = constBuffer->GetDesc().Width;
 	DxWrap->Device()->CreateConstantBufferView(&cbvDesc, DescHandle);
-	//mDescriptorRange();
-	//mRootParameters();
-	//mSampler();
-	//mRootSignatureDesc();
 }
 
 D3D12_DESCRIPTOR_HEAP_DESC 

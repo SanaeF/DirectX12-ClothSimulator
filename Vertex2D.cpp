@@ -12,8 +12,8 @@ void Vertex2D::setPolygonSize(SIZE size, DirectX::TexMetadata data) {
 	vertex[3].pos.x = 1;
 	vertex[3].pos.y = 1;
 
-	float widthProp = (static_cast<float>(data.width) / 1920);
-	float heightProp = (static_cast<float>(data.height) / 1440);
+	float widthProp = (static_cast<float>(data.width) / static_cast<float>(size.cx));
+	float heightProp = (static_cast<float>(data.height) / static_cast<float>(size.cy));
 	float aspect = static_cast<float>(size.cx) / static_cast<float>(size.cy);
 	for (int i = 0; i < 4; i++) {
 		vertex[i].pos.x = vertex[i].pos.x * widthProp * aspect;
@@ -30,7 +30,7 @@ void Vertex2D::changePol(float x, float y) {
 	}
 }
 
-void Vertex2D::mHeapProp() {
+void Vertex2D::Heap_Prop() {
 	mHeap_prop.Type = D3D12_HEAP_TYPE_UPLOAD;
 	mHeap_prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_UNKNOWN;
 	mHeap_prop.MemoryPoolPreference = D3D12_MEMORY_POOL_UNKNOWN;
@@ -89,8 +89,6 @@ void Vertex2D::mCretateBuffView() {
 
 
 void Vertex2D::mCreateBuff(Dx12Wrapper& DxWrap) {
-	mHeapProp();
-
 	mResourceDesc();
 
 	mBufferCCR(DxWrap);

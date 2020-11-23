@@ -16,7 +16,6 @@ bool Application::Initialize() {
 	Sound.reset(new DxSound(_hwnd));
 	Key.reset(new DxKeyConfig(_hwnd,_windowClass));
 	Graph.reset(new DxGraph(mDxWr));
-
 	Key->KeyInit(0);
 	return true;
 }
@@ -29,16 +28,15 @@ void Application::Run() {
 	imageHandle[0] = Graph->Load2D(L"./dat/back.png");
 	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
 	HandleLif = Graph->Load2D(L"./dat/Bullet02.png");
-	//int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
+	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
 	Sound->SetVolume(-3000, MusicHandle);
-	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
+	Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
 	float angle = 0.0f;
 	int spd = 1;
-	MSG msg = {};
 	int count = 0;
 	float Move[2] = { 0,0 };
-
+	MSG msg = {};
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -48,40 +46,31 @@ void Application::Run() {
 		if (msg.message == WM_QUIT) {
 			break;
 		}
-
-		if (Key->CheckHitKey(DIK_UP) == 1)Move[0] += 2;
-		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[0] -= 2;
-		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[1] += 2;
-		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[1] -= 2;
 		Key->CheckAll();
 		if (Key->CheckHitKey(DIK_C) == 1)spd = 20;
 		else if (Key->CheckHitKey(DIK_LSHIFT) == 1)spd = 1;
 		else spd = 10;
-		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * spd;
-		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * spd;
+		if (Key->CheckHitKey(DIK_UP) == 1)Move[0] += 2 * spd;
+		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[0] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[1] += 2 * spd;
+		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[1] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * 10;
+		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * 10;
 		if (Key->CheckHitKey(DIK_C) == 0)count++;
 		if (count == 1920)count = 0;
-		mDxWr->ClearScreen();
-		Graph->BasicDraw2D();
-
-		if (count < 960)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
-		if (960 < count)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
+		Graph->ClearDraw();
+		//if (count < 960)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
+		//if (960 < count)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
 		Graph->DrawPrototype2D(0, 0, 1, 0, imageHandle[1]);
-
 		Graph->SetArea(0, 0, 1920, 1440);
+		for (int i = 0; i < 5; i++)Graph->DrawPrototype2D(-Move[1] - i * 100, -Move[0], 1, angle, HandleLif);
+		for (int i = 0; i < 1000; i++)Graph->DrawPrototype2D(Move[1] + i * 100, Move[0]+100*(i%2), 1, -angle, HandleLif);
+		if(count>960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);
+		//if (count < 960)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
+		//if (960 < count)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
+		//Graph->DrawPrototype2D(Move[1], Move[0], 1, angle, imageHandle[0]);
 
-		Graph->DrawPrototype2D(-Move[1], Move[0], 1, angle, HandleLif);
-		Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);
-
-		//std::thread Draw([&]() {
-		//	});
-
-		if (count < 960)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
-		if (960 < count)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
-		Graph->DrawPrototype2D(Move[1], Move[0], 1, angle, imageHandle[0]);
-		//Graph->setMatrix();
-
-		mDxWr->ScreenFlip();
+		Graph->ScreenFlip();
 	}
 }
 

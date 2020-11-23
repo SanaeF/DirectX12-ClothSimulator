@@ -11,6 +11,7 @@
 #include<d3dx12.h>
 #include<wrl.h>
 #include<memory>
+#include "DirectXLib.h"
 
 class Dx12Wrapper;
 class PMDRenderer;
@@ -23,6 +24,7 @@ class DxSound;
 ///シングルトンクラス
 class Application{
 private:
+
 	SIZE mWin, mPix;
 
 	const char* winName[2];
@@ -31,6 +33,8 @@ private:
 	//ウィンドウ周り
 	WNDCLASSEX _windowClass;
 	HWND _hwnd;
+	//std::shared_ptr<DirectXLib>DirectXlib;
+
 	std::shared_ptr<Dx12Wrapper> mDxWr;
 	std::shared_ptr<PMDRenderer> mPMDRenderer;
 	std::shared_ptr<DXPMDModel> mPMDModel;

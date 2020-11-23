@@ -20,54 +20,25 @@ void Dx2DMatrix::createBuffer(Dx12Wrapper& DxWrap) {
 		IID_PPV_ARGS(&mConstBuffer)
 	);
 	auto result = mConstBuffer->Map(0, nullptr, (void**)&mMapMatrix);
-	*mMapMatrix = mMatrix;
+	*mMapMatrix = mMatrix * mLookAt * mPerspectiveFov;
 }
 
 void Dx2DMatrix::ChangeMatrix(
-	int InstID,
 	DirectX::XMMATRIX* pMatrix,
 	float x,
 	float y,
 	float size,
 	float RotaZ
 ) {
-	XMVECTOR PosisitonOrigin = XMVectorSet(x, y, 0, 0);
-
 	mWorlMat = DirectX::XMMatrixTransformation2D(
-		PosisitonOrigin,
+		XMVectorSet(0, 0, 0, 0),
 		0,
 		XMVectorSet(size, size, 0, 0),
 		XMVectorSet(0, 0, 0, 0),
 		RotaZ,
-		PosisitonOrigin
+		XMVectorSet(x, y, 0, 0)
 	);
-
-
 	*pMatrix = mWorlMat * mLookAt * mPerspectiveFov;
-	//mConstBuffer->Unmap(0, nullptr);
-}
-
-void Dx2DMatrix::BasicChangeMatrix(
-	int InstID,
-	float x,
-	float y,
-	float size,
-	float RotaZ
-) {
-	XMVECTOR PosisitonOrigin = XMVectorSet(x, y, 0, 0);
-
-	mWorlMat = DirectX::XMMatrixTransformation2D(
-		PosisitonOrigin,
-		0,
-		XMVectorSet(size, size, 0, 0),
-		XMVectorSet(0, 0, 0, 0),
-		RotaZ,
-		PosisitonOrigin
-	);
-
-
-	*mMapMatrix = mWorlMat * mLookAt * mPerspectiveFov;
-	mConstBuffer->Unmap(0, nullptr);
 }
 
 void Dx2DMatrix::RotaInitialize(Dx12Wrapper& DxWrap) {
@@ -87,12 +58,6 @@ void Dx2DMatrix::RotaInitialize(Dx12Wrapper& DxWrap) {
 		1.f,
 		10.f
 	);
-}
-
-void Dx2DMatrix::setMatrix(DirectX::XMMATRIX* pMatrix) {
-	auto result = mConstBuffer->Map(0, nullptr, (void**)&pMatrix);
-	//*pMatrix = *mChangeMatrix;
-	mConstBuffer->Unmap(0, nullptr);
 }
 
 ID3D12Resource* 

@@ -24,18 +24,13 @@ private:
 	};
 
 	struct GraphicData {
-		DirectX::TexMetadata mTextureData;
 		DirectX::XMMATRIX* mMatrix;
 		ID3D12DescriptorHeap* mTexDescHeap;
 		ID3D12Resource* mTextureBuffer;
-		D3D12_CPU_DESCRIPTOR_HANDLE mDescHandle;
-		ID3D12PipelineState* mPipelineState;
-		ID3D12RootSignature* mRootSignature;
 		D3D12_VERTEX_BUFFER_VIEW mVertexBufferView;
-		D3D12_INDEX_BUFFER_VIEW mVertexIndexView;
 		D3D12_VIEWPORT mViewPort = {};
-		D3D12_DESCRIPTOR_HEAP_DESC mDescriptorHeap = {};
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC mPipeline = {};
+		std::vector<DirectX::XMMATRIX*> MatrixArry;
+		std::vector<ID3D12DescriptorHeap*> TexDescHeapArry;
 	};
 
 	struct DrawGraphParam {
@@ -77,16 +72,14 @@ public:
 
 	void BeingDraw();
 
-	void setMatrix();
-
 	Dx2DGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
 	~Dx2DGraph();
 
 private:
 
-	void GraphicPipeline();
+	void GraphicPipeline_Prop();
 
-	void CopyTex(int num);
+	void mCreateMatrix(int Handle, int num);
 
 	void mDrawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle);
 

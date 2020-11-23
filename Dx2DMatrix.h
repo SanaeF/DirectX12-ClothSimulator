@@ -29,39 +29,12 @@ public:
 	void createBuffer(Dx12Wrapper& DxWrap);
 
 	void ChangeMatrix(
-		int InstID, 
 		DirectX::XMMATRIX* pMatrix,
 		float x,
 		float y,
 		float size,
 		float RotaZ
 	);
-
-	void BasicChangeMatrix(
-		int InstID,
-		float x,
-		float y,
-		float size,
-		float RotaZ
-	);
-
-	void Rotation(
-		int InstID,
-		DirectX::XMMATRIX& pMatrix,
-		double RotaX,
-		double RotaY,
-		double RotaZ
-	);
-
-	void TransMove(
-		DirectX::XMMATRIX& pMatrix,
-		double RotaX,
-		double RotaY,
-		double RotaZ
-	);
-
-	void setMatrix(DirectX::XMMATRIX* pMatrix);
-
 	ID3D12Resource* getConstBuffer();
 
 	DirectX::XMMATRIX* getMatData();

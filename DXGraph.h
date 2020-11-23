@@ -10,6 +10,8 @@ private:
 
 	std::shared_ptr<Dx2DGraph>mDraw2D;
 
+	std::shared_ptr<Dx12Wrapper> mDxWrap;
+
 public:
 
 	void SetArea(int x1, int y1, int x2, int y2);
@@ -20,9 +22,9 @@ public:
 
 	int Load2D(const wchar_t* path);
 
-	void setMatrix();
+	void ClearDraw();
 
-	void BasicDraw2D();
+	void ScreenFlip();
 
 	DxGraph(std::shared_ptr<Dx12Wrapper> DxWrap);
 	~DxGraph();
