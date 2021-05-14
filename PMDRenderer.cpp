@@ -51,7 +51,6 @@ void PMDRenderer::BeforeDraw() {
 
 void PMDRenderer::Draw() {
 	for (auto& actor : _actors) {
-		//actor->Draw();
 	}
 }
 
@@ -62,7 +61,7 @@ void PMDRenderer::Init() {
 
 void PMDRenderer::AnimationStart() {
 	for (auto& actor : _actors) {
-		actor->PlayAnimation();
+		actor->SetAnimationTime();
 	}
 }
 
@@ -234,12 +233,21 @@ HRESULT PMDRenderer::CreateRootSignature() {
 
 	ComPtr<ID3DBlob> rootSigBlob = nullptr;
 	ComPtr<ID3DBlob> errorBlob = nullptr;
+
 	auto result = D3D12SerializeRootSignature(&rootSignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &rootSigBlob, &errorBlob);
+
 	if (FAILED(result)) {
 		assert(SUCCEEDED(result));
 		return result;
 	}
-	result = _dx12->Device()->CreateRootSignature(0, rootSigBlob->GetBufferPointer(), rootSigBlob->GetBufferSize(), IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf()));
+
+	result = _dx12->Device()->CreateRootSignature(
+		0, 
+		rootSigBlob->GetBufferPointer(), 
+		rootSigBlob->GetBufferSize(), 
+		IID_PPV_ARGS(_rootSignature.ReleaseAndGetAddressOf())
+	);
+
 	if (FAILED(result)) {
 		assert(SUCCEEDED(result));
 		return result;

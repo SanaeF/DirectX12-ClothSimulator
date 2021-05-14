@@ -13,14 +13,12 @@
 #include<memory>
 #include "DirectXLib.h"
 
-class Dx12Wrapper;
-class PMDRenderer;
-class DXPMDModel;
-
-class DxGraph;
 class DxKeyConfig;
 class DxSound;
-
+namespace lib {
+	class DirectX12Manager;
+	class DxGraph;
+}
 ///シングルトンクラス
 class Application{
 private:
@@ -35,10 +33,8 @@ private:
 	HWND _hwnd;
 	//std::shared_ptr<DirectXLib>DirectXlib;
 
-	std::shared_ptr<Dx12Wrapper> mDxWr;
-	std::shared_ptr<PMDRenderer> mPMDRenderer;
-	std::shared_ptr<DXPMDModel> mPMDModel;
-	std::shared_ptr<DxGraph>Graph;
+	std::shared_ptr<lib::DirectX12Manager> mDxWr;
+	std::shared_ptr<lib::DxGraph>Graph;
 	std::shared_ptr<DxKeyConfig>Key;
 	std::shared_ptr<DxSound>Sound;
 	//ゲーム用ウィンドウの生成
@@ -60,7 +56,7 @@ public:
 
 	void RunTest();
 	void Run();
-
+	void Run2();
 	///後処理
 	void Finaliz();
 

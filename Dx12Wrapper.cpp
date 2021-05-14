@@ -91,13 +91,13 @@ bool Dx12Wrapper::Init(SIZE pix) {
 		return false;
 	}
 
-	//if (FAILED(CreateSceneView())) {
-	//	assert(0);
-	//	return false;
-	//}
+	if (FAILED(CreateSceneView())) {
+		assert(0);
+		return false;
+	}
 
 	//テクスチャローダー関連初期化
-	//CreateTextureLoaderTable();
+	CreateTextureLoaderTable();
 
 	//深度バッファ作成
 	if (FAILED(CreateDepthStencilView())) {

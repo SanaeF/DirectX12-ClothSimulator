@@ -34,7 +34,7 @@ public:
 
 	bool Update(DWORD startTime);
 
-	void PlayAnimation(DWORD _startTime);
+	void AnimationInit(DWORD _startTime);
 
 	DXVMDMotion() {
 	}

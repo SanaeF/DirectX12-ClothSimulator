@@ -58,7 +58,7 @@ float GetYFromXOnBezier(float x, const XMFLOAT2& a, const XMFLOAT2& b, uint8_t n
 	return t * t * t + 3 * t * t * r * b.y + 3 * t * r * r * a.y;
 }
 
-void DXVMDMotion::PlayAnimation(DWORD startTime) {
+void DXVMDMotion::AnimationInit(DWORD startTime) {
 	_startTime = startTime;
 }
 

@@ -91,25 +91,20 @@ int DXPMDModel::LoadPMDFile(const char* path,int Handle) {
 	mMaterial->CreateMaterialData(_dx12->Device()); //CreateMaterialData();
 	mMaterial->CreateMaterialAndTextureView(_dx12->Device()); //CreateMaterialAndTextureView();
 
-	DXHandler handler;
-	PMDManager PMDdata;
-	PMDdata.vertex = mMaterial->getVB_View();
-	PMDdata.index = mMaterial->getIB_View();
-
-	return handler.CreateHandler(&PMDdata);
+	return 0;
 }
 
 void DXPMDModel::LoadVMDFile(const char* filepath, const char* name) {
 	Motion->LoadVMDFile(filepath, name);
 }
 
-void DXPMDModel::PlayAnimation() {
-	Motion->PlayAnimation(timeGetTime());
+void DXPMDModel::SetAnimationTime() {
+	Motion->AnimationInit(timeGetTime());
 }
 
 void DXPMDModel::MotionUpdate() {
 	_angle += 0.1f;
-	//Motion->testUpdateInBone(cos(_angle));
+	Motion->testUpdateInBone(cos(_angle));
 	Motion->Update(timeGetTime());
 }
 
@@ -117,15 +112,8 @@ void DXPMDModel::Update() {
 	MotionUpdate();
 }
 
-void DXPMDModel::CheckData(int Handle) {
-	DXHandler handler;
-	//PMDManager* PMDdata = (PMDManager*)handler.getHandleData()[Handle];
-
-	//if (&PMDdata->vertex == &mMaterial->getVB_View())assert(0);
-}
 void DXPMDModel::Draw(int Handle) {
-	//DXHandler handler;
-	//PMDManager* PMDdata = (PMDManager*)handler.getPMDData()[Handle];
+
 	auto vertex = mMaterial->getVB_View();
 	auto index = mMaterial->getIB_View();
 	_dx12->CmdList()->IASetVertexBuffers(0, 1,&vertex);

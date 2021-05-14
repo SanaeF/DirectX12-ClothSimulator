@@ -37,7 +37,7 @@ public:
 	DXPMDModel* Clone();
 
 	void LoadVMDFile(const char* filepath, const char* name);
-	void PlayAnimation();
+	void SetAnimationTime();
 	void Update();
 	void Draw(int Handle);
 

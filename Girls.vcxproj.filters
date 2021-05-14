@@ -19,14 +19,8 @@
     <Filter Include="DirectXlib">
       <UniqueIdentifier>{3c5784f3-a2dc-42c6-863b-b69a32b19001}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\DxWindow">
-      <UniqueIdentifier>{e3f44038-831a-4f85-83ef-5e6fc6286f29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DXHandler">
       <UniqueIdentifier>{ac04ad31-b41f-4ac3-a1f2-e8cfcc94c7d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics">
-      <UniqueIdentifier>{173db223-9681-4d80-9715-58dbcebb6db3}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\DXHandler\Manager">
       <UniqueIdentifier>{6ebdc9ca-511b-4e97-b367-186e7b832d62}</UniqueIdentifier>
@@ -40,9 +34,6 @@
     <Filter Include="リソース ファイル\ShaderMultiRender">
       <UniqueIdentifier>{d43b5029-21d9-400a-a83c-08ba0ca7d7c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Live2D">
-      <UniqueIdentifier>{0d99b910-9cc7-48d2-88aa-e08130feb138}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DXSound">
       <UniqueIdentifier>{6e45268d-57ad-41fd-85c6-2036bf238947}</UniqueIdentifier>
     </Filter>
@@ -55,65 +46,14 @@
     <Filter Include="ソース ファイル\DX12wrap\CreateScreen">
       <UniqueIdentifier>{5319f35b-416c-448a-b215-a5d3c46ddae2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D">
-      <UniqueIdentifier>{790efa2c-bcbe-47cf-8946-b04c43a2ec8b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Pipeline">
-      <UniqueIdentifier>{f89a6ec2-3f85-4656-8171-19bd9dccbef8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Pipeline\RootSignature">
-      <UniqueIdentifier>{c5619be6-f528-4daf-bec7-ac686ea63c2e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Vertex">
-      <UniqueIdentifier>{b1684b2f-09f6-4f81-8245-59efb6bf2be9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Vertex\Index">
-      <UniqueIdentifier>{ef58877a-0594-4763-9998-70031c0729f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Texture">
-      <UniqueIdentifier>{a719192a-8920-473c-b656-9d3135525f6d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Matrix">
-      <UniqueIdentifier>{8536a38b-25af-4b7d-9756-57b33ebd881a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D">
-      <UniqueIdentifier>{b160fe52-92be-4a99-b700-f89f9219b9f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD">
-      <UniqueIdentifier>{cc5969b0-ae42-493a-ab80-743f8fe778d0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel">
-      <UniqueIdentifier>{3e3ab550-147d-4eae-8129-0719e8cb2a83}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData">
-      <UniqueIdentifier>{73814352-a52b-4b2f-b4e0-bb74b000c52c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\VMDMotion">
-      <UniqueIdentifier>{b57de40c-b4ef-4b6e-bff0-a31363884ab2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\VMDMotion\PMDBone">
-      <UniqueIdentifier>{50b87c8a-5435-49a7-beff-1006531b7de3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\DXPMDMaterial">
-      <UniqueIdentifier>{2eb97d0b-c7a7-41ec-b055-32d21154a2c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs3D\PMD\DX3DRenderer">
-      <UniqueIdentifier>{8f96b75e-1ef9-42a4-beb1-84ad1c009c53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DXKeyConfig">
       <UniqueIdentifier>{bb57ac45-092d-42fc-84d2-0a4a0b767ad8}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\DXShaderManager">
       <UniqueIdentifier>{c54027b5-8365-4b32-882e-6c2cd8a723d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\Texture\DxUploadTex2D">
-      <UniqueIdentifier>{986c3363-cdb6-458a-8956-cab5dbce3e07}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\DxHelper">
       <UniqueIdentifier>{22791bea-ea2e-4761-baff-96fea7e7feec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ソース ファイル\DXGraphics\Graphs2D\DxViewPort">
-      <UniqueIdentifier>{41d9b496-cfc9-49ec-95fb-acb63f0fb0e5}</UniqueIdentifier>
     </Filter>
     <Filter Include="ソース ファイル\DXSound\WavData">
       <UniqueIdentifier>{7944ec6f-4d17-491a-b838-b7fc051d6f14}</UniqueIdentifier>
@@ -121,14 +61,80 @@
     <Filter Include="ソース ファイル\DirectXLib">
       <UniqueIdentifier>{e099ab01-26af-4bf8-84af-0429e27b45aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXlib\Source">
+      <UniqueIdentifier>{71ad3ddc-e6ae-4b4f-b0e7-43173bd0ce18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics">
+      <UniqueIdentifier>{57145075-c657-47c5-918c-0856f0e55093}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\LibHelper">
+      <UniqueIdentifier>{9d8bcfd0-910a-48f5-8428-f419dc46f36d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D">
+      <UniqueIdentifier>{790efa2c-bcbe-47cf-8946-b04c43a2ec8b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\ShaderManager">
+      <UniqueIdentifier>{f40ae0fa-5dcf-4296-a2d5-426ea2570f7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\DirectX12">
+      <UniqueIdentifier>{ab161154-a83d-47cb-b9ce-2484ff4abd8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D">
+      <UniqueIdentifier>{8c51023b-6614-4ba1-aa57-5b572ef4f5c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\FbxModel">
+      <UniqueIdentifier>{dbbaf828-8566-4803-8744-3707b6a34954}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\FbxModel\FbxMaterial">
+      <UniqueIdentifier>{db635660-cce2-4eea-9d75-e370b4eab91c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\GraphicsProp">
+      <UniqueIdentifier>{4ddf443f-4387-4a62-9f69-cb4f708ae3d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp">
+      <UniqueIdentifier>{050db3c4-0f37-4e52-a041-b6e7048ae5b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\DxViewPort">
+      <UniqueIdentifier>{41d9b496-cfc9-49ec-95fb-acb63f0fb0e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\GraphicsPipeline">
+      <UniqueIdentifier>{f89a6ec2-3f85-4656-8171-19bd9dccbef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\GraphicsPipeline\RootSignature">
+      <UniqueIdentifier>{c5619be6-f528-4daf-bec7-ac686ea63c2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Matrix">
+      <UniqueIdentifier>{8536a38b-25af-4b7d-9756-57b33ebd881a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Texture">
+      <UniqueIdentifier>{a719192a-8920-473c-b656-9d3135525f6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Texture\DxUploadTex">
+      <UniqueIdentifier>{986c3363-cdb6-458a-8956-cab5dbce3e07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Vertex">
+      <UniqueIdentifier>{b1684b2f-09f6-4f81-8245-59efb6bf2be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Vertex\Index">
+      <UniqueIdentifier>{ef58877a-0594-4763-9998-70031c0729f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\GraphicsProp">
+      <UniqueIdentifier>{dd934b9e-c109-4c9f-aa56-22517e266072}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\GraphicsProp\Vertex">
+      <UniqueIdentifier>{52d843a3-7a66-4421-9d8b-b772485aac0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\GraphicsProp\Vertex\Index">
+      <UniqueIdentifier>{ba351ef6-178f-46fb-a807-2faadd07634e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="リソース ファイル\Shader3D\ClothSim">
+      <UniqueIdentifier>{691858eb-6abf-442b-ab73-3d86ce04032f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\ClothSimulator">
+      <UniqueIdentifier>{b885dd38-385a-44b7-a0d8-33c5e6c33069}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Dx12Wrapper.h">
-      <Filter>ソース ファイル\DX12wrap</Filter>
-    </ClInclude>
-    <ClInclude Include="PMDRenderer.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DX3DRenderer</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>ソース ファイル\Application</Filter>
     </ClInclude>
@@ -141,53 +147,8 @@
     <ClInclude Include="DXHandler.h">
       <Filter>ソース ファイル\DXHandler</Filter>
     </ClInclude>
-    <ClInclude Include="DXPMDBone.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
-    </ClInclude>
-    <ClInclude Include="DXVMDMotion.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\VMDMotion</Filter>
-    </ClInclude>
-    <ClInclude Include="DXPMDModel.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel</Filter>
-    </ClInclude>
-    <ClInclude Include="DXPMDMaterial.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
-    </ClInclude>
-    <ClInclude Include="DX3DGraph.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D</Filter>
-    </ClInclude>
     <ClInclude Include="DxHandleManager.h">
       <Filter>ソース ファイル\DXHandler\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="DxPMDManager.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD</Filter>
-    </ClInclude>
-    <ClInclude Include="Dx2DGraph.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Dx2DPipeline.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="Vertex2D.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Vertex</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderManager.h">
-      <Filter>ソース ファイル\DXShaderManager</Filter>
-    </ClInclude>
-    <ClInclude Include="Dx2DRootSignature.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Pipeline\RootSignature</Filter>
-    </ClInclude>
-    <ClInclude Include="DxIndex2D.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Vertex\Index</Filter>
-    </ClInclude>
-    <ClInclude Include="DxTexture2D.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Dx2DMatrix.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Matrix</Filter>
-    </ClInclude>
-    <ClInclude Include="DxLive2D.h">
-      <Filter>ソース ファイル\DXGraphics\Live2D</Filter>
     </ClInclude>
     <ClInclude Include="DxSound.h">
       <Filter>ソース ファイル\DXSound</Filter>
@@ -195,14 +156,8 @@
     <ClInclude Include="DxKeyConfig.h">
       <Filter>ソース ファイル\DXKeyConfig</Filter>
     </ClInclude>
-    <ClInclude Include="DxUploadTex2D.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Texture\DxUploadTex2D</Filter>
-    </ClInclude>
     <ClInclude Include="DxHelper.h">
       <Filter>ソース ファイル\DxHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="DxViewPort2D.h">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\DxViewPort</Filter>
     </ClInclude>
     <ClInclude Include="DxWavData.h">
       <Filter>ソース ファイル\DXSound\WavData</Filter>
@@ -210,17 +165,65 @@
     <ClInclude Include="DirectXLib.h">
       <Filter>ソース ファイル\DirectXLib</Filter>
     </ClInclude>
-    <ClInclude Include="DxGraph.h">
-      <Filter>ソース ファイル\DXGraphics</Filter>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxModel.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h">
+      <Filter>DirectXlib\Source\LibHelper</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxMaterial\FbxMaterial.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\FbxModel\FbxMaterial</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\ShaderManager\ShaderManager.h">
+      <Filter>DirectXlib\Source\ShaderManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\DxGraphics.h">
+      <Filter>DirectXlib\Source\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\ViewPort\DxGraphicsViewPort.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\DxViewPort</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Texture\DxGraphics2DTexture.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Texture\UploadTexture\DxUploadTex.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Texture\DxUploadTex</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Matrix\DxGraphicsMatrix.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\GraphPipline\DxGraphicsPipeline.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\GraphicsPipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\GraphPipline\RootSignature\DxRootSignature.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\GraphicsPipeline\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\DirectX12\DirectX12Manager.h">
+      <Filter>DirectXlib\Source\DirectX12</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph2D\DxGraphics2D.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\DxGraphics3D.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Vertex\DxGraph2DVertex.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Vertex\Index\DxGraph2DIndex.h">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Vertex\Index</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\DxGraphicsVertex.h">
+      <Filter>DirectXlib\Source\Graphics\GraphicsProp\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\Index\DxGraphicsIndex.h">
+      <Filter>DirectXlib\Source\Graphics\GraphicsProp\Vertex\Index</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulator.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\ClothSimulator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PixelPolygon.hlsl">
-      <Filter>リソース ファイル\Shader3D</Filter>
-    </FxCompile>
-    <FxCompile Include="VertexPolygon.hlsl">
-      <Filter>リソース ファイル\Shader3D</Filter>
-    </FxCompile>
     <FxCompile Include="Vertex2D.hlsl">
       <Filter>リソース ファイル\Shader2D</Filter>
     </FxCompile>
@@ -233,27 +236,27 @@
     <FxCompile Include="BasicVertexShader.hlsl">
       <Filter>リソース ファイル\ShaderMultiRender</Filter>
     </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
+      <Filter>リソース ファイル\Shader3D</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Vertex3D.hlsl">
+      <Filter>リソース ファイル\Shader3D</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="HeaderPolygon.hlsli">
-      <Filter>リソース ファイル\Shader3D</Filter>
-    </None>
     <None Include="BasicShaderHeader.hlsli">
       <Filter>リソース ファイル\ShaderMultiRender</Filter>
     </None>
     <None Include="Header2D.hlsli">
       <Filter>リソース ファイル\Shader2D</Filter>
     </None>
+    <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
+      <Filter>リソース ファイル\Shader3D</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="Dx12Wrapper.cpp">
-      <Filter>ソース ファイル\DX12wrap</Filter>
-    </ClCompile>
-    <ClCompile Include="PMDRenderer.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DX3DRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>ソース ファイル\Application</Filter>
@@ -267,62 +270,14 @@
     <ClCompile Include="DXHandler.cpp">
       <Filter>ソース ファイル\DXHandler</Filter>
     </ClCompile>
-    <ClCompile Include="DXPMDBone.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\VMDMotion\PMDBone</Filter>
-    </ClCompile>
-    <ClCompile Include="DXVMDMotion.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\VMDMotion</Filter>
-    </ClCompile>
-    <ClCompile Include="DXPMDModel.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel</Filter>
-    </ClCompile>
-    <ClCompile Include="DXPMDMaterial.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D\PMD\DXPMDModel\PMDData\DXPMDMaterial</Filter>
-    </ClCompile>
-    <ClCompile Include="DX3DGraph.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs3D</Filter>
-    </ClCompile>
-    <ClCompile Include="Dx2DGraph.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Dx2DPipeline.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="Vertex2D.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Vertex</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderManager.cpp">
-      <Filter>ソース ファイル\DXShaderManager</Filter>
-    </ClCompile>
-    <ClCompile Include="Dx2DRootSignature.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Pipeline\RootSignature</Filter>
-    </ClCompile>
-    <ClCompile Include="DxIndex2D.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Vertex\Index</Filter>
-    </ClCompile>
-    <ClCompile Include="DxTexture2D.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Texture</Filter>
-    </ClCompile>
-    <ClCompile Include="Dx2DMatrix.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Matrix</Filter>
-    </ClCompile>
-    <ClCompile Include="DxLive2D.cpp">
-      <Filter>ソース ファイル\DXGraphics\Live2D</Filter>
-    </ClCompile>
     <ClCompile Include="DxSound.cpp">
       <Filter>ソース ファイル\DXSound</Filter>
     </ClCompile>
     <ClCompile Include="DxKeyConfig.cpp">
       <Filter>ソース ファイル\DXKeyConfig</Filter>
     </ClCompile>
-    <ClCompile Include="DxUploadTex2D.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\Texture\DxUploadTex2D</Filter>
-    </ClCompile>
     <ClCompile Include="DxHelper.cpp">
       <Filter>ソース ファイル\DxHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="DxViewPort2D.cpp">
-      <Filter>ソース ファイル\DXGraphics\Graphs2D\DxViewPort</Filter>
     </ClCompile>
     <ClCompile Include="DxWavData.cpp">
       <Filter>ソース ファイル\DXSound\WavData</Filter>
@@ -330,8 +285,62 @@
     <ClCompile Include="DirectXLib.cpp">
       <Filter>ソース ファイル\DirectXLib</Filter>
     </ClCompile>
-    <ClCompile Include="DxGraph.cpp">
-      <Filter>ソース ファイル\DXGraphics</Filter>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxModel.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp">
+      <Filter>DirectXlib\Source\LibHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxMaterial\FbxMaterial.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\FbxModel\FbxMaterial</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\ShaderManager\ShaderManager.cpp">
+      <Filter>DirectXlib\Source\ShaderManager</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\DxGraphics.cpp">
+      <Filter>DirectXlib\Source\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\ViewPort\DxGraphicsViewPort.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\DxViewPort</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Texture\DxGraphics2DTexture.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Texture\UploadTexture\DxUploadTex.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Texture\DxUploadTex</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Matrix\DxGraphicsMatrix.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\GraphPipline\DxGraphicsPipeline.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\GraphicsPipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\GraphPipline\RootSignature\DxRootSignature.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\GraphicsPipeline\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\DirectX12\DirectX12Manager.cpp">
+      <Filter>DirectXlib\Source\DirectX12</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph2D\DxGraphics2D.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\DxGraphics3D.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Vertex\Index\DxGraph2DIndex.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Vertex\Index</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Vertex\DxGraph2DVertex.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphs2D\GraphicsProp\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\DxGraphicsVertex.cpp">
+      <Filter>DirectXlib\Source\Graphics\GraphicsProp\Vertex</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\Index\DxGraphicsIndex.cpp">
+      <Filter>DirectXlib\Source\Graphics\GraphicsProp\Vertex\Index</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulator.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\ClothSimulator</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

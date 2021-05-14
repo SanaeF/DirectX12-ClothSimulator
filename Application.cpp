@@ -1,42 +1,76 @@
 ﻿#include "Application.h"
 #include<thread>
-#include"Dx12Wrapper.h"
-#include"PMDRenderer.h"
-#include"DXPMDModel.h"
-
-#include "DxGraph.h"
+#include "DirectXLib/Source/Graphics/DxGraphics.h"
+#include "DirectXLib/Source/DirectX12/DirectX12Manager.h"
 #include "DxKeyConfig.h"
 #include "DxSound.h"
 
 bool Application::Initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	CreateGameWindow(_hwnd, _windowClass);
-	mDxWr.reset(new Dx12Wrapper(_hwnd));
+	mDxWr.reset(new lib::DirectX12Manager(_hwnd));
 	mDxWr->Init(mPix);
 	Sound.reset(new DxSound(_hwnd));
 	Key.reset(new DxKeyConfig(_hwnd,_windowClass));
-	Graph.reset(new DxGraph(mDxWr));
+	Graph.reset(new lib::DxGraph(mDxWr));
 	Key->KeyInit(0);
+
 	return true;
 }
 
 
 void Application::Run() {
-	int imageHandle[2];
+	//Graph3d->loadFbx();
+	int imageHandle[2];//ハンドル
 	int HandleLif;
 	int MusicHandle;
-	imageHandle[0] = Graph->Load2D(L"./dat/back.png");
-	imageHandle[1] = Graph->Load2D(L"./dat/ochiful.png");
+	Graph->Load3D();
+	imageHandle[0] = Graph->Load2D(L"./dat/back.png");//2D画像ロード
+	imageHandle[1] = Graph->Load2D(L"./dat/titleback.png");
 	HandleLif = Graph->Load2D(L"./dat/Bullet02.png");
 	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
 	Sound->SetVolume(-3000, MusicHandle);
-	Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
+	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
+	float angle = 0.0f;int spd = 1;int count = 0;float Move[2] = { 0,0 };MSG msg = {};
+	while (true) {
+		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&msg);
+			DispatchMessage(&msg);
+		}
+
+		if (msg.message == WM_QUIT) {break;}
+		Graph->ClearDraw();//画面の初期化
+		//Graph->SetArea(0, 0, 1920, 1440/2);//描画範囲の指定
+		Graph->DrawPrototype2D(0, 0, 1, 0, text_img);
+		Graph->SetArea(0, 0, 1920, 1440);//描画範囲の指定
+		//Graph->DrawPrototype2D(-Move[1], -Move[0], 1, angle, HandleLif);//描画(テスト用)
+		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
+		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
+		Graph->Draw3D(Move[1], Move[0], 1, angle);
+		Graph->ScreenFlip();//スワップチェイン
+
+		Key->CheckAll();//キー入力のセット
+		if (Key->CheckHitKey(DIK_C))spd = 20;//キーを押している間はCheckHitKeyの戻り値が増えていく
+		else spd = 20;
+		if (Key->CheckHitKey(DIK_UP) == 1)Move[0] += 2 * spd;
+		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[0] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[1] += 2 * spd;
+		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[1] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * 10;
+		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * 10;
+		if (Key->CheckHitKey(DIK_C) == 0)count++;
+		if (count == 1920)count = 0;
+		angle += 0.0005f;
+	}
+}
+
+
+void Application::Run2() {
+	Graph->Load3D();
 	float angle = 0.0f;
-	int spd = 1;
-	int count = 0;
-	float Move[2] = { 0,0 };
 	MSG msg = {};
+	unsigned int frame = 0;
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -46,34 +80,12 @@ void Application::Run() {
 		if (msg.message == WM_QUIT) {
 			break;
 		}
-		Key->CheckAll();
-		if (Key->CheckHitKey(DIK_C) == 1)spd = 20;
-		else if (Key->CheckHitKey(DIK_LSHIFT) == 1)spd = 1;
-		else spd = 10;
-		if (Key->CheckHitKey(DIK_UP) == 1)Move[0] += 2 * spd;
-		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[0] -= 2 * spd;
-		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[1] += 2 * spd;
-		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[1] -= 2 * spd;
-		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * 10;
-		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * 10;
-		if (Key->CheckHitKey(DIK_C) == 0)count++;
-		if (count == 1920)count = 0;
 		Graph->ClearDraw();
-		//if (count < 960)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
-		//if (960 < count)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
-		Graph->DrawPrototype2D(0, 0, 1, 0, imageHandle[1]);
-		Graph->SetArea(0, 0, 1920, 1440);
-		for (int i = 0; i < 5; i++)Graph->DrawPrototype2D(-Move[1] - i * 100, -Move[0], 1, angle, HandleLif);
-		for (int i = 0; i < 1000; i++)Graph->DrawPrototype2D(Move[1] + i * 100, Move[0]+100*(i%2), 1, -angle, HandleLif);
-		if(count>960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);
-		//if (count < 960)Graph->SetArea((count % 960) * 2, 0, 1920, 1440);
-		//if (960 < count)Graph->SetArea(0, 0, (count % 960) * 2, 1440);
-		//Graph->DrawPrototype2D(Move[1], Move[0], 1, angle, imageHandle[0]);
+
 
 		Graph->ScreenFlip();
 	}
 }
-
 
 void Application::SetWindow(int width, int height, const char* window_name, const char* Name) {
 
@@ -147,52 +159,50 @@ void Application::ShowWin() {
 }
 
 void Application::RunTest() {
-	int imageHandle;
-	mDxWr.reset(new Dx12Wrapper(_hwnd));
-	mPMDRenderer.reset(new PMDRenderer(mDxWr)); 
+	//int imageHandle;
 
-	mPMDRenderer->Init();
-	mPMDModel.reset(new DXPMDModel(mDxWr));
+	//mPMDRenderer->Init();
+	//mPMDModel.reset(new DXPMDModel(mDxWr));
 
-	imageHandle = mPMDModel->LoadPMDFile("model/鷺澤美咲ミク.pmd");
-	mPMDModel->LoadVMDFile("motion/motion.vmd", "pose");
+	//imageHandle = mPMDModel->LoadPMDFile("model/鷺澤美咲ミク.pmd");
+	//mPMDModel->LoadVMDFile("motion/motion.vmd", "pose");
 
-	mPMDModel->PlayAnimation();
-	//mPMDRenderer->AddActor(mPMDModel);
+	//mPMDModel->SetAnimationTime();
+	////mPMDRenderer->AddActor(mPMDModel);
 
-	float angle = 0.0f;
-	MSG msg = {};
-	unsigned int frame = 0;
-	while (true) {
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		
-		if (msg.message == WM_QUIT) {
-			break;
-		}
+	//float angle = 0.0f;
+	//MSG msg = {};
+	//unsigned int frame = 0;
+	//while (true) {
+	//	if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+	//		TranslateMessage(&msg);
+	//		DispatchMessage(&msg);
+	//	}
+	//	
+	//	if (msg.message == WM_QUIT) {
+	//		break;
+	//	}
 
-		mDxWr->ClearScreen();
+	//	mDxWr->ClearScreen();
 
-		mDxWr->Update();
+	//	mDxWr->Update();
 
-		mPMDRenderer->Update();
+	//	mPMDRenderer->Update();
 
-		mPMDRenderer->BeforeDraw();
+	//	mPMDRenderer->BeforeDraw();
 
-		mDxWr->Draw(mPMDRenderer);
+	//	mDxWr->Draw(mPMDRenderer);
 
-		mDxWr->SetScene();
+	//	mDxWr->SetScene();
 
-		mPMDModel->Update();
-		mPMDModel->Draw(imageHandle);
+	//	mPMDModel->Update();
+	//	mPMDModel->Draw(imageHandle);
 
-		mDxWr->CommandClear();
+	//	mDxWr->CommandClear();
 
-		mDxWr->ScreenFlip();
+	//	mDxWr->ScreenFlip();
 
-	}
+	//}
 }
 
 void Application::Finaliz() {

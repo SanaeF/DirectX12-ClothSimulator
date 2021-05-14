@@ -2,7 +2,7 @@
 #include "DxWavData.h"
 #include <cassert>
 int DxSound::mHandleCount = 0;
-
+//Load Wav File
 int DxSound::LoadFile(const char* file_name) {
 	int HandleID = mHandleCount;
 	//pDxSoundBuffer.resize(HandleID + 1);
@@ -48,7 +48,7 @@ int DxSound::LoadFile(const char* file_name) {
 	mHandleCount++;
 	return HandleID;
 }
-
+//Play Sound
 void DxSound::Play(int Handle, int Type) {
 	DWORD PlayType = 0;
 	if (Type == SOUND::eDXSOUND_NORMAL) {
