@@ -27,7 +27,7 @@ namespace compute {
 
         dx12->CmdList()->Close();
 
-        test.assign((float*)data, (float*)data + test.size());
+        test.assign((float*)data, (float*)data + test.size());//データ受け取り
     }
 
     long ClothShader::CreateRoot(ComPtr<ID3D12Device> device) {//シェーダーコンパイル
