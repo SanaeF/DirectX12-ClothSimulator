@@ -401,7 +401,7 @@ namespace lib {
 		auto dsvH = _dsvHeap->GetCPUDescriptorHandleForHeapStart();
 		_cmdList->OMSetRenderTargets(1, &rtvH, false, &dsvH);
 		//画面クリア
-		float clearColor[] = { 1.0f,1.0f,1.0f,1.0f };//白色
+		float clearColor[] = { 0.5f,0.0f,0.5f,1.0f };//白色
 		_cmdList->ClearRenderTargetView(rtvH, clearColor, 0, nullptr);
 		_cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}

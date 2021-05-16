@@ -24,6 +24,7 @@ namespace lib {
 		void DrawPrototype2D(float x, float y, float size, float Angle, int Handle);//•`‰æ
 		int Load3D();
 		void Draw3D(float x, float y, float size, float Angle);
+		void clothSimProc(int Handle);
 		void ClearDraw();
 		void ScreenFlip();
 		DxGraph(std::shared_ptr<DirectX12Manager>& DxWrap);

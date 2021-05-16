@@ -48,6 +48,7 @@ void Application::Run() {
 		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
 		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
 		Graph->Draw3D(Move[1], Move[0], 1, angle);
+		Graph->clothSimProc(0);
 		Graph->ScreenFlip();//スワップチェイン
 
 		Key->CheckAll();//キー入力のセット

@@ -1,4 +1,5 @@
 #pragma once
+#include "../Graph3D/Vertex/Vertex.h"
 #include <memory>
 #include <vector>
 #include <d3dx12.h>
@@ -11,6 +12,9 @@ namespace libGraph {
 	class Dx2DMatrix;
 	class Dx2DRootSignature;
 	class Dx2DPipeline;
+}
+namespace model{
+	class FbxModel;
 }
 namespace lib {
 	class DirectX12Manager;
@@ -32,6 +36,8 @@ namespace lib {
 			ComPtr<ID3D12Resource> IB;
 			UINT IndexCount;
 			UINT VertexCount;
+			std::vector<Vertex> vertex;
+			std::vector<UINT> index;
 		};
 		struct DrawGraphParam {
 			float x;
@@ -44,11 +50,13 @@ namespace lib {
 		std::shared_ptr <libGraph::Dx2DMatrix>mMatrix;
 		std::shared_ptr<libGraph::DxUploadTex2D>mTexture;
 		std::shared_ptr<libGraph::Dx2DRootSignature> mRootSignature;
+		std::shared_ptr<model::FbxModel> fbxData;
 	public:
 		Graph3D(std::shared_ptr<DirectX12Manager>& dx12);
 		int loadFbx(libGraph::Dx2DPipeline& pipeline);
 		void Draw(float x, float y, float size, double Angle, int Handle);
 		void beginDraw(libGraph::Dx2DPipeline& pipeline, int Handle);
+		void ClothSimProc(int Handle);
 	private:
 		void mCreateMatrix(int Handle, int num);
 		void mDrawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle);

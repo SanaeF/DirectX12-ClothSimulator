@@ -129,10 +129,13 @@
     <ClCompile Include="DirectXLib\Source\DirectX12\DirectX12Manager.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\DxGraphics.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\Graph2D\DxGraphics2D.cpp" />
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothShader\ClothShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulator.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxMaterial\FbxMaterial.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxModel.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\DxGraphics3D.cpp" />
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\Physics\Physics.cpp" />
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\Vector3D\Vector3D.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\DxGraphicsVertex.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\Index\DxGraphicsIndex.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\GraphPipline\DxGraphicsPipeline.cpp" />
@@ -160,10 +163,14 @@
     <ClInclude Include="DirectXLib\Source\DirectX12\DirectX12Manager.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\DxGraphics.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\Graph2D\DxGraphics2D.h" />
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothShader\ClothShader.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulator.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxMaterial\FbxMaterial.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxModel.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\DxGraphics3D.h" />
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Physics\Physics.h" />
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Vector3D\Vector3D.h" />
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Vertex\Vertex.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\DxGraphicsVertex.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\Index\DxGraphicsIndex.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\GraphPipline\DxGraphicsPipeline.h" />
@@ -201,6 +208,17 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BasicVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\ClothSimulator\ClothPhisical.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothPhisical</EntryPointName>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>

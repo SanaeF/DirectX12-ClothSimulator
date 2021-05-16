@@ -69,7 +69,7 @@ namespace libGraph {
 		float size,
 		float RotaZ
 	) {
-		DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(-6, -y, -x);
+		DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(-6 - x, -y, 0);
 		//DirectX::XMMATRIX rotate_x = DirectX::XMMatrixRotationX(XM_PI/6);
 		DirectX::XMMATRIX rotate_y = DirectX::XMMatrixRotationY(XM_PI / 2);
 		DirectX::XMMATRIX rotate_z = DirectX::XMMatrixRotationZ(XM_PI);

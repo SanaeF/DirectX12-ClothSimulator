@@ -133,6 +133,18 @@
     <Filter Include="DirectXlib\Source\Graphics\Graphic3D\ClothSimulator">
       <UniqueIdentifier>{b885dd38-385a-44b7-a0d8-33c5e6c33069}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\Physics">
+      <UniqueIdentifier>{64ae16e1-98b5-41ae-83ae-fc88d8b8c345}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\Vector3D">
+      <UniqueIdentifier>{2645db11-6cbb-4a61-8052-154b1db7d0c4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\Vertex">
+      <UniqueIdentifier>{672eec67-e453-434d-96cc-801e1296e2c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Graphics\Graphic3D\ClothSimulator\ClothShader">
+      <UniqueIdentifier>{a403ff23-3f45-44b1-a75d-a0176d2499fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -222,6 +234,18 @@
     <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulator.h">
       <Filter>DirectXlib\Source\Graphics\Graphic3D\ClothSimulator</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Physics\Physics.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Vector3D\Vector3D.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\Vector3D</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Vertex\Vertex.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\Vertex</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothShader\ClothShader.h">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\ClothSimulator\ClothShader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Vertex2D.hlsl">
@@ -241,6 +265,9 @@
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Vertex3D.hlsl">
       <Filter>リソース ファイル\Shader3D</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\ClothSimulator\ClothPhisical.hlsl">
+      <Filter>リソース ファイル\Shader3D\ClothSim</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,6 +368,15 @@
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulator.cpp">
       <Filter>DirectXlib\Source\Graphics\Graphic3D\ClothSimulator</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\Physics\Physics.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\Vector3D\Vector3D.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\Vector3D</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothShader\ClothShader.cpp">
+      <Filter>DirectXlib\Source\Graphics\Graphic3D\ClothSimulator\ClothShader</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

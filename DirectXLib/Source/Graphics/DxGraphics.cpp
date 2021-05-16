@@ -50,7 +50,9 @@ namespace lib {
 		mDraw3D->Draw(x, y, size, Angle, 0);
 		//mDraw2D->BeingDraw();
 	}
-
+	void DxGraph::clothSimProc(int Handle) {
+		mDraw3D->ClothSimProc(Handle);
+	}
 	void DxGraph::ClearDraw() {
 		mDxWrap->ClearScreen();
 		auto viewPort = mViewPort->getViewPort();

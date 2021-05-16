@@ -1,24 +1,22 @@
 #pragma once
+#include "../../../../../DirectXLib/Source/Graphics/Graph3D/Vertex/Vertex.h"
 #include <d3dx12.h>
 #include <fbxsdk.h>
-#include <DirectXMath.h>
 #include <vector>
 #include <wrl.h>
 #pragma comment(lib,"libfbxsdk-md.lib")
 #pragma comment(lib,"libxml2-md.lib")
 #pragma comment(lib,"zlib-md.lib")
 
+namespace lib {
+	class ClothSimulator;
+}
 namespace model {
 	class FbxModel {
 	private:
 		template<typename T>
 		using ComPtr = Microsoft::WRL::ComPtr<T>;
-		struct Vertex {
-			DirectX::XMFLOAT3 position;
-			DirectX::XMFLOAT2 color;
-		};
-		Vertex* m_Vertices;
-		std::vector<Vertex>mVertex;
+		std::vector<lib::Vertex>mVertex;
 		std::vector<UINT>mIndex;
 		FbxManager* m_Manager = nullptr;
 		FbxScene* m_Scene = nullptr;
@@ -31,16 +29,25 @@ namespace model {
 		int m_VertexNum;
 		int m_IndexNum;
 	public:
-		FbxModel(const char* FileName);
+		FbxModel();
 		~FbxModel();
+		void load(const char* FileName);
 		void createViewBuffer(ComPtr<ID3D12Device> device);
+
+		void calculatePhysics(
+			ComPtr<ID3D12Device> device,
+			std::vector<lib::Vertex>& vertex,
+			std::vector<UINT>& index
+		);
+
 		int getVertexNum();
 		int getIndexNum();
 		ID3D12Resource* getVertexBuffer();
 		ID3D12Resource* getIndexBuffer();
 		D3D12_VERTEX_BUFFER_VIEW getVertexBufferView();
 		D3D12_INDEX_BUFFER_VIEW getIndexBufferView();
-		Vertex* getVertex();
+		std::vector<lib::Vertex>& getVertex();
+		std::vector<UINT>& getIndex();
 	private:
 		void mLoadFile(const char* FileName);
 		bool mDisplayContent(FbxScene* scene);
@@ -48,6 +55,7 @@ namespace model {
 		void mLoadMesh(FbxNode* pNode);
 		bool mLoadIndex(FbxMesh* mesh);
 		bool mLoadVertex(FbxMesh* mesh);
+		bool mLoadVertexColor(FbxMesh* mesh);
 		bool mCreateVertexBuffer(ComPtr<ID3D12Device> device);
 		bool mCreateIndexBuffer(ComPtr<ID3D12Device> device);
 	};

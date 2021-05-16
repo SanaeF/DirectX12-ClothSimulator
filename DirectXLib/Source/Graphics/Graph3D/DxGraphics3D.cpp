@@ -14,6 +14,7 @@ namespace lib {
 		mMatrix.reset(new libGraph::Dx2DMatrix());
 		mTexture.reset(new libGraph::DxUploadTex2D());
 		mRootSignature.reset(new libGraph::Dx2DRootSignature());
+		fbxData.reset(new model::FbxModel());
 		mTexture->DescriptorHeap_Prop();
 		mTexture->RootSignatureDesc_Prop();
 		mTexture->ShaderResourceViewDesc_Prop();
@@ -26,14 +27,16 @@ namespace lib {
 		pipeline.CreateGraphicsPipeline(mDx12, *mRootSignature, mTexture->getRootSigDesc());
 		mModelData[handleID].mTextureBuffer = mTexture->getTextureBuff();
 
-		model::FbxModel fbxData("./model/skirt.fbx");
-		fbxData.createViewBuffer(mDx12->Device());
-		mModelData[handleID].IndexCount = static_cast<UINT>(fbxData.getIndexNum());
-		mModelData[handleID].VertexCount = static_cast<UINT>(fbxData.getVertexNum());
-		mModelData[handleID].VB = fbxData.getVertexBuffer();
-		mModelData[handleID].IB = fbxData.getIndexBuffer();
-		mModelData[handleID].VBView = fbxData.getVertexBufferView();
-		mModelData[handleID].IBView = fbxData.getIndexBufferView();
+		fbxData->load("./model/skirt.fbx");
+		fbxData->createViewBuffer(mDx12->Device());
+		mModelData[handleID].IndexCount = static_cast<UINT>(fbxData->getIndexNum());
+		mModelData[handleID].VertexCount = static_cast<UINT>(fbxData->getVertexNum());
+		mModelData[handleID].VB = fbxData->getVertexBuffer();
+		mModelData[handleID].IB = fbxData->getIndexBuffer();
+		mModelData[handleID].vertex = fbxData->getVertex();
+		mModelData[handleID].index = fbxData->getIndex();
+		mModelData[handleID].VBView = fbxData->getVertexBufferView();
+		mModelData[handleID].IBView = fbxData->getIndexBufferView();
 		return -1;
 	}
 	void Graph3D::Draw(float x, float y, float size, double Angle, int Handle) {
@@ -43,7 +46,6 @@ namespace lib {
 		Param.y = y / static_cast<float>(mDx12->getPixelSize().cy);
 		Param.size = size;
 		Param.angle = Angle;
-
 		mCreateMatrix(Handle, mDx12->getCount3D(Handle));
 		mDrawMatrix(Param, mDx12->getCount3D(Handle), Handle);
 		mDrawCommand(mDx12->getCount3D(Handle), Handle);
@@ -113,5 +115,9 @@ namespace lib {
 		mDx12->CmdList()->IASetIndexBuffer(&getMatIBView);
 		mDx12->CmdList()->SetGraphicsRootSignature(rootsignature);
 		mDx12->CmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	}
+	void Graph3D::ClothSimProc(int Handle) {
+		fbxData->calculatePhysics(mDx12->Device(), mModelData[Handle].vertex, mModelData[Handle].index);
+		mModelData[Handle].VBView = fbxData->getVertexBufferView();
 	}
 }

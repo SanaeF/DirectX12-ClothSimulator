@@ -1,14 +1,16 @@
 #include "FbxModel.h"
 #include "../../../../../DirectXLib/Source/LibHelper/LibHelper.h"
+#include "../../../../../DirectXLib/Source/Graphics/Graph3D/ClothSimulator/ClothSimulator.h"
 
 namespace model {
-	FbxModel::FbxModel(const char* FileName) :
+	FbxModel::FbxModel() :
 		m_VertexNum(0),
 		m_IndexNum(0)
 	{
+	}
+	void FbxModel::load(const char* FileName) {
 		mLoadFile(FileName);
 	}
-
 	void FbxModel::mLoadFile(const char* FileName) {
 		m_Manager = FbxManager::Create();
 		FbxIOSettings* ios = FbxIOSettings::Create(m_Manager, IOSROOT);
@@ -73,14 +75,43 @@ namespace model {
 		// 法線リストの取得
 		mesh->GetPolygonVertexNormals(normals);
 		FbxVector4* vertexData = mesh->GetControlPoints();	// 頂点座標配列
-		for (int i = 0; i < m_VertexNum; ++i) {
+		for (int i = 0; i < m_VertexNum; i++) {
 			mVertex[i].position.x = (float)vertexData[i][2];
 			mVertex[i].position.y = (float)vertexData[i][1];
 			mVertex[i].position.z = (float)vertexData[i][0];
-			mVertex[i].color.x = 1.f;
-			mVertex[i].color.y = 1.f;
-			//mVertex[i].color.z = 1.f;
-			//mVertex[i].color.w = 1.f;
+		}
+		mLoadVertexColor(mesh);
+		return true;
+	}
+	bool FbxModel::mLoadVertexColor(FbxMesh* mesh) {
+		int color_count = mesh->GetElementVertexColorCount();
+		if (color_count == 0)return false;
+		// 頂点カラーデータの取得
+		FbxGeometryElementVertexColor* color_buffer = mesh->GetElementVertexColor(0);
+		if (color_buffer == nullptr)return false;
+		FbxLayerElement::EMappingMode mapping_mode = color_buffer->GetMappingMode();
+		FbxLayerElement::EReferenceMode reference_mode = color_buffer->GetReferenceMode();
+		// モードチェック
+		if (mapping_mode == FbxLayerElement::eByPolygonVertex)
+		{
+			// 参照方法チェック
+			if (reference_mode == FbxLayerElement::eIndexToDirect)
+			{
+				// 頂点カラーバッファ取得
+				FbxLayerElementArrayTemplate<FbxColor>& colors = color_buffer->GetDirectArray();
+				// 頂点カラーインデックスバッファ
+				FbxLayerElementArrayTemplate<int>& indeces = color_buffer->GetIndexArray();
+
+				for (int i = 0; i < m_VertexNum; i++)
+				{
+					int id = indeces.GetAt(i);
+					FbxColor color = colors.GetAt(id);
+					mVertex[i].color.x = color.mRed;
+					mVertex[i].color.y = 1.f;
+					//mVertex[i].color.z = 1.f;
+					//mVertex[i].color.w = 1.f;
+				}
+			}
 		}
 		return true;
 	}
@@ -90,8 +121,9 @@ namespace model {
 		if (m_IndexNum <= 0)return false;
 		UINT* index = (UINT*)mesh->GetPolygonVertices();
 		mIndex.resize(m_IndexNum);
+		int Polnum = 0;
 		//p個目のポリゴンへの処理
-		for (int num = 0; num < m_IndexNum; ++num) {
+		for (int num = 0; num < m_IndexNum; num++) {
 			mIndex[num] = index[num];
 		}
 		return true;
@@ -102,9 +134,21 @@ namespace model {
 		if (!mCreateIndexBuffer(device))return;
 		return;
 	}
+
+	void FbxModel::calculatePhysics(
+		ComPtr<ID3D12Device> device,
+		std::vector<lib::Vertex>& vertex,
+		std::vector<UINT>& index
+	) {
+		lib::ClothSimulator cloth;
+		cloth.inputParamater();
+		cloth.calculate(1, vertex, index);
+		mVertex = vertex;
+		createViewBuffer(device);
+	}
+
 	bool FbxModel::mCreateVertexBuffer(ComPtr<ID3D12Device> device) {
-		//helper::LibHelper help;
-		const UINT vertexBufferSize = static_cast<UINT>(mVertex.size()) * sizeof(Vertex);
+		const UINT vertexBufferSize = static_cast<UINT>(mVertex.size()) * sizeof(lib::Vertex);
 		constexpr size_t vertexSize = 38;
 		auto heap = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
 		auto buffer = CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize);
@@ -123,7 +167,7 @@ namespace model {
 		m_vertexBuffer->Unmap(0, nullptr);
 		m_VertexBufferView.BufferLocation = m_vertexBuffer->GetGPUVirtualAddress();
 		m_VertexBufferView.SizeInBytes = vertexBufferSize;
-		m_VertexBufferView.StrideInBytes = sizeof(Vertex);
+		m_VertexBufferView.StrideInBytes = sizeof(lib::Vertex);
 		return true;
 	}
 	bool FbxModel::mCreateIndexBuffer(ComPtr<ID3D12Device> device) {
@@ -156,11 +200,8 @@ namespace model {
 	ID3D12Resource* FbxModel::getIndexBuffer() { return m_indexBuffer; }
 	D3D12_VERTEX_BUFFER_VIEW FbxModel::getVertexBufferView() { return m_VertexBufferView; }
 	D3D12_INDEX_BUFFER_VIEW FbxModel::getIndexBufferView() { return m_IndexBufferView; }
-
-	FbxModel::Vertex*
-		FbxModel::getVertex() {
-		return m_Vertices;
-	}
-
+	std::vector<lib::Vertex>&
+		FbxModel::getVertex() {	return mVertex;}
+	std::vector<UINT>& FbxModel::getIndex() { return mIndex; }
 	FbxModel::~FbxModel() {}
 }
