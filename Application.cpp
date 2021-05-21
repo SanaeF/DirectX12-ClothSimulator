@@ -31,6 +31,7 @@ void Application::Run() {
 	int text_img = Graph->Load2D(L"./dat/shadow_wing.png");
 	MusicHandle = Sound->LoadFile("./dat/music.wav");
 	Sound->SetVolume(-3000, MusicHandle);
+	bool isSimulate = false;
 	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[2] = { 0,0 };MSG msg = {};
 	while (true) {
@@ -48,7 +49,7 @@ void Application::Run() {
 		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
 		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
 		Graph->Draw3D(Move[1], Move[0], 1, angle);
-		Graph->clothSimProc(0);
+		if (isSimulate)Graph->clothSimProc(0);
 		Graph->ScreenFlip();//スワップチェイン
 
 		Key->CheckAll();//キー入力のセット
@@ -61,6 +62,10 @@ void Application::Run() {
 		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * 10;
 		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * 10;
 		if (Key->CheckHitKey(DIK_C) == 0)count++;
+		if (Key->CheckHitKey(DIK_P)) {
+			if (isSimulate)isSimulate = false;
+			else isSimulate = true;
+		}
 		if (count == 1920)count = 0;
 		angle += 0.0005f;
 	}

@@ -3,12 +3,14 @@
 #include <d3dx12.h>
 #include <fbxsdk.h>
 #include <vector>
+#include <memory>
 #include <wrl.h>
 #pragma comment(lib,"libfbxsdk-md.lib")
 #pragma comment(lib,"libxml2-md.lib")
 #pragma comment(lib,"zlib-md.lib")
 
 namespace lib {
+	class DirectX12Manager;
 	class ClothSimulator;
 }
 namespace model {
@@ -26,16 +28,18 @@ namespace model {
 		CD3DX12_RANGE readRange;
 		D3D12_VERTEX_BUFFER_VIEW m_VertexBufferView;
 		D3D12_INDEX_BUFFER_VIEW m_IndexBufferView;
+		std::shared_ptr<lib::ClothSimulator> mClothSim;
 		int m_VertexNum;
 		int m_IndexNum;
 	public:
 		FbxModel();
 		~FbxModel();
 		void load(const char* FileName);
+		void setClothSimulator(ComPtr<ID3D12Device> device);
 		void createViewBuffer(ComPtr<ID3D12Device> device);
 
 		void calculatePhysics(
-			ComPtr<ID3D12Device> device,
+			std::shared_ptr<lib::DirectX12Manager> dx12,
 			std::vector<lib::Vertex>& vertex,
 			std::vector<UINT>& index
 		);

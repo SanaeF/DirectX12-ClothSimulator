@@ -29,6 +29,7 @@ namespace lib {
 
 		fbxData->load("./model/skirt.fbx");
 		fbxData->createViewBuffer(mDx12->Device());
+		fbxData->setClothSimulator(mDx12->Device());
 		mModelData[handleID].IndexCount = static_cast<UINT>(fbxData->getIndexNum());
 		mModelData[handleID].VertexCount = static_cast<UINT>(fbxData->getVertexNum());
 		mModelData[handleID].VB = fbxData->getVertexBuffer();
@@ -117,7 +118,7 @@ namespace lib {
 		mDx12->CmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	void Graph3D::ClothSimProc(int Handle) {
-		fbxData->calculatePhysics(mDx12->Device(), mModelData[Handle].vertex, mModelData[Handle].index);
+		fbxData->calculatePhysics(mDx12, mModelData[Handle].vertex, mModelData[Handle].index);
 		mModelData[Handle].VBView = fbxData->getVertexBufferView();
 	}
 }

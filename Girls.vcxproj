@@ -211,7 +211,7 @@
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\ClothSimulator\ClothPhisical.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
@@ -219,6 +219,7 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothPhisical</EntryPointName>
+      <FileType>Document</FileType>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>
@@ -253,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="BasicShaderHeader.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\ClothSimulator\PhisicasParam.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\ClothSimulator\Layout.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\ClothSimulator\Vector.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
       <FileType>Document</FileType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

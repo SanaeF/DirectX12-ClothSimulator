@@ -280,6 +280,15 @@
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
       <Filter>リソース ファイル\Shader3D</Filter>
     </None>
+    <None Include="DirectXLib\Shader\Shader3D\ClothSimulator\Layout.hlsli">
+      <Filter>リソース ファイル\Shader3D\ClothSim</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\ClothSimulator\PhisicasParam.hlsli">
+      <Filter>リソース ファイル\Shader3D\ClothSim</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\ClothSimulator\Vector.hlsli">
+      <Filter>リソース ファイル\Shader3D\ClothSim</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

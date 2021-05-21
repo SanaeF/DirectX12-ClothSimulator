@@ -1,5 +1,6 @@
 #include "FbxModel.h"
 #include "../../../../../DirectXLib/Source/LibHelper/LibHelper.h"
+#include "../../DirectX12/DirectXLib/Source/DirectX12/DirectX12Manager.h"
 #include "../../../../../DirectXLib/Source/Graphics/Graph3D/ClothSimulator/ClothSimulator.h"
 
 namespace model {
@@ -134,17 +135,21 @@ namespace model {
 		if (!mCreateIndexBuffer(device))return;
 		return;
 	}
-
+	void FbxModel::setClothSimulator(ComPtr<ID3D12Device> device) {
+		mClothSim.reset(new lib::ClothSimulator(device, mVertex, mIndex));
+	}
 	void FbxModel::calculatePhysics(
-		ComPtr<ID3D12Device> device,
+		std::shared_ptr<lib::DirectX12Manager> dx12,
 		std::vector<lib::Vertex>& vertex,
 		std::vector<UINT>& index
 	) {
-		lib::ClothSimulator cloth;
+		mClothSim->inputParamater();
+		mClothSim->calculate(1, dx12, vertex, index);
+	/*	lib::ClothSimulator cloth;
 		cloth.inputParamater();
-		cloth.calculate(1, vertex, index);
+		cloth.calculate(1, vertex, index);*/
 		mVertex = vertex;
-		createViewBuffer(device);
+		createViewBuffer(dx12->Device());
 	}
 
 	bool FbxModel::mCreateVertexBuffer(ComPtr<ID3D12Device> device) {

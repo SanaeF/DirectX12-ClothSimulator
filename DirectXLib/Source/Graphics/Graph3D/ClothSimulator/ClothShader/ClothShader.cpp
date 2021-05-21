@@ -5,8 +5,10 @@
 #pragma comment(lib,"d3dcompiler.lib")
 
 namespace compute {
-    std::vector<float>test(256, 0);
-    ClothShader::ClothShader(ComPtr<ID3D12Device> device) {
+    //std::vector<float>test(256, 0);
+    ClothShader::ClothShader(ComPtr<ID3D12Device> device, std::vector<lib::Vertex> vertex, std::vector<UINT> index) :
+        modelData{ vertex ,vertex,index ,(int)vertex.size(),(int)index.size() }
+    {
         CreateRoot(device);
         CreatePipe(device);
         CreateHeap(device);
@@ -14,24 +16,23 @@ namespace compute {
         CreateUAV(device);
         Map();
     }
-    void ClothShader::ShaderCalculater(ComPtr<lib::DirectX12Manager>& dx12) {
-
+    void ClothShader::ShaderCalculater(std::shared_ptr<lib::DirectX12Manager> dx12) {
         dx12->CmdList()->SetComputeRootSignature(root);
         dx12->CmdList()->SetPipelineState(pipe);
-        dx12->CmdList()->SetDescriptorHeaps(1, &heap);
+        dx12->CmdList()->SetDescriptorHeaps(3, &heap);
         auto handle = heap->GetGPUDescriptorHandleForHeapStart();
-        dx12->CmdList()->SetComputeRootDescriptorTable(0, handle);
+        dx12->CmdList()->SetComputeRootDescriptorTable(2, handle);
 
         //コンピュートシェーダーの実行(今回は256個のスレッドグループを指定)
-        dx12->CmdList()->Dispatch(test.size(), 1, 1);
+        dx12->CmdList()->Dispatch(1, 1, 1);
 
-        dx12->CmdList()->Close();
+        //dx12->CmdList()->Close();
 
-        test.assign((float*)data, (float*)data + test.size());//データ受け取り
+        modelData.vertex.assign((lib::Vertex*)data, (lib::Vertex*)data + modelData.vertex.size());//データ受け取り
+        modelData.index.assign((UINT*)data, (UINT*)data + modelData.index.size());//データ受け取り
     }
-
     long ClothShader::CreateRoot(ComPtr<ID3D12Device> device) {//シェーダーコンパイル
-        auto result = D3DCompileFromFile(L"ClothPhisical.hlsl", nullptr,
+        auto result = D3DCompileFromFile(L"./DirectXLib/Shader/Shader3D/ClothSimulator/ClothPhisical.hlsl", nullptr,
             D3D_COMPILE_STANDARD_FILE_INCLUDE, "ClothPhisical", "cs_5_1", D3DCOMPILE_DEBUG |
             D3DCOMPILE_SKIP_OPTIMIZATION, 0, &shader, nullptr);
         ID3DBlob* sig = nullptr;
@@ -55,12 +56,13 @@ namespace compute {
         D3D12_DESCRIPTOR_HEAP_DESC desc{};
         desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         desc.NodeMask = 0;
-        desc.NumDescriptors = 1;
+        desc.NumDescriptors = 4;
         desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         auto result = device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&heap));
         return result;
     }
     long ClothShader::CreateRsc(ComPtr<ID3D12Device> device) {
+        auto vectSize = modelData.vertex.size() + modelData.perVertex.size() + modelData.index.size();
         D3D12_HEAP_PROPERTIES prop{};
         prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
         prop.CreationNodeMask = 1;
@@ -78,28 +80,35 @@ namespace compute {
         desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         desc.MipLevels = 1;
         desc.SampleDesc = { 1, 0 };
-        desc.Width = (sizeof(float) * test.size() + 0xff) & ~0xff;
+        desc.Width = (sizeof(ClothModel) * vectSize + 0xff) & ~0xff;
 
         auto result = device->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
             D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
             IID_PPV_ARGS(&rsc));
-            return result;
+        return result;
     }
     void ClothShader::CreateUAV(ComPtr<ID3D12Device> device) {//GPUから受け取るのはchar型にしています
+        auto vectSize = modelData.vertex.size() + modelData.perVertex.size() + modelData.index.size();
         D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
         desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-        desc.Format = DXGI_FORMAT_UNKNOWN;//char?
-        desc.Buffer.NumElements = test.size();
+        desc.Format = DXGI_FORMAT_UNKNOWN;
+        desc.Buffer.NumElements = vectSize;
         desc.Buffer.StructureByteStride = sizeof(float);
 
         device->CreateUnorderedAccessView(rsc, nullptr, &desc, heap->GetCPUDescriptorHandleForHeapStart());
     }
     long ClothShader::Map() {
-        D3D12_RANGE range{ 0, 1 };
+        auto vectSize = modelData.vertex.size() + modelData.perVertex.size() + modelData.index.size();
+        D3D12_RANGE range{ 0, vectSize };
         auto result = rsc->Map(0, &range, &data);
         return result;
     }
+    ClothShader::ClothModel ClothShader::getSimulatedData() {
+        return modelData;
+    }
     ClothShader::~ClothShader() {
-
+        auto vectSize = modelData.vertex.size() + modelData.perVertex.size() + modelData.index.size();
+        D3D12_RANGE range{ 0, vectSize };
+        rsc->Unmap(0, &range);
     }
 }
