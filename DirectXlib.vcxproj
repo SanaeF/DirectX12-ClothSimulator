@@ -124,7 +124,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
     <ClCompile Include="DirectXLib.cpp" />
     <ClCompile Include="DirectXLib\Source\DirectX12\DirectX12Manager.cpp" />
     <ClCompile Include="DirectXLib\Source\Graphics\DxGraphics.cpp" />
@@ -163,11 +162,11 @@
     <ClCompile Include="DxWavData.cpp" />
     <ClCompile Include="DXHandler.cpp" />
     <ClCompile Include="DXResource.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="DX_MultRend.cpp" />
+    <ClCompile Include="Source\Application\Application.cpp" />
+    <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
     <ClInclude Include="DirectXLib.h" />
     <ClInclude Include="DirectXLib\Source\DirectX12\DirectX12Manager.h" />
     <ClInclude Include="DirectXLib\Source\Graphics\DxGraphics.h" />
@@ -210,6 +209,7 @@
     <ClInclude Include="DXResource.h" />
     <ClInclude Include="DxHandleManager.h" />
     <ClInclude Include="DX_MultRend.h" />
+    <ClInclude Include="Source\Application\Application.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BasicPixelShader.hlsl">
