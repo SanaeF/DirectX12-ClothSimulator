@@ -2,7 +2,10 @@
 
 float4 Pixel3D(Output input) : SV_TARGET
 {
-	float3 light = normalize(float3(1,-1,1));
+
+	float3 light = normalize(float3(1.5,-1.0,1.5));
 	float brightness = dot(-light, input.normal);
-	return float4(brightness, brightness, brightness, 1); //return float4(0,0,0,1);
+	float4 texColor = tex.Sample(smp, input.uv); //テクスチャカラー
+	return float4(mul(texColor.x, brightness), mul(texColor.y, brightness), mul(texColor.z, brightness), texColor.w); //return float4(0,0,0,1);
+	//return float4(brightness, brightness, brightness, 1); //return float4(0,0,0,1);
 }

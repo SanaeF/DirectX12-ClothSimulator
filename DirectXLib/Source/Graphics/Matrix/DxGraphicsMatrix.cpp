@@ -66,15 +66,16 @@ namespace libGraph {
 		DirectX::XMMATRIX* pMatrix,
 		float x,
 		float y,
+		float z,
 		float size,
 		float RotaZ
 	) {
-		DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(-6 - x, -y, 0);
+		DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(x, y, z);
 		//DirectX::XMMATRIX rotate_x = DirectX::XMMatrixRotationX(XM_PI/6);
-		DirectX::XMMATRIX rotate_y = DirectX::XMMatrixRotationY(XM_PI / 2);
-		DirectX::XMMATRIX rotate_z = DirectX::XMMatrixRotationZ(XM_PI);
+		//DirectX::XMMATRIX rotate_y = DirectX::XMMatrixRotationY(XM_PI / 2);
+		//DirectX::XMMATRIX rotate_z = DirectX::XMMatrixRotationZ(XM_PI);
 		DirectX::XMMATRIX scale_mat = DirectX::XMMatrixScaling(size, size, size);
-		mWorlMat = translate * rotate_y * rotate_z;
+		mWorlMat = translate;
 		mapMatrix->world = mWorlMat;
 	}
 

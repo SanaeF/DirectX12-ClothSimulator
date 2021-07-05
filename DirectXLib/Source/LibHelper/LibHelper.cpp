@@ -12,4 +12,8 @@ namespace helper {
 	size_t LibHelper::AlignmentedSize(size_t size, size_t alignment) {
 		return size + alignment - size % alignment;
 	}
+	bool LibHelper::between(int param, int deltaP1, int deltaP2) {
+		if (deltaP1 <= param && param < deltaP2)return true;
+		return false;
+	}
 }

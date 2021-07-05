@@ -33,7 +33,8 @@ void Application::Run() {
 	Sound->SetVolume(-3000, MusicHandle);
 	bool isSimulate = false;
 	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
-	float angle = 0.0f;int spd = 1;int count = 0;float Move[2] = { 0,0 };MSG msg = {};
+	Graph->setupClothSimulator(0);
+	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
@@ -48,20 +49,25 @@ void Application::Run() {
 		//Graph->DrawPrototype2D(-Move[1], -Move[0], 1, angle, HandleLif);//描画(テスト用)
 		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
 		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
-		Graph->Draw3D(Move[1], Move[0], 1, angle);
+		Graph->Draw3D(Move[0], Move[1], 6000 + Move[2], 1, angle);
 		if (isSimulate)Graph->clothSimProc(0);
+		//isSimulate = false;
 		Graph->ScreenFlip();//スワップチェイン
 
 		Key->CheckAll();//キー入力のセット
 		if (Key->CheckHitKey(DIK_C))spd = 20;//キーを押している間はCheckHitKeyの戻り値が増えていく
 		else spd = 20;
-		if (Key->CheckHitKey(DIK_UP) == 1)Move[0] += 2 * spd;
-		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[0] -= 2 * spd;
-		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[1] += 2 * spd;
-		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[1] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_RIGHT) == 1)Move[0] += 2 * spd;
+		if (Key->CheckHitKey(DIK_LEFT) == 1)Move[0] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_SPACE) == 1)Move[1] += 2 * spd;
+		if (Key->CheckHitKey(DIK_LSHIFT) == 1)Move[1] -= 2 * spd;
+		if (Key->CheckHitKey(DIK_UP) == 1)Move[2] += 2 * spd;
+		if (Key->CheckHitKey(DIK_DOWN) == 1)Move[2] -= 2 * spd;
+
 		if (Key->CheckHitKey(DIK_Z) == 1)angle += 0.002f * 10;
 		if (Key->CheckHitKey(DIK_X) == 1)angle -= 0.002f * 10;
 		if (Key->CheckHitKey(DIK_C) == 0)count++;
+		if (Key->CheckHitKey(DIK_R))Graph->clothReset(0);
 		if (Key->CheckHitKey(DIK_P)) {
 			if (isSimulate)isSimulate = false;
 			else isSimulate = true;

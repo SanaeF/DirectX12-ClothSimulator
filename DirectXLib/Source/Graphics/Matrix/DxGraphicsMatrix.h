@@ -43,6 +43,7 @@ namespace libGraph {
 			DirectX::XMMATRIX* pMatrix,
 			float x,
 			float y,
+			float z,
 			float size,
 			float RotaZ
 		);

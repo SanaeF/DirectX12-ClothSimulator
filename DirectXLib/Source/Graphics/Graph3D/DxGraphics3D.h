@@ -6,6 +6,7 @@
 #include <wrl.h>
 #include<DirectXMath.h>
 #include<DirectXTex.h>
+#include "../../Phisicas/ClothSimulator/ClothData/SpringData.h"
 
 namespace libGraph {
 	class DxUploadTex2D;
@@ -13,9 +14,7 @@ namespace libGraph {
 	class Dx2DRootSignature;
 	class Dx2DPipeline;
 }
-namespace model{
-	class FbxModel;
-}
+namespace phy {	class ClothSimulator;}
 namespace lib {
 	class DirectX12Manager;
 	class Graph3D {
@@ -34,14 +33,17 @@ namespace lib {
 			D3D12_INDEX_BUFFER_VIEW IBView;
 			ComPtr<ID3D12Resource> VB;
 			ComPtr<ID3D12Resource> IB;
-			UINT IndexCount;
-			UINT VertexCount;
 			std::vector<Vertex> vertex;
 			std::vector<UINT> index;
+			std::vector<std::vector<int>>index_group;
+			std::vector<Vertex> pre_vertex;
+			std::vector<std::vector<int>> pre_index;
+			std::vector<SpringData>spring_data;
 		};
 		struct DrawGraphParam {
 			float x;
 			float y;
+			float z;
 			double angle;
 			double size;
 		};
@@ -50,16 +52,17 @@ namespace lib {
 		std::shared_ptr <libGraph::Dx2DMatrix>mMatrix;
 		std::shared_ptr<libGraph::DxUploadTex2D>mTexture;
 		std::shared_ptr<libGraph::Dx2DRootSignature> mRootSignature;
-		std::shared_ptr<model::FbxModel> fbxData;
 	public:
 		Graph3D(std::shared_ptr<DirectX12Manager>& dx12);
 		int loadFbx(libGraph::Dx2DPipeline& pipeline);
-		void Draw(float x, float y, float size, double Angle, int Handle);
+		void setupClothSimulator(int Handle);
+		void Draw(float x, float y, float z, float size, double Angle, int Handle);
 		void beginDraw(libGraph::Dx2DPipeline& pipeline, int Handle);
 		void ClothSimProc(int Handle);
+		void clothReset(int Handle);
 	private:
 		void mCreateMatrix(int Handle, int num);
 		void mDrawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle);
 		void mDrawCommand(int InstancedCount, int Handle);
 	};
-};
+}

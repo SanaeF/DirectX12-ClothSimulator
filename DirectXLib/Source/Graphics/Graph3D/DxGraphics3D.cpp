@@ -5,7 +5,7 @@
 #include "../GraphPipline/RootSignature/DxRootSignature.h"
 #include "../Texture/UploadTexture/DxUploadTex.h"
 #include "../GraphPipline/DxGraphicsPipeline.h"
-
+#include "../../Phisicas/ClothSimulator/ClothSimulator.h"
 namespace lib {
 	int Graph3D::mHandleCount = 0;
 	Graph3D::Graph3D(std::shared_ptr<DirectX12Manager>& dx12) :
@@ -14,7 +14,6 @@ namespace lib {
 		mMatrix.reset(new libGraph::Dx2DMatrix());
 		mTexture.reset(new libGraph::DxUploadTex2D());
 		mRootSignature.reset(new libGraph::Dx2DRootSignature());
-		fbxData.reset(new model::FbxModel());
 		mTexture->DescriptorHeap_Prop();
 		mTexture->RootSignatureDesc_Prop();
 		mTexture->ShaderResourceViewDesc_Prop();
@@ -22,29 +21,32 @@ namespace lib {
 	int Graph3D::loadFbx(libGraph::Dx2DPipeline& pipeline) {
 		int handleID = 0;
 		mModelData.resize(handleID + 1);
-		mTexture->LoadWIC(L"./dat/shadow_wing.png");
+		mTexture->LoadWIC(L"./model/skirt/skirt.png");
 		mTexture->CreateResource(mDx12);
 		pipeline.CreateGraphicsPipeline(mDx12, *mRootSignature, mTexture->getRootSigDesc());
 		mModelData[handleID].mTextureBuffer = mTexture->getTextureBuff();
-
-		fbxData->load("./model/skirt.fbx");
-		fbxData->createViewBuffer(mDx12->Device());
-		fbxData->setClothSimulator(mDx12->Device());
-		mModelData[handleID].IndexCount = static_cast<UINT>(fbxData->getIndexNum());
-		mModelData[handleID].VertexCount = static_cast<UINT>(fbxData->getVertexNum());
-		mModelData[handleID].VB = fbxData->getVertexBuffer();
-		mModelData[handleID].IB = fbxData->getIndexBuffer();
-		mModelData[handleID].vertex = fbxData->getVertex();
-		mModelData[handleID].index = fbxData->getIndex();
-		mModelData[handleID].VBView = fbxData->getVertexBufferView();
-		mModelData[handleID].IBView = fbxData->getIndexBufferView();
+		model::FbxModel obj;
+		obj.load("./model/skirt2.fbx"); //obj.load("./model/skirt2.fbx");testcloth
+		auto data = obj.getModelData();
+		obj.createViewBuffer(mDx12->Device(), data);
+		//obj.setClothSimulator(mDx12->Device());
+		data = obj.getModelData();
+		mModelData[handleID].vertex = data.vertex;
+		mModelData[handleID].pre_vertex = data.vertex;
+		mModelData[handleID].VB = data.vertex_buffer;
+		mModelData[handleID].VBView = data.vb_view;
+		mModelData[handleID].index = data.index;
+		mModelData[handleID].IB = data.index_buffer;
+		mModelData[handleID].IBView = data.ib_view;
+		mModelData[handleID].index_group = data.index_group;
 		return -1;
 	}
-	void Graph3D::Draw(float x, float y, float size, double Angle, int Handle) {
+	void Graph3D::Draw(float x, float y, float z, float size, double Angle, int Handle) {
 		//if (Handle == -1 || Handle >= mHandleCount)return;
 		DrawGraphParam Param;
 		Param.x = x / static_cast<float>(mDx12->getPixelSize().cx);
 		Param.y = y / static_cast<float>(mDx12->getPixelSize().cy);
+		Param.z = z / static_cast<float>(mDx12->getPixelSize().cx);
 		Param.size = size;
 		Param.angle = Angle;
 		mCreateMatrix(Handle, mDx12->getCount3D(Handle));
@@ -91,6 +93,7 @@ namespace lib {
 			mModelData[Handle].MatrixArry[InstancedCount],
 			Paramater.x,
 			Paramater.y,
+			Paramater.z,
 			Paramater.size,
 			Paramater.angle
 		);
@@ -98,7 +101,7 @@ namespace lib {
 	void Graph3D::mDrawCommand(int InstancedCount, int Handle) {
 		ID3D12DescriptorHeap* texDH = mModelData[Handle].TexDescHeapArry[InstancedCount];
 		auto getMatVBView = mModelData[Handle].VBView;
-		auto getIndexCount = mModelData[Handle].IndexCount;
+		auto getIndexCount = mModelData[Handle].index.size();
 		mDx12->CmdList()->IASetVertexBuffers(0, 1, &getMatVBView);
 		mDx12->CmdList()->SetDescriptorHeaps(1, &texDH);
 		mDx12->CmdList()->SetGraphicsRootDescriptorTable(0, texDH->GetGPUDescriptorHandleForHeapStart());
@@ -117,8 +120,54 @@ namespace lib {
 		mDx12->CmdList()->SetGraphicsRootSignature(rootsignature);
 		mDx12->CmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
+	void Graph3D::setupClothSimulator(int Handle) {
+		phy::ClothSimulator sim(mModelData[Handle].vertex, mModelData[Handle].index, mModelData[Handle].index_group);
+		mModelData[Handle].pre_index = sim.getPreIndexID();
+	}
 	void Graph3D::ClothSimProc(int Handle) {
-		fbxData->calculatePhysics(mDx12, mModelData[Handle].vertex, mModelData[Handle].index);
-		mModelData[Handle].VBView = fbxData->getVertexBufferView();
+		phy::ClothSimulator::update(
+			mModelData[Handle].vertex,
+			mModelData[Handle].index,
+			mModelData[Handle].pre_vertex,
+			mModelData[Handle].pre_index,
+			mModelData[Handle].spring_data
+		);
+		model::FbxModel obj;
+		model::FbxModel::ModelData data;
+		data.ib_view = mModelData[Handle].IBView;
+		data.index = mModelData[Handle].index;
+		//data.index_buffer = mModelData[Handle].IB;
+		data.vb_view = mModelData[Handle].VBView;
+		data.vertex = mModelData[Handle].vertex;
+		//data.vertex_buffer = mModelData[Handle].VB;
+		obj.createViewBuffer(mDx12->Device(), data);
+
+		data = obj.getModelData();
+		mModelData[Handle].vertex = data.vertex;
+		mModelData[Handle].VB = data.vertex_buffer;
+		mModelData[Handle].VBView = data.vb_view;
+		mModelData[Handle].index = data.index;
+		mModelData[Handle].IB = data.index_buffer;
+		mModelData[Handle].IBView = data.ib_view;
+	}
+	void Graph3D::clothReset(int Handle) {
+		phy::ClothSimulator::resetPower(mModelData[Handle].spring_data);
+		model::FbxModel obj;
+		model::FbxModel::ModelData data;
+		data.ib_view = mModelData[Handle].IBView;
+		data.index = mModelData[Handle].index;
+		//data.index_buffer = mModelData[Handle].IB;
+		data.vb_view = mModelData[Handle].VBView;
+		data.vertex = mModelData[Handle].pre_vertex;
+		//data.vertex_buffer = mModelData[Handle].VB;
+		obj.createViewBuffer(mDx12->Device(), data);
+
+		data = obj.getModelData();
+		mModelData[Handle].vertex = data.vertex;
+		mModelData[Handle].VB = data.vertex_buffer;
+		mModelData[Handle].VBView = data.vb_view;
+		mModelData[Handle].index = data.index;
+		mModelData[Handle].IB = data.index_buffer;
+		mModelData[Handle].IBView = data.ib_view;
 	}
 }

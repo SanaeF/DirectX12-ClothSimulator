@@ -45,13 +45,19 @@ namespace lib {
 		return 0;
 	}
 
-	void DxGraph::Draw3D(float x, float y, float size, float Angle) {
+	void DxGraph::Draw3D(float x, float y, float z, float size, float Angle) {
 		mDraw3D->beginDraw(*mPipeline3D, 0);
-		mDraw3D->Draw(x, y, size, Angle, 0);
+		mDraw3D->Draw(x, y, z, size, Angle, 0);
 		//mDraw2D->BeingDraw();
+	}
+	void DxGraph::setupClothSimulator(int Handle) {
+		mDraw3D->setupClothSimulator(Handle);
 	}
 	void DxGraph::clothSimProc(int Handle) {
 		mDraw3D->ClothSimProc(Handle);
+	}
+	void DxGraph::clothReset(int Handle) {
+		mDraw3D->clothReset(Handle);
 	}
 	void DxGraph::ClearDraw() {
 		mDxWrap->ClearScreen();

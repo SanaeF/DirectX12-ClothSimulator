@@ -27,7 +27,8 @@ namespace compute {
         ID3D12DescriptorHeap* heap = nullptr;
         ID3D12Resource* rsc = nullptr;
         ClothModel modelData;
-        void* data = nullptr;
+        ClothModel* GUPData;
+        bool getGPUData;
 	public:
         ClothShader(
             ComPtr<ID3D12Device> device, std::vector<lib::Vertex> vertex, std::vector<UINT> index

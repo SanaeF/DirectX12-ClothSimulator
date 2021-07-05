@@ -1,7 +1,6 @@
 #include "Header3D.hlsli"
-//#include "../DirectX12/DirectXLib/Shader/ClothSimulator/ClothSim.hlsl"
 
-Output Vertex3D(float4 pos : POSITION, float4 normal : NORMAL, float2 uv : TEXCOORD, min16uint2 boneno : BONE_NO, min16uint weight : WEIGHT)//, matrix mat:MATRIX
+Output Vertex3D(float4 pos : POSITION, float4 normal : NORMAL, float3 uv : TEXCOORD, min16uint2 boneno : BONE_NO, min16uint weight : WEIGHT)//, matrix mat:MATRIX
 {
 	Output output;
 	//output.mat = mat;
