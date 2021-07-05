@@ -3,7 +3,7 @@
 #include<cassert>
 #include<d3dx12.h>
 #include<d3dcompiler.h>
-
+ 
 #pragma comment(lib,"DirectXTex.lib")
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")

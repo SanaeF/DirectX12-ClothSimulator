@@ -6,7 +6,7 @@
 #include<wrl.h>
 #include<string>
 #include<functional>
-
+ 
 class DX_MultRend {
 private:
 	D3D12_DESCRIPTOR_RANGE range = {};

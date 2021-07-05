@@ -7,3 +7,4 @@ namespace helper {
 		void ThrowIfFailed(HRESULT hr);
 	};
 }
+ 

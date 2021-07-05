@@ -6,7 +6,7 @@
 #include<wrl.h>
 #include<string>
 #include<functional>
-
+ 
 class DXResource {
 private:
 

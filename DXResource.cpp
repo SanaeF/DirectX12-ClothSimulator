@@ -11,7 +11,7 @@
 
 using namespace Microsoft::WRL;
 using namespace DirectX;
-using namespace std;
+using namespace std; 
 
 bool DXResource::mHeapRTV(ComPtr< ID3D12Device> device) {
 
