@@ -11,67 +11,43 @@
 #include<d3dx12.h>
 #include<wrl.h>
 #include<memory>
-//#include "../../DirectXLib.h"
-
-class DxKeyConfig;
-class DxSound;
 namespace lib {
 	class DirectX12Manager;
-	class DxGraph;
+	class DxKeyConfig;
+	class DxSound;
+	class DxGraphics;
 }
 ///シングルトンクラス
 class Application{
 private:
-
-	SIZE mWin, mPix;
-
-	const char* winName[2];
-
-	//ここに必要な変数(バッファやヒープなど)を書く
+	std::shared_ptr<lib::DirectX12Manager> m_Dx12;
+	std::shared_ptr<lib::DxGraphics>m_Graphics;
+	std::shared_ptr<lib::DxKeyConfig>m_Key;
+	std::shared_ptr<lib::DxSound>m_Sound;
+	SIZE m_Win, m_Pix;
+	const char* m_WinName[2];
 	//ウィンドウ周り
-	WNDCLASSEX _windowClass;
-	HWND _hwnd;
-	//std::shared_ptr<DirectXLib>DirectXlib;
+	WNDCLASSEX m_Window_class;
+	HWND m_Hwnd;
+public:
+	///初期化
+	bool initialize();
+	///ループ起動
+	void showWin();
+	void run();
+	///後処理
+	void finaliz();
 
-	std::shared_ptr<lib::DirectX12Manager> mDxWr;
-	std::shared_ptr<lib::DxGraph>Graph;
-	std::shared_ptr<DxKeyConfig>Key;
-	std::shared_ptr<DxSound>Sound;
-	//ゲーム用ウィンドウの生成
-	void CreateGameWindow(HWND &hwnd, WNDCLASSEX &windowClass);
-
-
-
+	void setWindow(int width, int height, const char* window_name, const char* name);
+	void setGraphMode(int width, int height);
+	SIZE getWindowSize()const;
+	SIZE getGraphicSize()const;
+	static Application& getInstance();
+	~Application();
+private:
 	Application();
 	Application(const Application&) = delete;
 	void operator=(const Application&) = delete;
-
-public:
-
-	///初期化
-	bool Initialize();
-
-	///ループ起動
-	void ShowWin();
-
-	void RunTest();
-	void Run();
-	void Run2();
-	///後処理
-	void Finaliz();
-
-
-
-	void SetWindow(int width, int height, const char* window_name, const char* name);
-
-	void SetGraphMode(int width, int height);
-
-	SIZE GetWindowSize()const;
-
-	SIZE GetGraphicSize()const;
-
-
-	static Application& Instance();
-	~Application();
-
+	//ゲーム用ウィンドウの生成
+	void createGameWindow(HWND& hwnd, WNDCLASSEX& windowClass);
 };

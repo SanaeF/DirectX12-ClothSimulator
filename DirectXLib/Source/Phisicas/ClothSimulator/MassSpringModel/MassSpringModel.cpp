@@ -2,7 +2,7 @@
 #include "../../../VectorMath/VectorMath.h"
 
 namespace phy {
-	MassSpringModel::MassSpringModel(std::vector<lib::Vertex> vertex, std::vector<UINT> index, std::vector<std::vector<int>>index_group) :
+	MassSpringModel::MassSpringModel(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>>index_group) :
 		m_Vert_num(0),
 		m_Vertex(vertex),
 		m_Index(index),

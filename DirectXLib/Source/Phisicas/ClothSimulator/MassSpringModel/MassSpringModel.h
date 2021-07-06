@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <wrl.h>
-#include "../../../Graphics/Graph3D/Vertex/Vertex.h"
+#include "../../../DxGraphics/DxGraphics3D/ModelData/ModelData.h"
 namespace phy {
 	class MassSpringModel {
 	private:
@@ -23,13 +23,13 @@ namespace phy {
 			}
 		};
 		std::vector<std::vector<int>>m_Index_group;
-		std::vector<lib::Vertex>m_Vertex;
+		std::vector<lib::ModelData>m_Vertex;
 		std::vector<UINT>m_Index;
 		std::vector<int> m_Result;
 		EDGE_TYPE m_Edge_type;
 		int m_Vert_num;
 	public:
-		MassSpringModel(std::vector<lib::Vertex> vertex, std::vector<UINT> index, std::vector<std::vector<int>>index_group);
+		MassSpringModel(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>>index_group);
 		std::vector<int> create(int num);
 		~MassSpringModel();
 	private:

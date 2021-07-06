@@ -1,7 +1,7 @@
 #include "LibHelper.h"
 #include <iostream>
 namespace helper {
-	inline void LibHelper::ThrowIfFailed(HRESULT hr)
+	inline void LibHelper::throwIfFailed(HRESULT hr)
 	{
 		if (FAILED(hr))
 		{
@@ -9,7 +9,7 @@ namespace helper {
 		}
 	}
 
-	size_t LibHelper::AlignmentedSize(size_t size, size_t alignment) {
+	size_t LibHelper::alignmentedSize(size_t size, size_t alignment) {
 		return size + alignment - size % alignment;
 	}
 	bool LibHelper::between(int param, int deltaP1, int deltaP2) {

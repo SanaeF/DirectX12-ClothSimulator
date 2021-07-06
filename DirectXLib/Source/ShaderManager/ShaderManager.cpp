@@ -3,11 +3,11 @@
 #pragma comment(lib,"d3dcompiler.lib")
 
 namespace lib {
-	void ShaderManager::LoadShader() {
+	void ShaderManager::loadShader() {
 
 	}
 
-	void ShaderManager::LoadVertexShaderFile(
+	void ShaderManager::loadVertexShaderFile(
 		LPCWSTR Path,
 		LPCSTR function,
 		LPCSTR Version
@@ -19,8 +19,8 @@ namespace lib {
 			function, Version,
 			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 			0,
-			&vsBlob,
-			&errorBlob
+			&m_pVS_blob,
+			&m_pError_blob
 		);
 
 		if (!SUCCEEDED(result)) {
@@ -28,7 +28,7 @@ namespace lib {
 		}
 	}
 
-	void ShaderManager::LoadPixelShaderFile(
+	void ShaderManager::loadPixelShaderFile(
 		LPCWSTR Path,
 		LPCSTR function,
 		LPCSTR Version
@@ -40,8 +40,8 @@ namespace lib {
 			function, Version,
 			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 			0,
-			&psBlob,
-			&errorBlob
+			&m_pPS_blob,
+			&m_pError_blob
 		);
 
 		if (!SUCCEEDED(result)) {
@@ -50,27 +50,27 @@ namespace lib {
 	}
 
 	void ShaderManager::setVertShaderBlob(ID3DBlob* vsBlob) {
-		this->vsBlob = vsBlob;
+		this->m_pVS_blob = vsBlob;
 	}
 
 	void ShaderManager::setPixelShaderBlob(ID3DBlob* psBlob) {
-		this->psBlob = psBlob;
+		this->m_pPS_blob = psBlob;
 	}
 
 	void ShaderManager::setErrorShaderBlob(ID3DBlob* errorBlob) {
-		this->errorBlob = errorBlob;
+		this->m_pError_blob = errorBlob;
 	}
 
 
 	ID3DBlob* ShaderManager::getVertShaderBlob() {
-		return vsBlob;
+		return m_pVS_blob;
 	}
 
 	ID3DBlob* ShaderManager::getPixelShaderBlob() {
-		return psBlob;
+		return m_pPS_blob;
 	}
 
 	ID3DBlob* ShaderManager::getErrorShaderBlob() {
-		return errorBlob;
+		return m_pError_blob;
 	}
 }

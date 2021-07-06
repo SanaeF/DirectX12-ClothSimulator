@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{48DA0F3E-CC4C-4CEE-A8FA-ACBF12FA9A24}</ProjectGuid>
-    <RootNamespace>Girls</RootNamespace>
+    <RootNamespace>DirectXlib</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>DirectX12Lib</ProjectName>
   </PropertyGroup>
@@ -113,42 +113,34 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>F:\DirectX\DirectXTex-master\DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\include</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTex-master\DirectXTex</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>F:\DirectX\DirectXTex-master\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\lib\vs2017\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\DirectXTex-master\DirectXTex\Bin\Desktop_2019_Win10\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="DirectXLib.cpp" />
-    <ClCompile Include="DirectXLib\Source\DirectX12\DirectX12Manager.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\DxGraphics.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph2D\DxGraphics2D.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothShader\ClothShader.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulatorOld.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxMaterial\FbxMaterial.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxModel.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\DxGraphics3D.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\PropFile\PropFile.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\VirtualPoint\VirtualPoint.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\Physics\Physics.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Graph3D\Vector3D\Vector3D.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\DxGraphicsVertex.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\Index\DxGraphicsIndex.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\GraphPipline\DxGraphicsPipeline.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\GraphPipline\RootSignature\DxRootSignature.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Matrix\DxGraphicsMatrix.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Texture\DxGraphics2DTexture.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Texture\UploadTexture\DxUploadTex.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Vertex\DxGraph2DVertex.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\Vertex\Index\DxGraph2DIndex.cpp" />
-    <ClCompile Include="DirectXLib\Source\Graphics\ViewPort\DxGraphicsViewPort.cpp" />
+    <ClCompile Include="DirectXLib\Source\DirectX12Manager\DirectX12Manager.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex\DxGraph2DIndex.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DVertex.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2D.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture\DxGraphics2DTexture.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\DxGraphics3D.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix\DxGraphicsMatrix.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline\DxGraphicsPipeline.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxRootSignature\DxRootSignature.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\UploadTexture\UploadTexture.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\ViewPort\DxGraphicsViewPort.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxKeyConfig\DxKeyConfig.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxSound\DxSound.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.cpp" />
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp" />
-    <ClCompile Include="DirectXLib\Source\Phisicas\ArrayChanger\ArrayChanger.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.cpp" />
@@ -156,43 +148,28 @@
     <ClCompile Include="DirectXLib\Source\ShaderManager\ComputeShader\ComputeShader.cpp" />
     <ClCompile Include="DirectXLib\Source\ShaderManager\ShaderManager.cpp" />
     <ClCompile Include="DirectXLib\Source\VectorMath\VectorMath.cpp" />
-    <ClCompile Include="DxHelper.cpp" />
-    <ClCompile Include="DxKeyConfig.cpp" />
-    <ClCompile Include="DxSound.cpp" />
-    <ClCompile Include="DxWavData.cpp" />
-    <ClCompile Include="DXHandler.cpp" />
-    <ClCompile Include="DXResource.cpp" />
-    <ClCompile Include="DX_MultRend.cpp" />
     <ClCompile Include="Source\Application\Application.cpp" />
     <ClCompile Include="Source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DirectXLib.h" />
-    <ClInclude Include="DirectXLib\Source\DirectX12\DirectX12Manager.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\DxGraphics.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph2D\DxGraphics2D.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothShader\ClothShader.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\ClothSimulator\ClothSimulatorOld.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxMaterial\FbxMaterial.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\FbxModel.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\DxGraphics3D.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\PropFile\PropFile.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\FbxModel\VirtualPoint\VirtualPoint.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Physics\Physics.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Vector3D\Vector3D.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Graph3D\Vertex\Vertex.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\DxGraphicsVertex.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\GraphicsProp\Vertex\Index\DxGraphicsIndex.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\GraphPipline\DxGraphicsPipeline.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\GraphPipline\RootSignature\DxRootSignature.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Matrix\DxGraphicsMatrix.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Texture\DxGraphics2DTexture.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Texture\UploadTexture\DxUploadTex.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Vertex\DxGraph2DVertex.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\Vertex\Index\DxGraph2DIndex.h" />
-    <ClInclude Include="DirectXLib\Source\Graphics\ViewPort\DxGraphicsViewPort.h" />
+    <ClInclude Include="DirectXLib\Source\DirectX12Manager\DirectX12Manager.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex\DxGraph2DIndex.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DVertex.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2D.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture\DxGraphics2DTexture.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\DxGraphics3D.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix\DxGraphicsMatrix.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline\DxGraphicsPipeline.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxRootSignature\DxRootSignature.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\UploadTexture\UploadTexture.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\ViewPort\DxGraphicsViewPort.h" />
+    <ClInclude Include="DirectXLib\Source\DxKeyConfig\DxKeyConfig.h" />
+    <ClInclude Include="DirectXLib\Source\DxSound\DxSound.h" />
+    <ClInclude Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.h" />
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h" />
-    <ClInclude Include="DirectXLib\Source\Phisicas\ArrayChanger\ArrayChanger.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.h" />
@@ -201,90 +178,54 @@
     <ClInclude Include="DirectXLib\Source\ShaderManager\ComputeShader\ComputeShader.h" />
     <ClInclude Include="DirectXLib\Source\ShaderManager\ShaderManager.h" />
     <ClInclude Include="DirectXLib\Source\VectorMath\VectorMath.h" />
-    <ClInclude Include="DxHelper.h" />
-    <ClInclude Include="DxKeyConfig.h" />
-    <ClInclude Include="DxSound.h" />
-    <ClInclude Include="DxWavData.h" />
-    <ClInclude Include="DXHandler.h" />
-    <ClInclude Include="DXResource.h" />
-    <ClInclude Include="DxHandleManager.h" />
-    <ClInclude Include="DX_MultRend.h" />
     <ClInclude Include="Source\Application\Application.h" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicPixelShader.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BasicPS</EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BasicPS</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="BasicVertexShader.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">BasicVS</EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">BasicVS</EntryPointName>
-    </FxCompile>
-    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothCollider.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClothCollider</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothCollider</EntryPointName>
-    </FxCompile>
-    <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel3D</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="DirectXLib\Shader\Shader3D\Vertex3D.hlsl">
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex3D</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex3D</EntryPointName>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="Pixel2D.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="DirectXLib\Shader\Shader2D\Pixel2D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel2D</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel2D</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="Vertex2D.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    <FxCompile Include="DirectXLib\Shader\Shader2D\Vertex2D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex2D</EntryPointName>
-      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex2D</EntryPointName>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="BasicShaderHeader.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothData.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
-      <FileType>Document</FileType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
-    </None>
-    <None Include="Header2D.hlsli" />
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex2D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothCollider.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothCollider</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClothCollider</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel3D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Vertex3D.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex3D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex3D</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

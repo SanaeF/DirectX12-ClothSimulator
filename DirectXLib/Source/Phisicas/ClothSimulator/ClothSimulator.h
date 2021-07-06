@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <wrl.h>
-#include "../../Graphics/Graph3D/Vertex/Vertex.h"
+#include "../../DxGraphics/DxGraphics3D/ModelData/ModelData.h"
 #include "ClothData/SpringData.h"
 namespace phy {
 	class ClothSimulator {
@@ -11,13 +11,13 @@ namespace phy {
 	public:
 		ClothSimulator();
 		//質点モデル-インデックスIDの生成用初期化
-		ClothSimulator(std::vector<lib::Vertex> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group);
+		ClothSimulator(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group);
 		static void resetPower(std::vector<SpringData>& spring_data);
 		//物理演算の計算を更新
 		static void update(
-			std::vector<lib::Vertex>& vertex,
+			std::vector<lib::ModelData>& vertex,
 			std::vector<UINT> index,
-			std::vector<lib::Vertex> pre_vertex,
+			std::vector<lib::ModelData> pre_vertex,
 			std::vector<std::vector<int>> pre_index_id,
 			std::vector<SpringData>& spring_data
 		);

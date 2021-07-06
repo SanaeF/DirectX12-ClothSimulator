@@ -2,7 +2,7 @@
 #include <vector>
 #include<d3dx12.h>
 #include <vector>
-#include "../../../../Graphics/Graph3D/Vertex/Vertex.h"
+#include "../../../../DxGraphics/DxGraphics3D/ModelData/ModelData.h"
 #include "../../ClothData/SpringData.h"
 namespace phy {
 	class ClothCollider {
@@ -23,9 +23,9 @@ namespace phy {
 	public:
 		ClothCollider(int split_num, int vert_size);
 		//モデルサイズに合わせて、あたり判定空間を生成する
-		void createSpaceBox(lib::Vertex p);
-		void spaceInput(int id, lib::Vertex p);
-		void repulsion(int vert_id, std::vector<lib::Vertex>& vert, std::vector<lib::Vertex> pre_vert);
+		void createSpaceBox(lib::ModelData p);
+		void spaceInput(int id, lib::ModelData p);
+		void repulsion(int vert_id, std::vector<lib::ModelData>& vert, std::vector<lib::ModelData> pre_vert);
 	private:
 		bool isHitCircle(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2);
 		void calcForce(DirectX::XMFLOAT3& p1, DirectX::XMFLOAT3 p2);

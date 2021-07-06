@@ -8,7 +8,7 @@ namespace phy {
 	ClothSimulator::ClothSimulator() {
 
 	}
-	ClothSimulator::ClothSimulator(std::vector<lib::Vertex> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group) {
+	ClothSimulator::ClothSimulator(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group) {
 		m_Pre_IndexID.resize(vertex.size());
 		MassSpringModel ms(vertex, index, index_group);
 		for (int ite = 0; ite < vertex.size(); ite++) {
@@ -26,9 +26,9 @@ namespace phy {
 		}
 	}
 	void ClothSimulator::update(
-		std::vector<lib::Vertex>& vertex,
+		std::vector<lib::ModelData>& vertex,
 		std::vector<UINT> index,
-		std::vector<lib::Vertex> pre_vertex,
+		std::vector<lib::ModelData> pre_vertex,
 		std::vector<std::vector<int>> pre_index_id,
 		std::vector<SpringData>& spring_data
 	) {

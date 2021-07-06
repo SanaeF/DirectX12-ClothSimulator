@@ -16,7 +16,7 @@ namespace phy {
 		m_Space_vert.resize(vert_size);
 	}
 	//モデルサイズに合わせて、あたり判定空間を生成する
-	void ClothCollider::createSpaceBox(lib::Vertex p) {
+	void ClothCollider::createSpaceBox(lib::ModelData p) {
 		//四角形p1を求める
 		if (m_High_dist.x < p.position.x)m_High_dist.x = p.position.x;
 		if (m_High_dist.y < p.position.y)m_High_dist.y = p.position.y;
@@ -28,7 +28,7 @@ namespace phy {
 		m_High_pos = DirectX::XMFLOAT3(m_High_dist.x, m_High_dist.y, m_High_dist.z);
 		m_Low_pos = DirectX::XMFLOAT3(m_Low_dist.x, m_Low_dist.y, m_Low_dist.z);
 	}
-	void ClothCollider::spaceInput(int id, lib::Vertex p) {
+	void ClothCollider::spaceInput(int id, lib::ModelData p) {
 		int box = 1;
 		if (m_High_pos.x != 0)box *= m_Split_num;
 		if (m_High_pos.y != 0)box *= m_Split_num;
@@ -52,8 +52,8 @@ namespace phy {
 	}
 	void ClothCollider::repulsion(
 		int vert_id,
-		std::vector<lib::Vertex>& vert,
-		std::vector<lib::Vertex> pre_vert
+		std::vector<lib::ModelData>& vert,
+		std::vector<lib::ModelData> pre_vert
 	) {
 		if (m_Hit_space.size() == 1)return;
 		auto id = m_Space_vert[vert_id];

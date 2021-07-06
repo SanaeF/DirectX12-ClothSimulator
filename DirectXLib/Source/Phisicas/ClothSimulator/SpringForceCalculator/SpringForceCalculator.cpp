@@ -3,7 +3,7 @@
 #include "ClothCollider/ClothCollider.h"
 #include <thread>
 namespace phy {
-	SpringForceCalculator::SpringForceCalculator(std::vector<lib::Vertex> pre_vert):
+	SpringForceCalculator::SpringForceCalculator(std::vector<lib::ModelData> pre_vert):
 		m_Pre_vertex(pre_vert)
 	{
 		m_Param.grid_mass = 1.f;
@@ -20,7 +20,7 @@ namespace phy {
 		m_collision.reset(new ClothCollider(40, pre_vert.size()));
 	}
 	void SpringForceCalculator::gravity(
-		int frame, std::vector<lib::Vertex> vertex, std::vector<std::vector<int>> pre_index_id
+		int frame, std::vector<lib::ModelData> vertex, std::vector<std::vector<int>> pre_index_id
 	) {
 		m_Spring_data.resize(vertex.size());
 		for (int ite = 0; ite < vertex.size(); ite++) {
@@ -43,12 +43,12 @@ namespace phy {
 	}
 	void SpringForceCalculator::step(
 		int frame,
-		std::vector<lib::Vertex> vertex, 
+		std::vector<lib::ModelData> vertex, 
 		std::vector<std::vector<int>> pre_index_id
 	) {
 		calcForce(vertex, m_Pre_vertex, pre_index_id);
 	}
-	void SpringForceCalculator::createNewPosition(std::vector<lib::Vertex>& vertex) {
+	void SpringForceCalculator::createNewPosition(std::vector<lib::ModelData>& vertex) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
 			auto v = lib::VectorMath::scale(m_Spring_data[ite].force, 1 / m_Spring_data[ite].mass);
@@ -62,7 +62,7 @@ namespace phy {
 			//m_collision->createSpaceBox(vertex[ite]);
 		}
 	}
-	void SpringForceCalculator::collision(std::vector<lib::Vertex>& vertex) {
+	void SpringForceCalculator::collision(std::vector<lib::ModelData>& vertex) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
 			m_collision->spaceInput(ite, vertex[ite]);
@@ -73,8 +73,8 @@ namespace phy {
 		}
 	}
 	inline void SpringForceCalculator::calcForce(
-		std::vector<lib::Vertex> vertex,
-		std::vector<lib::Vertex> pre_vertex,
+		std::vector<lib::ModelData> vertex,
+		std::vector<lib::ModelData> pre_vertex,
 		std::vector<std::vector<int>> pre_index_id
 	) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
@@ -106,8 +106,8 @@ namespace phy {
 	}
 	inline DirectX::XMFLOAT3
 		SpringForceCalculator::getSpringForce(
-			lib::Vertex vert1,
-			lib::Vertex vert2,
+			lib::ModelData vert1,
+			lib::ModelData vert2,
 			float length,
 			float constant,
 			Resistance resistance
@@ -125,7 +125,7 @@ namespace phy {
 	std::vector<SpringData> SpringForceCalculator::getSpringForceData() {
 		return m_Spring_data;
 	}
-	inline bool SpringForceCalculator::isFixed(lib::Vertex vert) {
+	inline bool SpringForceCalculator::isFixed(lib::ModelData vert) {
 		if (vert.color.x == 1.f &&
 			vert.color.y == 0.f &&
 			vert.color.z == 0.f)return true;

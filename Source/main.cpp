@@ -6,17 +6,17 @@ int main() {
 #include<Windows.h>
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #endif
-	auto& app = Application::Instance();
-	app.SetWindow(1280, 960, "PlasticSkirt", "PlasticSkirt");
-	app.SetGraphMode(1920, 1440);
-	if (!app.Initialize()) {
+	auto& app = Application::getInstance();
+	app.setWindow(1280, 960, "PlasticSkirt", "PlasticSkirt");
+	app.setGraphMode(1920, 1440);
+	if (!app.initialize()) {
 		return -1;
 	}
-	app.ShowWin();
+	app.showWin();
 
-	app.Run();
+	app.run();
 
-	app.Finaliz();
+	app.finaliz();
 	return 0;
 }
 

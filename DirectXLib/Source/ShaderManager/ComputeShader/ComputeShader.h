@@ -2,7 +2,7 @@
 #include <vector>
 #include<d3dx12.h>
 #include <wrl.h>
-#include "../../Graphics/Graph3D/Vertex/Vertex.h"
+#include "../../DxGraphics/DxGraphics3D/ModelData/ModelData.h"
 #include "../../Phisicas/ClothSimulator/ClothData/SpringData.h"
 namespace lib {
 	class ComputeShader {
