@@ -22,7 +22,7 @@ namespace lib {
 		void init();
 		int load2D(const wchar_t* path);//2D画像ロード(戻り値ハンドル,-1の場合エラー)
 		void drawPrototype2D(float x, float y, float size, float Angle, int Handle);//描画
-		int load3D();
+		int load3D(const char*);
 		void draw3D(float x, float y, float z, float size, float Angle);
 		void setupClothSimulator(int Handle);
 		void clothSimProc(int Handle);

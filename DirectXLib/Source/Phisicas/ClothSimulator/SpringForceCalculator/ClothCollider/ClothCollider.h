@@ -25,7 +25,7 @@ namespace phy {
 		//モデルサイズに合わせて、あたり判定空間を生成する
 		void createSpaceBox(lib::ModelData p);
 		void spaceInput(int id, lib::ModelData p);
-		void repulsion(int vert_id, std::vector<lib::ModelData>& vert, std::vector<lib::ModelData> pre_vert);
+		lib::ModelData repulsion(int vert_id, std::vector<lib::ModelData> vert, std::vector<lib::ModelData> pre_vert);
 	private:
 		bool isHitCircle(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2);
 		void calcForce(DirectX::XMFLOAT3& p1, DirectX::XMFLOAT3 p2);

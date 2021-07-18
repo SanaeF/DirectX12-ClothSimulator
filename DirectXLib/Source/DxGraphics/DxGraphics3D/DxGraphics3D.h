@@ -54,7 +54,7 @@ namespace lib {
 		std::shared_ptr<libGraph::Dx2DRootSignature> m_Root_signature;
 	public:
 		DxGraphics3D(std::shared_ptr<DirectX12Manager>& dx_12);
-		int loadFbx(libGraph::DxGraphicsPipeline& pipeline);
+		int loadFbx(const char* path, libGraph::DxGraphicsPipeline& pipeline);
 		void setupClothPhis(int Handle);
 		void draw(float x, float y, float z, float size, double Angle, int Handle);
 		void beginDraw(libGraph::DxGraphicsPipeline& pipeline, int Handle);

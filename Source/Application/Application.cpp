@@ -24,7 +24,7 @@ void Application::run() {
 	int imageHandle[2];//ハンドル
 	int HandleLif;
 	int MusicHandle;
-	m_Graphics->load3D();
+	m_Graphics->load3D("./model/testcloth.fbx");//./model/skirt2.fbx - testcloth
 	//imageHandle[0] = Graph->Load2D(L"./dat/back.png");//2D画像ロード
 	//imageHandle[1] = Graph->Load2D(L"./dat/titleback.png");
 	//HandleLif = Graph->Load2D(L"./dat/Bullet02.png");

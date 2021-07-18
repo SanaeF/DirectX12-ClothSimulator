@@ -129,6 +129,15 @@
     <Filter Include="DirectXlib\Source\LibHelper">
       <UniqueIdentifier>{ec29b673-5c70-4c97-b57c-96bcfb91ab79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring">
+      <UniqueIdentifier>{3d3f255d-964e-496a-8558-299921ea3137}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring">
+      <UniqueIdentifier>{98778358-1e61-49bf-993f-09e465cc605d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring">
+      <UniqueIdentifier>{d14c7726-6f2c-4055-a8cb-f334cef2263b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Application.h">
@@ -212,6 +221,15 @@
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h">
       <Filter>DirectXlib\Source\LibHelper</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.h">
+      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.h">
+      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.h">
+      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -291,6 +309,15 @@
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp">
       <Filter>DirectXlib\Source\LibHelper</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.cpp">
+      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.cpp">
+      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.cpp">
+      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

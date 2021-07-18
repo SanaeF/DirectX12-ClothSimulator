@@ -18,7 +18,7 @@ namespace lib {
 		m_Texture->rootSignatureDescProp();
 		m_Texture->shaderResourceViewDescProp();
 	}
-	int DxGraphics3D::loadFbx(libGraph::DxGraphicsPipeline& pipeline) {
+	int DxGraphics3D::loadFbx(const char* path,libGraph::DxGraphicsPipeline& pipeline) {
 		int handleID = 0;
 		m_Model_data.resize(handleID + 1);
 		m_Texture->loadWIC(L"./model/skirt/skirt.png");
@@ -26,7 +26,7 @@ namespace lib {
 		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
 		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
 		model::FbxModel obj;
-		obj.load("./model/testcloth.fbx"); //obj.load("./model/skirt2.fbx");testcloth
+		obj.load(path); //obj.load("./model/skirt2.fbx");testcloth
 		auto data = obj.getModelData();
 		obj.createViewBuffer(m_Dx12->device(), data);
 		//obj.setClothSimulator(mDx12->Device());

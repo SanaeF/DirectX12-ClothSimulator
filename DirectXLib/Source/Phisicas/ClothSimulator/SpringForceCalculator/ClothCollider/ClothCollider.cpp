@@ -50,22 +50,23 @@ namespace phy {
 		//‹óŠÔID‚²‚Æ‚Ì’¸“_‚ÌŒÂ”
 		m_Input_num[space_id]++;
 	}
-	void ClothCollider::repulsion(
+	lib::ModelData ClothCollider::repulsion(
 		int vert_id,
-		std::vector<lib::ModelData>& vert,
+		std::vector<lib::ModelData> vert,
 		std::vector<lib::ModelData> pre_vert
 	) {
-		if (m_Hit_space.size() == 1)return;
+		if (m_Hit_space.size() == 1)return vert[vert_id];
 		auto id = m_Space_vert[vert_id];
 		//‹óŠÔID‚ªˆê’v‚·‚é’¸“_‚ğ”äŠr‚·‚é
 		for (int ite = 0; ite < m_Input_num[id]; ite++) {
 			//continue;
 			auto id2 = m_Hit_space[id][ite];
-			m_Hit_dist = lib::VectorMath::distance(pre_vert[vert_id].position, pre_vert[id2].position) * 5 / 6;
+			m_Hit_dist = lib::VectorMath::distance(pre_vert[vert_id].position, pre_vert[id2].position) / 2;
 			if (isHitCircle(vert[vert_id].position, vert[id2].position)) {
 				calcForce(vert[vert_id].position, vert[id2].position);
 			}
 		}
+		return vert[vert_id];
 	}
 	inline int ClothCollider::searchX(
 		int id, int split_num, DirectX::XMFLOAT3 p
@@ -126,20 +127,16 @@ namespace phy {
 		DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2
 	) {
 		m_Now_dist = lib::VectorMath::distance(p1, p2);
-		m_Now_dist = lib::VectorMath::distance(p1, DirectX::XMFLOAT3(0, -3, 0));
-		m_Hit_dist = 0.75;
 		if (m_Now_dist < m_Hit_dist)return true;
 		return false;
 	}
 	inline void ClothCollider::calcForce(
 		DirectX::XMFLOAT3& p1, DirectX::XMFLOAT3 p2
 	) {
-		p2 = DirectX::XMFLOAT3(0,-3,0);
 		auto v = lib::VectorMath::subtract(p1, p2);
-		auto d = lib::VectorMath::mulAdd(v, v);
-		v = lib::VectorMath::scale(v, 0.75 / d);
-		auto result = lib::VectorMath::add(p2, v);
-		if (lib::VectorMath::distance(p1, result) < d)p1 = result;
+		v = lib::VectorMath::normalize(v);
+		v = lib::VectorMath::scale(v, m_Hit_dist - m_Now_dist);
+		p1 = lib::VectorMath::add(p1, v);
 	}
 	inline bool ClothCollider::between(float p1, float a, float b) {
 		if (a <= p1 && p1 < b)return true;

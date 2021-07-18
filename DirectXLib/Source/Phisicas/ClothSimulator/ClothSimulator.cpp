@@ -38,11 +38,13 @@ namespace phy {
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);
 		//重力を加える
 		force.gravity(m_time, vertex, pre_index_id);
+		//座標更新
+		//force.createNewPosition(vertex);
 		//ステップ数だけバネの計算をする
 		for (int i = 0; i < step; i++) {
-			force.step(m_time, vertex, pre_index_id);
+			force.restriction(m_time, vertex, pre_index_id);
 			//座標更新
-			force.createNewPosition(vertex);
+			//force.createNewPosition(vertex);
 		}
 		//force.collision(vertex);
 		spring_data = force.getSpringForceData();

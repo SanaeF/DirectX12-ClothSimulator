@@ -27,24 +27,25 @@ namespace phy {
 		std::vector<UINT>m_Index;
 		std::vector<int> m_Result;
 		EDGE_TYPE m_Edge_type;
-		int m_Vert_num;
 	public:
-		MassSpringModel(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>>index_group);
+		MassSpringModel(std::vector<lib::ModelData>& vertex, std::vector<UINT>& index, std::vector<std::vector<int>>& index_group);
 		std::vector<int> create(int num);
 		~MassSpringModel();
 	private:
+		//3x3行列の質点モデルを生成
+		void createMatrix3x3(int vertex_id);
+		//3x3行列外にある4つのの質点モデルを生成
+		void createOutOfP4(int vertex_id);
 		//端かどうかを調べる
-		EDGE_TYPE pointType(IndexData all_index, IndexData related_index);
+		EDGE_TYPE pointType(IndexData& all_index, IndexData& related_index);
 		//調べている頂点番号と一致するインデックス番号を全て取得
-		IndexData loadAllIndex();
+		IndexData loadAllIndex(int vertex_id);
 		//関連のある頂点番号を全て取得
-		IndexData loadRelatedIndex(IndexData all_index);
+		IndexData loadRelatedIndex(int vertex_id, IndexData& all_index);
 		//十字方向の質点を取得
-		std::vector<int> loadNearestIndex(int num, IndexData related_index);
+		std::vector<int> loadNearestIndex(int num, int target_index, IndexData& related_index);
 		//調べた十字方向の質点以外を取得
-		std::vector<int> loadCorners(int num, IndexData related_index, std::vector<int> four_point);
-		void loadAddNearest(std::vector<int> nearest_index);
-		IndexData loadNearestSearch(int num, std::vector<int> nearest_index);
-		IndexData loadAddNearestIndex(int num, IndexData searched_nearest);
+		std::vector<int> loadCorners(int num, IndexData& related_index, std::vector<int>& four_point);
+		IndexData exclusionMatrix3x3(int vertex_id, std::vector<int>& out_of_matrix_index);
 	};
 }
