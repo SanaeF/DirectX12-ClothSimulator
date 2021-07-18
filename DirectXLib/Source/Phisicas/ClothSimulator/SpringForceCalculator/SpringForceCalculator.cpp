@@ -40,7 +40,7 @@ namespace phy {
 			data.force.y -= data.mass * m_Param.gravity;
 			//•——Í‚ð‰Á‚¦‚é
 			double r1 = frame /10;
-			data.force.x = m_Param.wind;data.force.x += m_Param.wind * (sin(r1) * 1.5 + 0.5);
+			//data.force.x += m_Param.wind * (sin(r1) * 0.5 + 0.5);
 
 			//ƒ_ƒ“ƒsƒ“ƒO
 			auto d = lib::VectorMath::scale(data.velocity, m_Param.damping);
