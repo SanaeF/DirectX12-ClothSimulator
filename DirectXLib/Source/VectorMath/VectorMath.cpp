@@ -52,6 +52,14 @@ namespace lib {
 		}
 		return result;
 	}
+	//2“_ŠÔ‚Ì’†“_
+	DirectX::XMFLOAT3 VectorMath::slplitPoint(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2) {
+		DirectX::XMFLOAT3 result(0.f, 0.f, 0.f);
+		result.x = (p1.x + p2.x) / 2;
+		result.y = (p1.y + p2.y) / 2;
+		result.z = (p1.z + p2.z) / 2;
+		return result;
+	}
 	float VectorMath::distance(
 		DirectX::XMFLOAT3 vec1, DirectX::XMFLOAT3 vec2
 	) {

@@ -4,6 +4,7 @@
 #include <vector>
 #include <d3dx12.h>
 #include <wrl.h>
+#include <string>
 #include<DirectXMath.h>
 #include<DirectXTex.h>
 #include "../../Phisicas/ClothSimulator/ClothData/SpringData.h"
@@ -33,10 +34,10 @@ namespace lib {
 			D3D12_INDEX_BUFFER_VIEW ib_view;
 			ComPtr<ID3D12Resource> vb;
 			ComPtr<ID3D12Resource> ib;
-			std::vector<ModelData> vertex;
+			std::vector<ModelParam> vertex;
 			std::vector<UINT> index;
 			std::vector<std::vector<int>>index_group;
-			std::vector<ModelData> pre_vertex;
+			std::vector<ModelParam> pre_vertex;
 			std::vector<std::vector<int>> pre_index;
 			std::vector<SpringData>spring_data;
 		};
@@ -55,6 +56,7 @@ namespace lib {
 	public:
 		DxGraphics3D(std::shared_ptr<DirectX12Manager>& dx_12);
 		int loadFbx(const char* path, libGraph::DxGraphicsPipeline& pipeline);
+		int loadPmx(const std::wstring& file_path, libGraph::DxGraphicsPipeline& pipeline);
 		void setupClothPhis(int Handle);
 		void draw(float x, float y, float z, float size, double Angle, int Handle);
 		void beginDraw(libGraph::DxGraphicsPipeline& pipeline, int Handle);

@@ -8,9 +8,9 @@ namespace phy {
 	ClothSimulator::ClothSimulator() {
 
 	}
-	ClothSimulator::ClothSimulator(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group) {
+	ClothSimulator::ClothSimulator(std::vector<lib::ModelParam> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group) {
 		m_Pre_IndexID.resize(vertex.size());
-		MassSpringModel ms(vertex, index, index_group);
+		MassSpringModel ms(MODEL_FILE::PMX,vertex, index, index_group);
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			auto id_list = ms.create(ite);
 			for (int ite2 = 0; ite2 < 12; ite2++) {
@@ -26,25 +26,21 @@ namespace phy {
 		}
 	}
 	void ClothSimulator::update(
-		std::vector<lib::ModelData>& vertex,
+		std::vector<lib::ModelParam>& vertex,
 		std::vector<UINT> index,
-		std::vector<lib::ModelData> pre_vertex,
+		std::vector<lib::ModelParam> pre_vertex,
 		std::vector<std::vector<int>> pre_index_id,
 		std::vector<SpringData>& spring_data
 	) {
-		const int step = 1;
+		const int step = 10;
 		SpringForceCalculator force(pre_vertex);
 		//モデル全頂点の力と速度データ受け取り
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);
 		//重力を加える
 		force.gravity(m_time, vertex, pre_index_id);
-		//座標更新
-		//force.createNewPosition(vertex);
 		//ステップ数だけバネの計算をする
 		for (int i = 0; i < step; i++) {
 			force.restriction(m_time, vertex, pre_index_id);
-			//座標更新
-			//force.createNewPosition(vertex);
 		}
 		//force.collision(vertex);
 		spring_data = force.getSpringForceData();

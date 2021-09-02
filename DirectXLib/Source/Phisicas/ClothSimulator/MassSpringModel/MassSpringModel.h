@@ -3,6 +3,9 @@
 #include <wrl.h>
 #include "../../../DxGraphics/DxGraphics3D/ModelData/ModelData.h"
 namespace phy {
+	enum MODEL_FILE {
+		FBX,PMX
+	};
 	class MassSpringModel {
 	private:
 		enum EDGE_TYPE {
@@ -23,12 +26,18 @@ namespace phy {
 			}
 		};
 		std::vector<std::vector<int>>m_Index_group;
-		std::vector<lib::ModelData>m_Vertex;
+		std::vector<lib::ModelParam>m_Vertex;
 		std::vector<UINT>m_Index;
 		std::vector<int> m_Result;
+		MODEL_FILE m_File_type;
 		EDGE_TYPE m_Edge_type;
 	public:
-		MassSpringModel(std::vector<lib::ModelData>& vertex, std::vector<UINT>& index, std::vector<std::vector<int>>& index_group);
+		MassSpringModel(
+			MODEL_FILE model_type,
+			std::vector<lib::ModelParam>& vertex,
+			std::vector<UINT>& index,
+			std::vector<std::vector<int>>& index_group
+		);
 		std::vector<int> create(int num);
 		~MassSpringModel();
 	private:

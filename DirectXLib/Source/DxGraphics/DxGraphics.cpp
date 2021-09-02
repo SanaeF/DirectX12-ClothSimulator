@@ -39,8 +39,9 @@ namespace lib {
 	}
 
 
-	int DxGraphics::load3D(const char* path) {
-		m_Graphics3D->loadFbx(path, *m_Pipeline3D);
+	int DxGraphics::load3D(const wchar_t* path) {
+		//m_Graphics3D->loadFbx(path, *m_Pipeline3D);
+		m_Graphics3D->loadPmx(path, *m_Pipeline3D);
 		return 0;
 	}
 

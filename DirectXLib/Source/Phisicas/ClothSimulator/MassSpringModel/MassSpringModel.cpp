@@ -2,10 +2,17 @@
 #include "../../../VectorMath/VectorMath.h"
 
 namespace phy {
-	MassSpringModel::MassSpringModel(std::vector<lib::ModelData>& vertex, std::vector<UINT>& index, std::vector<std::vector<int>>& index_group) :
+	MassSpringModel::MassSpringModel(
+		MODEL_FILE model_type, 
+		std::vector<lib::ModelParam>& vertex,
+		std::vector<UINT>& index,
+		std::vector<std::vector<int>>& index_group
+	) :
+		m_File_type(model_type),
 		m_Vertex(vertex),
 		m_Index(index),
-		m_Index_group(index_group) {
+		m_Index_group(index_group)
+	{
 		m_Result.resize(8);
 	}
 	std::vector<int> MassSpringModel::create(int num) {
@@ -69,7 +76,17 @@ namespace phy {
 		if (related_index.count == 3)return EDGE_TYPE::CORNER;//角でした。
 		if (related_index.count == 5)return EDGE_TYPE::EDGE;//辺だよ。
 		if (related_index.count == 8)return EDGE_TYPE::NONE;//結局、端じゃない
-		assert(0 && "布シミュレーターに対応出来ないモデルを使用しています。ヒント:ポリゴンは四角形で生成する。");
+		if (m_File_type == MODEL_FILE::FBX) {
+			if (related_index.count == 3)return EDGE_TYPE::CORNER;//角でした。
+			if (related_index.count == 5)return EDGE_TYPE::EDGE;//辺だよ。
+			if (related_index.count == 8)return EDGE_TYPE::NONE;//結局、端じゃない
+		}
+		if (m_File_type == MODEL_FILE::PMX) {
+			if (related_index.count == 3)return EDGE_TYPE::CORNER;//角でした。
+			if (related_index.count == 5)return EDGE_TYPE::EDGE;//辺だよ。
+			if (related_index.count == 8)return EDGE_TYPE::NONE;//結局、端じゃない
+		}
+		assert(0 && "布シミュレーターに対応出来ないモデルを使用しています。ごめんね");
 		return EDGE_TYPE::INDEX_ERROR;
 	}
 	//調べている頂点番号と一致するインデックス番号を全て取得
@@ -93,36 +110,44 @@ namespace phy {
 		MassSpringModel::loadRelatedIndex(int vertex_id, IndexData& all_index) {
 		IndexData data;
 		data.reset(48);
-		//取得したインデックスに対応するポリゴンの全てのインデックスを取得
-		for (int ite = 0; ite < all_index.count; ite++) {
-			if (all_index.constant[ite] != -1) {
-				int id = all_index.constant[ite] % 6;
-				for (int ite2 = 0; ite2 < 6; ite2++) {
-					auto id2 = all_index.constant[ite] - id + ite2;
-					//同一のインデックスを除外
-					bool is_input = true;
-					for (int ite3 = 0; ite3 < data.count; ite3++) {
-						if (m_Index[id2] == m_Index[data.constant[ite3]]) {
-							is_input = false;
-							break;
+		if (m_File_type == MODEL_FILE::FBX) {
+			//取得したインデックスに対応するポリゴンの全てのインデックスを取得
+			for (int ite = 0; ite < all_index.count; ite++) {
+				if (all_index.constant[ite] != -1) {
+					int id = all_index.constant[ite] % 6;
+					for (int ite2 = 0; ite2 < 6; ite2++) {
+						auto id2 = all_index.constant[ite] - id + ite2;
+						//同一のインデックスを除外
+						bool is_input = true;
+						for (int ite3 = 0; ite3 < data.count; ite3++) {
+							if (m_Index[id2] == m_Index[data.constant[ite3]]) {
+								is_input = false;
+								break;
+							}
 						}
-					}
-					if (is_input)for (int ite3 = 0; ite3 < all_index.count; ite3++) {
-						if (m_Index[id2] == m_Index[all_index.constant[ite3]]) {
-							is_input = false;
-							break;
+						if (is_input)for (int ite3 = 0; ite3 < all_index.count; ite3++) {
+							if (m_Index[id2] == m_Index[all_index.constant[ite3]]) {
+								is_input = false;
+								break;
+							}
 						}
+						if (is_input) {
+							if (m_Index[id2] == vertex_id)is_input = false;
+						}
+						if (!is_input)continue;
+						data.constant[data.count] = id2;
+						data.count++;
 					}
-					if (is_input){
-						if (m_Index[id2] == vertex_id)is_input = false;
-					}
-					if (!is_input)continue;
-					data.constant[data.count] = id2;
-					data.count++;
 				}
 			}
+			return data;
 		}
-		return data;
+		if (m_File_type == MODEL_FILE::PMX) {
+			//頂点が同一のインデックスに対応する三角形のインデックス番号をすべて取得する
+			for (int ite = 0; ite < all_index.count; ite++) {
+
+			}
+		}
 	}
 	//十字方向の質点を取得
 	std::vector<int>

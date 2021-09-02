@@ -9,9 +9,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="DirectXlib">
-      <UniqueIdentifier>{3c5784f3-a2dc-42c6-863b-b69a32b19001}</UniqueIdentifier>
-    </Filter>
     <Filter Include="リソース ファイル\Shader3D">
       <UniqueIdentifier>{2f607565-c00d-486e-b520-277fb629f7af}</UniqueIdentifier>
     </Filter>
@@ -30,113 +27,119 @@
     <Filter Include="Source\Application">
       <UniqueIdentifier>{2675d0ef-8165-4f22-8956-24d2162be7da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Shader">
+    <Filter Include="DirectXLib">
+      <UniqueIdentifier>{3c5784f3-a2dc-42c6-863b-b69a32b19001}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Shader">
       <UniqueIdentifier>{ba9f0c14-e39d-4a1f-b271-d711d0add70d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Shader\Shader2D">
+    <Filter Include="DirectXLib\Shader\Shader2D">
       <UniqueIdentifier>{7b16cca9-ddb0-4058-b433-bd654d51a605}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Shader\Shader3D">
+    <Filter Include="DirectXLib\Shader\Shader3D">
       <UniqueIdentifier>{24bc8644-8c9d-4870-8c1d-d2ed92f02596}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Shader\Shader3D\Cloth">
+    <Filter Include="DirectXLib\Shader\Shader3D\Cloth">
       <UniqueIdentifier>{40726b60-22cf-45ba-9910-1b779e4b92fd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source">
+    <Filter Include="DirectXLib\Source">
       <UniqueIdentifier>{f1f5e86e-4bc3-47a1-a33e-316d729f0f38}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DirectX12Manager">
+    <Filter Include="DirectXLib\Source\DirectX12Manager">
       <UniqueIdentifier>{3c284018-b148-4305-b310-bc63670806f3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxKeyConfig">
+    <Filter Include="DirectXLib\Source\DxKeyConfig">
       <UniqueIdentifier>{a14e51f7-199c-4c50-8e38-d15ba73a49b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxSound">
+    <Filter Include="DirectXLib\Source\DxSound">
       <UniqueIdentifier>{4ee94fb2-8c45-47a6-a178-31b4c911a422}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxSound\InputWavData">
+    <Filter Include="DirectXLib\Source\DxSound\InputWavData">
       <UniqueIdentifier>{c053450e-584a-422d-a3ce-a822bf0d3005}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics">
+    <Filter Include="DirectXLib\Source\DxGraphics">
       <UniqueIdentifier>{ad283a5c-9d05-4621-adb7-476c7779c5dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics2D">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics2D">
       <UniqueIdentifier>{3e05c707-d49e-4752-99a8-27f61befef50}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex">
       <UniqueIdentifier>{c19fe574-10d5-4e65-b14b-5d6beb2a5151}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex">
       <UniqueIdentifier>{89c7f76a-6a63-4d89-8255-09d1a0dd89fc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture">
       <UniqueIdentifier>{970e3307-acd5-45bd-ba30-10c625532ec9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics3D">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D">
       <UniqueIdentifier>{4bac114d-d7b5-4708-a113-5bc1321ff1fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics3D\ModelData">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData">
       <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics3D\ModelLoader">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader">
       <UniqueIdentifier>{8a4f9494-449e-4ea2-8506-e71a8d2a4228}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel">
       <UniqueIdentifier>{411c09b7-1758-4e91-89a7-42d849aaa829}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphicsPipeline">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel">
+      <UniqueIdentifier>{93761f1f-26d4-474a-ba5a-cd30e9f0eed3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline">
       <UniqueIdentifier>{cd4de91b-083e-4ed8-bc89-3d5045108673}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\ViewPort">
+    <Filter Include="DirectXLib\Source\DxGraphics\ViewPort">
       <UniqueIdentifier>{e74309aa-e84c-4945-b1e1-c6aa70849ca5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxGraphicsMatrix">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix">
       <UniqueIdentifier>{1cb3c099-307c-4f6d-9eef-ccdcf9f20915}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\UploadTexture">
+    <Filter Include="DirectXLib\Source\DxGraphics\UploadTexture">
       <UniqueIdentifier>{4b5ed0c5-a861-46ad-bea9-98a33f19f5d6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\DxGraphics\DxRootSignature">
+    <Filter Include="DirectXLib\Source\DxGraphics\DxRootSignature">
       <UniqueIdentifier>{68e59725-0a7b-4ac1-9cd5-ed603b24dbc4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas">
+    <Filter Include="DirectXLib\Source\Phisicas">
       <UniqueIdentifier>{94def666-6e5a-4b83-982c-1f523a8620b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator">
       <UniqueIdentifier>{464cda8e-39c0-4522-924d-144ebac3b0a0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\ClothData">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData">
       <UniqueIdentifier>{0ddcd82c-2fb4-4157-8716-8220dd2f7795}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\MassSpringModel">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel">
       <UniqueIdentifier>{9f79db48-4c67-40c5-ba42-008185a5200f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator">
       <UniqueIdentifier>{0a7ba1ab-c3fe-4019-b3a3-606a92f4ff9a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider">
       <UniqueIdentifier>{cdfaf14a-5019-414c-915f-99db3b4201bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\VectorMath">
-      <UniqueIdentifier>{81005658-491d-4fa1-a7db-5e3693c70094}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXlib\Source\ShaderManager">
-      <UniqueIdentifier>{74eaf55d-b7f0-4a48-ac3a-392fda17c11c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXlib\Source\ShaderManager\ComputeShader">
-      <UniqueIdentifier>{f6321a12-1351-4b6b-befa-bef9408e6c8a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXlib\Source\LibHelper">
-      <UniqueIdentifier>{ec29b673-5c70-4c97-b57c-96bcfb91ab79}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring">
       <UniqueIdentifier>{3d3f255d-964e-496a-8558-299921ea3137}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring">
       <UniqueIdentifier>{98778358-1e61-49bf-993f-09e465cc605d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring">
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring">
       <UniqueIdentifier>{d14c7726-6f2c-4055-a8cb-f334cef2263b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\VectorMath">
+      <UniqueIdentifier>{81005658-491d-4fa1-a7db-5e3693c70094}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\ShaderManager">
+      <UniqueIdentifier>{74eaf55d-b7f0-4a48-ac3a-392fda17c11c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\ShaderManager\ComputeShader">
+      <UniqueIdentifier>{f6321a12-1351-4b6b-befa-bef9408e6c8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\LibHelper">
+      <UniqueIdentifier>{ec29b673-5c70-4c97-b57c-96bcfb91ab79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -144,91 +147,94 @@
       <Filter>Source\Application</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DirectX12Manager\DirectX12Manager.h">
-      <Filter>DirectXlib\Source\DirectX12Manager</Filter>
+      <Filter>DirectXLib\Source\DirectX12Manager</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxKeyConfig\DxKeyConfig.h">
-      <Filter>DirectXlib\Source\DxKeyConfig</Filter>
+      <Filter>DirectXLib\Source\DxKeyConfig</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxSound\DxSound.h">
-      <Filter>DirectXlib\Source\DxSound</Filter>
+      <Filter>DirectXLib\Source\DxSound</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.h">
-      <Filter>DirectXlib\Source\DxSound\InputWavData</Filter>
+      <Filter>DirectXLib\Source\DxSound\InputWavData</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics.h">
-      <Filter>DirectXlib\Source\DxGraphics</Filter>
+      <Filter>DirectXLib\Source\DxGraphics</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\ViewPort\DxGraphicsViewPort.h">
-      <Filter>DirectXlib\Source\DxGraphics\ViewPort</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\ViewPort</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2D.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DVertex.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex\DxGraph2DIndex.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix\DxGraphicsMatrix.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphicsMatrix</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphicsMatrix</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\DxGraphics3D.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics3D</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture\DxGraphics2DTexture.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\UploadTexture\UploadTexture.h">
-      <Filter>DirectXlib\Source\DxGraphics\UploadTexture</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\UploadTexture</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline\DxGraphicsPipeline.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphicsPipeline</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphicsPipeline</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxRootSignature\DxRootSignature.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxRootSignature</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxRootSignature</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics3D\ModelData</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.h">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\VectorMath\VectorMath.h">
-      <Filter>DirectXlib\Source\VectorMath</Filter>
+      <Filter>DirectXLib\Source\VectorMath</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\ClothData</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothData</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\MassSpringModel</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\ShaderManager\ShaderManager.h">
-      <Filter>DirectXlib\Source\ShaderManager</Filter>
+      <Filter>DirectXLib\Source\ShaderManager</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\ShaderManager\ComputeShader\ComputeShader.h">
-      <Filter>DirectXlib\Source\ShaderManager\ComputeShader</Filter>
+      <Filter>DirectXLib\Source\ShaderManager\ComputeShader</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h">
-      <Filter>DirectXlib\Source\LibHelper</Filter>
+      <Filter>DirectXLib\Source\LibHelper</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.h">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.h">
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -239,113 +245,119 @@
       <Filter>Source\Application</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DirectX12Manager\DirectX12Manager.cpp">
-      <Filter>DirectXlib\Source\DirectX12Manager</Filter>
+      <Filter>DirectXLib\Source\DirectX12Manager</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxKeyConfig\DxKeyConfig.cpp">
-      <Filter>DirectXlib\Source\DxKeyConfig</Filter>
+      <Filter>DirectXLib\Source\DxKeyConfig</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxSound\DxSound.cpp">
-      <Filter>DirectXlib\Source\DxSound</Filter>
+      <Filter>DirectXLib\Source\DxSound</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.cpp">
-      <Filter>DirectXlib\Source\DxSound\InputWavData</Filter>
+      <Filter>DirectXLib\Source\DxSound\InputWavData</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics.cpp">
-      <Filter>DirectXlib\Source\DxGraphics</Filter>
+      <Filter>DirectXLib\Source\DxGraphics</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\ViewPort\DxGraphicsViewPort.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\ViewPort</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\ViewPort</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2D.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DVertex.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex\DxGraph2DIndex.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraph2DVertex\DxGraph2DIndex</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix\DxGraphicsMatrix.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphicsMatrix</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphicsMatrix</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\DxGraphics3D.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics3D</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture\DxGraphics2DTexture.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\UploadTexture\UploadTexture.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\UploadTexture</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\UploadTexture</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline\DxGraphicsPipeline.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphicsPipeline</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphicsPipeline</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxRootSignature\DxRootSignature.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxRootSignature</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxRootSignature</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.cpp">
-      <Filter>DirectXlib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\VectorMath\VectorMath.cpp">
-      <Filter>DirectXlib\Source\VectorMath</Filter>
+      <Filter>DirectXLib\Source\VectorMath</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\MassSpringModel</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\ShaderManager\ShaderManager.cpp">
-      <Filter>DirectXlib\Source\ShaderManager</Filter>
+      <Filter>DirectXLib\Source\ShaderManager</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\ShaderManager\ComputeShader\ComputeShader.cpp">
-      <Filter>DirectXlib\Source\ShaderManager\ComputeShader</Filter>
+      <Filter>DirectXLib\Source\ShaderManager\ComputeShader</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp">
-      <Filter>DirectXlib\Source\LibHelper</Filter>
+      <Filter>DirectXLib\Source\LibHelper</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.cpp">
-      <Filter>DirectXlib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.cpp">
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.cpp">
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
-      <Filter>DirectXlib\Shader\Shader3D</Filter>
+      <Filter>DirectXLib\Shader\Shader3D</Filter>
     </None>
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothData.hlsli">
-      <Filter>DirectXlib\Shader\Shader3D\Cloth</Filter>
+      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </None>
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli">
-      <Filter>DirectXlib\Shader\Shader2D</Filter>
+      <Filter>DirectXLib\Shader\Shader2D</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
-      <Filter>DirectXlib\Shader\Shader3D</Filter>
+      <Filter>DirectXLib\Shader\Shader3D</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Vertex3D.hlsl">
-      <Filter>DirectXlib\Shader\Shader3D</Filter>
+      <Filter>DirectXLib\Shader\Shader3D</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothCollider.hlsl">
-      <Filter>DirectXlib\Shader\Shader3D\Cloth</Filter>
+      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader2D\Pixel2D.hlsl">
-      <Filter>DirectXlib\Shader\Shader2D</Filter>
+      <Filter>DirectXLib\Shader\Shader2D</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader2D\Vertex2D.hlsl">
-      <Filter>DirectXlib\Shader\Shader2D</Filter>
+      <Filter>DirectXLib\Shader\Shader2D</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

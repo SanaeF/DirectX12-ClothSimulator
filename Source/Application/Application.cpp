@@ -24,7 +24,7 @@ void Application::run() {
 	int imageHandle[2];//ハンドル
 	int HandleLif;
 	int MusicHandle;
-	m_Graphics->load3D("./model/testcloth.fbx");//./model/skirt2.fbx - testcloth
+	m_Graphics->load3D(L"./model/制服JK(素体&モデル)v0.61/素体_制服JK_ベスト.pmx");//./model/skirt/SchoolSkirt.pmx/./model/制服JK(素体&モデル)v0.61/素体_制服JK_ベスト.pmx
 	//imageHandle[0] = Graph->Load2D(L"./dat/back.png");//2D画像ロード
 	//imageHandle[1] = Graph->Load2D(L"./dat/titleback.png");
 	//HandleLif = Graph->Load2D(L"./dat/Bullet02.png");
@@ -33,7 +33,7 @@ void Application::run() {
 	m_Sound->setVolume(-3000, MusicHandle);
 	bool isSimulate = false;
 	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
-	m_Graphics->setupClothSimulator(0);
+	//m_Graphics->setupClothSimulator(0);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -50,7 +50,7 @@ void Application::run() {
 		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
 		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
 		m_Graphics->draw3D(Move[0], Move[1], 6000 + Move[2], 1, angle);
-		if (isSimulate)m_Graphics->clothSimProc(0);
+		//if (isSimulate)m_Graphics->clothSimProc(0);
 		//isSimulate = false;
 		m_Graphics->screenFlip();//スワップチェイン
 

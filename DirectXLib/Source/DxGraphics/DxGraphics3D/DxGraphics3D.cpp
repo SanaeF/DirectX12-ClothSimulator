@@ -1,5 +1,6 @@
 #include "DxGraphics3D.h"
 #include "ModelLoader/FbxModel/FbxModel.h"
+#include "ModelLoader/PmxModel/PmxModel.h"
 #include "../../DirectX12Manager/DirectX12Manager.h"
 #include "../DxGraphicsMatrix/DxGraphicsMatrix.h"
 #include "../DxRootSignature/DxRootSignature.h"
@@ -18,19 +19,41 @@ namespace lib {
 		m_Texture->rootSignatureDescProp();
 		m_Texture->shaderResourceViewDescProp();
 	}
-	int DxGraphics3D::loadFbx(const char* path,libGraph::DxGraphicsPipeline& pipeline) {
+	//int DxGraphics3D::loadFbx(const char* path,libGraph::DxGraphicsPipeline& pipeline) {
+	//	int handleID = 0;
+	//	m_Model_data.resize(handleID + 1);
+	//	m_Texture->loadWIC(L"./model/skirt/skirt.png");
+	//	m_Texture->createResource(m_Dx12);
+	//	pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
+	//	m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
+	//	model::FbxModel obj;
+	//	obj.load(path); //obj.load("./model/skirt2.fbx");testcloth
+	//	auto data = obj.getModelData();
+	//	data.createViewBuffer(m_Dx12->device(), data);
+	//	//obj.setClothSimulator(mDx12->Device());
+	//	data = obj.getModelData();
+	//	m_Model_data[handleID].vertex = data.vertex;
+	//	m_Model_data[handleID].pre_vertex = data.vertex;
+	//	m_Model_data[handleID].vb = data.vertex_buffer;
+	//	m_Model_data[handleID].vb_view = data.vb_view;
+	//	m_Model_data[handleID].index = data.index;
+	//	m_Model_data[handleID].ib = data.index_buffer;
+	//	m_Model_data[handleID].ib_view = data.ib_view;
+	//	m_Model_data[handleID].index_group = data.index_group;
+	//	return -1;
+	//}
+	int DxGraphics3D::loadPmx(const std::wstring& file_path, libGraph::DxGraphicsPipeline& pipeline) {
 		int handleID = 0;
 		m_Model_data.resize(handleID + 1);
 		m_Texture->loadWIC(L"./model/skirt/skirt.png");
 		m_Texture->createResource(m_Dx12);
 		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
 		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
-		model::FbxModel obj;
-		obj.load(path); //obj.load("./model/skirt2.fbx");testcloth
-		auto data = obj.getModelData();
-		obj.createViewBuffer(m_Dx12->device(), data);
+		model::PmxModel obj;
+		obj.loadFile(file_path); //obj.load("./model/skirt2.fbx");testcloth
+		auto data = lib::ModelData::Object;
+		data.createViewBuffer(m_Dx12->device());
 		//obj.setClothSimulator(mDx12->Device());
-		data = obj.getModelData();
 		m_Model_data[handleID].vertex = data.vertex;
 		m_Model_data[handleID].pre_vertex = data.vertex;
 		m_Model_data[handleID].vb = data.vertex_buffer;
@@ -132,17 +155,15 @@ namespace lib {
 			m_Model_data[Handle].pre_index,
 			m_Model_data[Handle].spring_data
 		);
-		model::FbxModel obj;
-		model::FbxModel::ModelData data;
+		ModelData data;
 		data.ib_view = m_Model_data[Handle].ib_view;
 		data.index = m_Model_data[Handle].index;
 		//data.index_buffer = mModelData[Handle].IB;
 		data.vb_view = m_Model_data[Handle].vb_view;
 		data.vertex = m_Model_data[Handle].vertex;
 		//data.vertex_buffer = mModelData[Handle].VB;
-		obj.createViewBuffer(m_Dx12->device(), data);
+		data.createViewBuffer(m_Dx12->device());
 
-		data = obj.getModelData();
 		m_Model_data[Handle].vertex = data.vertex;
 		m_Model_data[Handle].vb = data.vertex_buffer;
 		m_Model_data[Handle].vb_view = data.vb_view;
@@ -152,17 +173,15 @@ namespace lib {
 	}
 	void DxGraphics3D::resetClothPhis(int Handle) {
 		phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
-		model::FbxModel obj;
-		model::FbxModel::ModelData data;
+		ModelData data;
 		data.ib_view = m_Model_data[Handle].ib_view;
 		data.index = m_Model_data[Handle].index;
 		//data.index_buffer = mModelData[Handle].IB;
 		data.vb_view = m_Model_data[Handle].vb_view;
 		data.vertex = m_Model_data[Handle].pre_vertex;
 		//data.vertex_buffer = mModelData[Handle].VB;
-		obj.createViewBuffer(m_Dx12->device(), data);
+		data.createViewBuffer(m_Dx12->device());
 
-		data = obj.getModelData();
 		m_Model_data[Handle].vertex = data.vertex;
 		m_Model_data[Handle].vb = data.vertex_buffer;
 		m_Model_data[Handle].vb_view = data.vb_view;

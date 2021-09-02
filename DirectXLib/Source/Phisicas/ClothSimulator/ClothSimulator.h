@@ -11,13 +11,13 @@ namespace phy {
 	public:
 		ClothSimulator();
 		//質点モデル-インデックスIDの生成用初期化
-		ClothSimulator(std::vector<lib::ModelData> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group);
+		ClothSimulator(std::vector<lib::ModelParam> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group);
 		static void resetPower(std::vector<SpringData>& spring_data);
 		//物理演算の計算を更新
 		static void update(
-			std::vector<lib::ModelData>& vertex,
+			std::vector<lib::ModelParam>& vertex,
 			std::vector<UINT> index,
-			std::vector<lib::ModelData> pre_vertex,
+			std::vector<lib::ModelParam> pre_vertex,
 			std::vector<std::vector<int>> pre_index_id,
 			std::vector<SpringData>& spring_data
 		);

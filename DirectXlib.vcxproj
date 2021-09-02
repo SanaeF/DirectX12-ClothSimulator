@@ -85,10 +85,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>F:\DirectX\DirectXTex-master\DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\DirectXTex-master\DirectXTex</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>F:\DirectX\DirectXTex-master\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.1.1\lib\vs2017\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)\DirectXTex-master\DirectXTex\Bin\Desktop_2019_Win10\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -131,7 +131,9 @@
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2D.cpp" />
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics2D\DxGraphics2DTexture\DxGraphics2DTexture.cpp" />
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\DxGraphics3D.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.cpp" />
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.cpp" />
+    <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.cpp" />
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix\DxGraphicsMatrix.cpp" />
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline\DxGraphicsPipeline.cpp" />
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxRootSignature\DxRootSignature.cpp" />
@@ -164,6 +166,7 @@
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\DxGraphics3D.h" />
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.h" />
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.h" />
+    <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.h" />
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphicsMatrix\DxGraphicsMatrix.h" />
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphicsPipeline\DxGraphicsPipeline.h" />
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxRootSignature\DxRootSignature.h" />
