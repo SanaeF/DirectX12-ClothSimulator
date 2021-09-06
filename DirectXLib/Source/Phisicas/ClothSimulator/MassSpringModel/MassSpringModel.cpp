@@ -18,7 +18,6 @@ namespace phy {
 	std::vector<int> MassSpringModel::create(int num) {
 		for (int ite = 0; ite < 8; ite++)m_Result[ite] = -1;
 		createMatrix3x3(num);
-		createOutOfP4(num);
 		return m_Result;
 	}
 	//3x3行列の質点モデルを生成
@@ -27,48 +26,25 @@ namespace phy {
 		auto all_index = loadAllIndex(vertex_id);
 		//自身以外の周囲(3x3)のインデックスを取得
 		auto related_index = loadRelatedIndex(vertex_id, all_index);
+		if (m_File_type == MODEL_FILE::PMX)related_index = loadMoreRelatedIndex(vertex_id, related_index);
 		//周囲(3x3)のインデックス数に応じてタイプを分ける
 		m_Edge_type = pointType(all_index, related_index);
-		//中心から十字方向のインデックスと、4つ角のインデックスを生成
-		std::vector<int> nearest_index;
-		std::vector<int> corners_index;
-		if (m_Edge_type == EDGE_TYPE::CORNER) {//角の場合(推定6個のインデックス)
-			nearest_index = loadNearestIndex(2, vertex_id, related_index);//2個の最寄質点を取得
-			corners_index = loadCorners(1, related_index, nearest_index);
+		//角の場合(推定 vertex_id + 3 個の頂点)
+		if (m_Edge_type == EDGE_TYPE::CORNER) {
+			for (int ite = 0; ite < 2; ite++)m_Result[ite] = m_Index[related_index.constant[ite]];
+			m_Result[4] = m_Index[related_index.constant[3]];
 		}
-		if (m_Edge_type == EDGE_TYPE::EDGE) {//端の場合(推定12個のインデックス)
-			nearest_index = loadNearestIndex(3, vertex_id, related_index);//3個の最寄質点を取得
-			corners_index = loadCorners(2, related_index, nearest_index);
+		//端の場合(推定 vertex_id + 5 個の頂点)
+		if (m_Edge_type == EDGE_TYPE::EDGE) {
+			for (int ite = 0; ite < 3; ite++)m_Result[ite] = m_Index[related_index.constant[ite]];
+			for (int ite = 0; ite < 2; ite++)m_Result[4 + ite] = m_Index[related_index.constant[3 + ite]];
 		}
-		if (m_Edge_type == EDGE_TYPE::NONE) {//端でない場合(推定24個のインデックス)
-			nearest_index = loadNearestIndex(4, vertex_id, related_index);//4個の最寄質点を取得
-			corners_index = loadCorners(4, related_index, nearest_index);
+		//端でない場合(推定 vertex_id + 8 個の頂点)
+		if (m_Edge_type == EDGE_TYPE::NONE) {
+			for (int ite = 0; ite < related_index.constant.size(); ite++) {
+				m_Result[ite] = m_Index[related_index.constant[ite]];
+			}
 		}
-		//出力用のベクター配列に格納
-		for (int ite = 0; ite < nearest_index.size(); ite++) {
-			m_Result[ite] = m_Index[nearest_index[ite]];
-		}
-		for (int ite = 0; ite < corners_index.size(); ite++) {
-			m_Result[4 + ite] = m_Index[corners_index[ite]];
-		}
-	}
-	//3x3行列外にある4つのの質点モデルを生成
-	void MassSpringModel::createOutOfP4(int vertex_id) {
-		//int point_num = 0;
-		//if (m_Edge_type == EDGE_TYPE::CORNER)point_num = 2;
-		//if (m_Edge_type == EDGE_TYPE::EDGE)point_num = 3;
-		//if (m_Edge_type == EDGE_TYPE::NONE)point_num = 4;
-		//for (int ite = 0; ite < point_num; ite++) {
-		//	//対応する全インデックスを取得
-		//	auto all_index = loadAllIndex(m_Result[ite]);
-		//	//自身以外の周囲(3x3)のインデックスを取得
-		//	auto related_index = loadRelatedIndex(m_Result[ite], all_index);
-		//	//3x3のインデックスを除外
-		//	auto data = exclusionMatrix3x3(vertex_id, related_index.constant);
-		//	//中心から近いインデックス
-		//	auto nearest_index = loadNearestIndex(data.count, vertex_id, data);
-		//	if (nearest_index.size() != 0)m_Result[8 + ite] = m_Index[nearest_index[0]];
-		//}
 	}
 	//端かどうかを調べる
 	MassSpringModel::EDGE_TYPE
@@ -76,29 +52,20 @@ namespace phy {
 		if (related_index.count == 3)return EDGE_TYPE::CORNER;//角でした。
 		if (related_index.count == 5)return EDGE_TYPE::EDGE;//辺だよ。
 		if (related_index.count == 8)return EDGE_TYPE::NONE;//結局、端じゃない
-		if (m_File_type == MODEL_FILE::FBX) {
-			if (related_index.count == 3)return EDGE_TYPE::CORNER;//角でした。
-			if (related_index.count == 5)return EDGE_TYPE::EDGE;//辺だよ。
-			if (related_index.count == 8)return EDGE_TYPE::NONE;//結局、端じゃない
-		}
-		if (m_File_type == MODEL_FILE::PMX) {
-			if (related_index.count == 3)return EDGE_TYPE::CORNER;//角でした。
-			if (related_index.count == 5)return EDGE_TYPE::EDGE;//辺だよ。
-			if (related_index.count == 8)return EDGE_TYPE::NONE;//結局、端じゃない
-		}
-		assert(0 && "布シミュレーターに対応出来ないモデルを使用しています。ごめんね");
+		//assert(0 && "布シミュレーターに対応出来ないモデルを使用しています。ごめんね");
 		return EDGE_TYPE::INDEX_ERROR;
 	}
 	//調べている頂点番号と一致するインデックス番号を全て取得
 	MassSpringModel::IndexData
 		MassSpringModel::loadAllIndex(int vertex_id) {
 		IndexData data;
-		data.reset(12);
+		data.reset(m_Index_group[vertex_id].size());
 		//仮想頂点用のインデックスを初期化(-1を代入)
-		for (int ite = 0; ite < 6; ite++) {
+		for (int ite = 0; ite < data.constant.size(); ite++) {
 			data.constant[ite] = -1;
 		}
 		//調べている頂点番号と一致するインデックス番号を確保
+		auto max = m_Index_group[vertex_id].size();
 		for (int num = 0; num < m_Index_group[vertex_id].size(); num++) {
 			data.constant[data.count] = m_Index_group[vertex_id][num];
 			data.count++;
@@ -145,35 +112,77 @@ namespace phy {
 		if (m_File_type == MODEL_FILE::PMX) {
 			//頂点が同一のインデックスに対応する三角形のインデックス番号をすべて取得する
 			for (int ite = 0; ite < all_index.count; ite++) {
-
+				for (int ite2 = 0; ite2 < 3; ite2++) {
+					auto new_id = all_index.constant[ite] - (all_index.constant[ite] % 3) + ite2;
+					//取得済みデータの中から一致しているデータがあるかを取得し、除外する
+					bool is_input = true;
+					if (new_id < 0)continue;
+					if (vertex_id == m_Index[new_id])is_input = false;
+					for (int ite3 = 0; ite3 < data.constant.size(); ite3++) {
+						if (data.constant[ite3] < 0)break;
+						if (m_Index[data.constant[ite3]] == m_Index[new_id]) {
+							is_input = false;
+							break;
+						}
+					}
+					if (is_input) {
+						data.constant[data.count] = new_id;
+						data.count++;
+					}
+				}
 			}
 		}
+		return data;
+	}
+	//取得したインデックスからさらに対応する三角形のインデックスを取得する
+	MassSpringModel::IndexData 
+	MassSpringModel::loadMoreRelatedIndex(int vertex_id, IndexData& related_index) {
+		IndexData data;
+		data.reset(m_Vertex.size());
+		//引数のインデックスリストから、対応する三角形のインデックスを取得する
+		for (int ite = 0; ite < related_index.count; ite++) {
+			auto id = m_Index[related_index.constant[ite]];
+			auto all_index2 = loadAllIndex(id);
+			auto related_index2 = loadRelatedIndex(id, all_index2);
+			for (int ite2 = 0; ite2 < related_index2.count; ite2++) {
+				data.constant[data.count] = related_index2.constant[ite2];
+				data.count++;
+			}
+		}
+		//引数のインデックスをリストに加える
+		for (int ite = 0; ite < related_index.count; ite++) {
+			data.constant[data.count] = related_index.constant[ite];
+			data.count++;
+		}
+		//同一インデックスを除外
+		for (int ite = 0; ite < data.count; ite++) {
+			for (int ite2 = 0; ite2 < data.count; ite2++) {
+				if (ite == ite2)continue;
+				if (data.constant[ite] < 0 || data.constant[ite2] < 0)continue;
+				auto id1 = m_Index[data.constant[ite]];
+				auto id2 = m_Index[data.constant[ite2]];
+				if (id1 == id2 || id1 == vertex_id) {
+					data.constant[ite] = -1;
+					break;
+				}
+			}
+		}
+		int num = 0;
+		if (related_index.count == 2)num = 3;
+		if (related_index.count == 4)num = 5;
+		if (related_index.count == 6)num = 8;
+		auto result = sortIndex(vertex_id, data);
+		return result;
 	}
 	//十字方向の質点を取得
 	std::vector<int>
 		MassSpringModel::loadNearestIndex(int num, int target_index, IndexData& related_index) {
 		IndexData result;
-		result.reset(related_index.count);
-		std::vector<float> distance(related_index.count);
-		//頂点番号同士の座標が近い順で並び変える
-		for (int ite = 0; ite < related_index.count; ite++) {
-			auto dist = lib::VectorMath::distance(
-				m_Vertex[target_index].position, m_Vertex[m_Index[related_index.constant[ite]]].position
-			);
-			//頂点が近い順に並び替え
-			for (int ite2 = 0; ite2 < related_index.count; ite2++) {
-				if (distance[ite2] == 0 || distance[ite2] > dist) {
-					for (int ite3 = 0; ite3 < num; ite3++) {
-						auto cid = num - ite3 - 2;
-						if (cid < 0)continue;
-						result.constant[cid + 1] = result.constant[cid];
-					}
-					result.constant[ite2] = related_index.constant[ite];
-					break;
-				}
-			}
+		result.reset(num);
+		auto sort_data = sortIndex(target_index, related_index);
+		for (int ite = 0; ite < num; ite++) {
+			result.constant[ite] = sort_data.constant[ite];
 		}
-		result.constant.resize(num);
 		return result.constant;
 	}
 	//調べた十字方向の質点以外を取得
@@ -220,6 +229,54 @@ namespace phy {
 			}
 		}
 		result.constant.resize(result.count);
+		return result;
+	}
+	MassSpringModel::IndexData 
+		MassSpringModel::sortIndex(int vertex_id, IndexData& data) {
+		//不明データを除外したデータの生成
+		IndexData new_data;
+		new_data.reset(data.constant.size());
+		for (int ite = 0; ite < data.constant.size(); ite++) {
+			if (data.constant[ite] < 0)continue;
+			new_data.constant[new_data.count] = data.constant[ite];
+			new_data.count++;
+		}
+		new_data.constant.resize(new_data.count);
+
+		//距離が遠い順に並べる
+		std::vector<int> sort_data(new_data.count);
+		for (int ite = 0; ite < new_data.count; ite++) {
+			int max_id = 0;
+			float max_dist = 0.f;
+			for (int ite2 = 0; ite2 < new_data.count; ite2++) {
+				//格納データの中から、一致するインデックスIDがあるかどうか
+				bool is_continue = false;
+				for (int ite3 = 0; ite3 < sort_data.size(); ite3++) {
+					if (sort_data[ite3] == new_data.constant[ite2])is_continue = true;
+				}
+				if (is_continue)continue;
+				auto id = m_Index[new_data.constant[ite2]];
+				auto dist = lib::VectorMath::distance(
+					m_Vertex[vertex_id].position, m_Vertex[id].position
+				);
+				//一番距離が遠ければ最大値(IDと距離)を更新する
+				if (max_dist < dist) {
+					max_dist = dist;
+					max_id = new_data.constant[ite2];
+				}
+			}
+			//最大距離のインデックスIDを格納する
+			sort_data[ite] = max_id;
+		}
+
+		IndexData result;
+		result.reset(sort_data.size());
+		for (int ite = 0; ite < sort_data.size(); ite++) {
+			result.constant[sort_data.size() - result.count - 1] = sort_data[ite];
+			result.count++;
+		}
+		result.constant.resize(8);
+		result.count = 8;
 		return result;
 	}
 	MassSpringModel::~MassSpringModel() {

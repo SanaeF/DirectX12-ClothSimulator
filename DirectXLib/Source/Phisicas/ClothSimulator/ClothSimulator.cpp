@@ -12,6 +12,10 @@ namespace phy {
 		m_Pre_IndexID.resize(vertex.size());
 		MassSpringModel ms(MODEL_FILE::PMX,vertex, index, index_group);
 		for (int ite = 0; ite < vertex.size(); ite++) {
+			if (vertex[ite].color.x == 1.f && 
+				vertex[ite].color.y == 0.f && 
+				vertex[ite].color.z == 0.f
+				)continue;
 			auto id_list = ms.create(ite);
 			for (int ite2 = 0; ite2 < 12; ite2++) {
 				m_Pre_IndexID[ite] = id_list;
@@ -32,7 +36,7 @@ namespace phy {
 		std::vector<std::vector<int>> pre_index_id,
 		std::vector<SpringData>& spring_data
 	) {
-		const int step = 10;
+		const int step = 15;
 		SpringForceCalculator force(pre_vertex);
 		//モデル全頂点の力と速度データ受け取り
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);

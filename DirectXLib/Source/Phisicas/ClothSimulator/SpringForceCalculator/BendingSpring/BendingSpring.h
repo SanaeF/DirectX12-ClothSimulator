@@ -4,12 +4,22 @@
 #include "../../ClothData/SpringData.h"
 namespace phy {
 	class BendingSpring {
+	public:
+		float bend; //‹È‚ª‚é‚Ì‚É‚Ç‚Ì‚­‚ç‚¢’ïR‚·‚é‚©
+		float bend_damping;//‹È‚°‹““®‚ÌŒ¸‘¬—Ê
 	private:
 		float m_Shrink;
 		float m_Stretch;
 	public:
 		BendingSpring(float shrink, float stretch);
 		void solver(
+			int vert_id,
+			std::vector<SpringData>& spring_data,
+			std::vector<lib::ModelParam>& vertex,
+			std::vector<lib::ModelParam>& pre_vert,
+			std::vector<std::vector<int>>& pre_index_id
+		);
+		void solver2(
 			int vert_id,
 			std::vector<SpringData>& spring_data,
 			std::vector<lib::ModelParam>& vertex,

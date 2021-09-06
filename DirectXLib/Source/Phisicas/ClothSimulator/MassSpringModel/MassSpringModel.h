@@ -43,18 +43,19 @@ namespace phy {
 	private:
 		//3x3行列の質点モデルを生成
 		void createMatrix3x3(int vertex_id);
-		//3x3行列外にある4つのの質点モデルを生成
-		void createOutOfP4(int vertex_id);
 		//端かどうかを調べる
 		EDGE_TYPE pointType(IndexData& all_index, IndexData& related_index);
 		//調べている頂点番号と一致するインデックス番号を全て取得
 		IndexData loadAllIndex(int vertex_id);
 		//関連のある頂点番号を全て取得
 		IndexData loadRelatedIndex(int vertex_id, IndexData& all_index);
-		//十字方向の質点を取得
+		//取得したインデックスからさらに対応する三角形のインデックスを取得する
+		IndexData loadMoreRelatedIndex(int vertex_id, IndexData& related_index);
+		//最寄りn個の質点を取得
 		std::vector<int> loadNearestIndex(int num, int target_index, IndexData& related_index);
-		//調べた十字方向の質点以外を取得
+		//調べた十字方向の質点を除外した最寄りn個の質点を取得
 		std::vector<int> loadCorners(int num, IndexData& related_index, std::vector<int>& four_point);
 		IndexData exclusionMatrix3x3(int vertex_id, std::vector<int>& out_of_matrix_index);
+		IndexData sortIndex(int vertex_id, IndexData& data);
 	};
 }

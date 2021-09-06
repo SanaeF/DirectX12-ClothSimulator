@@ -4,6 +4,9 @@
 #include "../../ClothData/SpringData.h"
 namespace phy {
 	class ShearSpring {
+	public:
+		float shear; //‚¹‚ñ’f‚·‚é‚Ì‚É‚Ç‚Ì‚­‚ç‚¢’ïR‚·‚é‚©
+		float shear_damping;//‚¹‚ñ’f‚ÌŒ¸‘¬—Ê
 	private:
 		float m_Shrink;
 		float m_Stretch;
@@ -12,6 +15,13 @@ namespace phy {
 		void solver(
 			int vert_id,
 			SpringData& spring_data,
+			std::vector<lib::ModelParam>& vertex,
+			std::vector<lib::ModelParam>& pre_vert,
+			std::vector<std::vector<int>>& pre_index_id
+		);
+		void solver2(
+			int vert_id,
+			std::vector<SpringData>& spring_data,
 			std::vector<lib::ModelParam>& vertex,
 			std::vector<lib::ModelParam>& pre_vert,
 			std::vector<std::vector<int>>& pre_index_id

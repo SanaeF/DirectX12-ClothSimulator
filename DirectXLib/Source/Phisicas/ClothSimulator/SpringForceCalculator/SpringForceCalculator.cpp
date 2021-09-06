@@ -11,8 +11,8 @@ namespace phy {
 	{
 		m_Param.grid_mass = 1.f;
 		m_Param.gravity = 9.8f;
-		m_Param.damping = 0.9f;
-		m_Param.dt = 0.01;
+		m_Param.damping = 0.1f;
+		m_Param.dt = 0.1;
 		m_Param.wind = 25.f;
 		m_Param.spring_constant = 15.f;
 		m_Param.structural.shrink = 15.f;
@@ -25,6 +25,16 @@ namespace phy {
 		m_Structural.reset(new StructuralSpring(15.f, 5.f));
 		m_Shear.reset(new ShearSpring(15.f, 5.f));
 		m_Bending.reset(new BendingSpring(40.f, 0.f));
+
+		m_Structural->tension = 15;
+		m_Structural->compression = 15;
+		m_Shear->shear = 15;
+		m_Bending->bend = 20;
+
+		m_Structural->tension_damping = 25;
+		m_Structural->compression_damping = 15;
+		m_Shear->shear_damping = 15;
+		m_Bending->bend = 3;
 	}
 	void SpringForceCalculator::gravity(
 		int frame, std::vector<lib::ModelParam>& vertex, std::vector<std::vector<int>>& pre_index_id
@@ -53,9 +63,12 @@ namespace phy {
 	) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
+			/*m_Bending->solver2(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
+			m_Structural->solver2(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
+			m_Shear->solver2(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);*/
+			m_Bending->solver(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
 			m_Structural->solver(ite, m_Spring_data[ite], vertex, m_Pre_vertex, pre_index_id);
 			m_Shear->solver(ite, m_Spring_data[ite], vertex, m_Pre_vertex, pre_index_id);
-			m_Bending->solver(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
 		}
 		createNewPosition(vertex);
 	}
