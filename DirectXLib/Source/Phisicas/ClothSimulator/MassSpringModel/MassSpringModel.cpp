@@ -13,10 +13,10 @@ namespace phy {
 		m_Index(index),
 		m_Index_group(index_group)
 	{
-		m_Result.resize(8);
+		m_Result.resize(SPRING_NUM);
 	}
 	std::vector<int> MassSpringModel::create(int num) {
-		for (int ite = 0; ite < 8; ite++)m_Result[ite] = -1;
+		for (int ite = 0; ite < m_Result.size(); ite++)m_Result[ite] = -1;
 		createMatrix3x3(num);
 		return m_Result;
 	}
@@ -212,7 +212,7 @@ namespace phy {
 		MassSpringModel::exclusionMatrix3x3(int vertex_id, std::vector<int>& out_of_matrix_index) {
 		auto data = out_of_matrix_index;
 		for (int ite = 0; ite < data.size(); ite++) {
-			for (int ite2 = 0; ite2 < m_Result.size(); ite2++) {
+			for (int ite2 = 0; ite2 < SPRING_NUM; ite2++) {
 				if (data[ite] == -1)continue;
 				auto id = m_Index[data[ite]];
 				if (id == m_Result[ite2] || id == vertex_id) {

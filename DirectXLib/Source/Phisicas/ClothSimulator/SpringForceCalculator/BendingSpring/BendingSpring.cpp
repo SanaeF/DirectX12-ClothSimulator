@@ -22,8 +22,14 @@ namespace phy {
 				auto id3 = pre_index_id[ite][4 + ite3];
 				if (id3 == -1 || id2 == id3)continue;
 				float Natulength = lib::VectorMath::distance(pre_vert[id2].position, pre_vert[id3].position);//ばねの自然長
-				auto f = calcForce(vertex[id2], vertex[id3], Natulength, 15);
-				f = lib::VectorMath::scale(f, 1 / 3);
+				auto f = calcForce(vertex[id2], vertex[id3], Natulength, bend_damping);
+				auto size = Natulength - lib::VectorMath::distance(vertex[id].position, vertex[id2].position);
+				if (sqrt(size * size) > Natulength) {
+					auto n = lib::VectorMath::subtract(pre_vert[id].position, vertex[id].position);
+					n = lib::VectorMath::normalize(n);//正規化2
+					n = lib::VectorMath::scale(n, bend_damping);
+					f = lib::VectorMath::add(f, n);
+				}
 				spring_data[id2].force = lib::VectorMath::add(spring_data[id2].force, f);
 			}
 		}
@@ -46,10 +52,10 @@ namespace phy {
 				float Natulength = lib::VectorMath::distance(pre_vert[id2].position, pre_vert[id3].position);//ばねの自然長
 				auto f = calcForce(vertex[id2], vertex[id3], Natulength, bend);
 				//ダンピング
-				auto vect_vel = lib::VectorMath::subtract(spring_data[id].velocity, spring_data[id2].velocity);//速度ベクトル
+				auto vect_vel = lib::VectorMath::subtract(spring_data[id2].velocity, spring_data[id].velocity);//速度ベクトル
 				auto f_damp = lib::VectorMath::scale(vect_vel, bend_damping);
 				f = lib::VectorMath::add(f, f_damp);
-				f = lib::VectorMath::scale(f, 1 / 3);
+				//f = lib::VectorMath::scale(f, 1 / 3);
 				spring_data[id2].force = lib::VectorMath::add(spring_data[id2].force, f);
 			}
 		}

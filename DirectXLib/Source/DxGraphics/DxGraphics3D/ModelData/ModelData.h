@@ -3,6 +3,9 @@
 #include <d3dx12.h>
 #include <memory>
 #include <vector>
+
+#define SPRING_NUM (8)//Ž¿“_ƒ‚ƒfƒ‹‚ª3x3
+
 namespace lib {
 	struct ModelParam {
 		DirectX::XMFLOAT3 position;
@@ -92,6 +95,7 @@ namespace lib {
 	public:
 		static ModelData Object;
 		std::vector<lib::ModelParam>vertex;
+		std::vector<lib::ModelParam>pre_vert;
 		std::vector<UINT>index;
 		std::vector<std::vector<int>>index_group;
 		std::vector<std::wstring> texturePaths;

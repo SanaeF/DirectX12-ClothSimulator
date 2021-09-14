@@ -144,10 +144,11 @@
     <ClCompile Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.cpp" />
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\ClothSpringShader.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature\CSRootSignature.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.cpp" />
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothShader\ClothShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.cpp" />
@@ -179,10 +180,11 @@
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\ClothSpringShader.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature\CSRootSignature.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.h" />
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothShader\ClothShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.h" />
@@ -194,6 +196,7 @@
   <ItemGroup>
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -220,6 +223,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothSpring.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothSpring</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClothSpring</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>

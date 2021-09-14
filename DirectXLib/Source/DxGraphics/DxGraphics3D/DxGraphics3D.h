@@ -30,7 +30,10 @@ namespace lib {
 			ID3D12Resource* texture_buffer;
 			std::vector<DirectX::XMMATRIX*> matrix_arry;
 			std::vector<ID3D12DescriptorHeap*> tex_desc_heap_arry;
-			D3D12_VERTEX_BUFFER_VIEW vb_view;
+
+			ModelData model;
+			std::vector<std::vector<int>>mass_springs;
+			/*D3D12_VERTEX_BUFFER_VIEW vb_view;
 			D3D12_INDEX_BUFFER_VIEW ib_view;
 			ComPtr<ID3D12Resource> vb;
 			ComPtr<ID3D12Resource> ib;
@@ -38,7 +41,7 @@ namespace lib {
 			std::vector<UINT> index;
 			std::vector<std::vector<int>>index_group;
 			std::vector<ModelParam> pre_vertex;
-			std::vector<std::vector<int>> pre_index;
+			std::vector<std::vector<int>> pre_index;*/
 			std::vector<SpringData>spring_data;
 		};
 		struct DrawGraphParam {

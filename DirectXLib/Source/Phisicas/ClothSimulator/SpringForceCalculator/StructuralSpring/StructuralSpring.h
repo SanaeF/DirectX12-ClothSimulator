@@ -31,6 +31,13 @@ namespace phy {
 			std::vector<lib::ModelParam>& pre_vert,
 			std::vector<std::vector<int>>& pre_index_id
 		);
+		void solverLinear(
+			int vert_id,
+			std::vector<SpringData>& spring_data,
+			std::vector<lib::ModelParam>& vertex,
+			std::vector<lib::ModelParam>& pre_vert,
+			std::vector<std::vector<int>>& pre_index_id
+		);
 	private:
 		void tension_solver(
 			int vert_id,

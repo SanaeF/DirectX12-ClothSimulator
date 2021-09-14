@@ -1,4 +1,5 @@
 #include "StructuralSpring.h"
+#include <iostream>
 #include "../../../../VectorMath/VectorMath.h"
 namespace phy {
 	StructuralSpring::StructuralSpring(float shrink, float stretch):
@@ -19,10 +20,27 @@ namespace phy {
 			auto id2 = pre_index_id[id][ite];
 			if (id2 == -1)continue;
 			float Natulength = lib::VectorMath::distance(pre_vert[id].position, pre_vert[id2].position);//ばねの自然長
-			auto f = calcForce(vertex[id], vertex[id2], Natulength, 15);
+			auto f = calcForce(vertex[id], vertex[id2], Natulength, tension);
+			auto size = Natulength - lib::VectorMath::distance(vertex[id].position, vertex[id2].position);
+			if (sqrt(size * size) > Natulength) {
+				size = lib::VectorMath::distance(pre_vert[id].position, vertex[id].position);;
+				auto n = lib::VectorMath::subtract(pre_vert[id].position, vertex[id].position);
+				n = lib::VectorMath::normalize(n);//正規化2
+				n = lib::VectorMath::scale(n, size * tension_damping);
+				f = lib::VectorMath::add(f, n);
+			}
 			//F=f+damping
 			spring_data.force = lib::VectorMath::add(spring_data.force, f);
 		}
+	}
+	void StructuralSpring::solverLinear(
+		int vert_id,
+		std::vector<SpringData>& spring_data,
+		std::vector<lib::ModelParam>& vertex,
+		std::vector<lib::ModelParam>& pre_vert,
+		std::vector<std::vector<int>>& pre_index_id
+	) {
+
 	}
 	void StructuralSpring::solver2(
 		int vert_id,
@@ -49,7 +67,7 @@ namespace phy {
 			float Natulength = lib::VectorMath::distance(pre_vert[id].position, pre_vert[id2].position);//ばねの自然長
 			auto f = calcForce(vertex[id], vertex[id2], Natulength, tension);
 			//張力のダンピング
-			auto vect_vel = lib::VectorMath::subtract(spring_data[id].velocity, spring_data[id2].velocity);//速度ベクトル
+			auto vect_vel = lib::VectorMath::subtract(spring_data[id2].velocity, spring_data[id].velocity);//速度ベクトル
 			auto f_damp = lib::VectorMath::scale(vect_vel, tension_damping);
 
 			f = lib::VectorMath::add(f, f_damp);
@@ -71,7 +89,7 @@ namespace phy {
 			float Natulength = lib::VectorMath::distance(pre_vert[id].position, pre_vert[id2].position);//ばねの自然長
 			auto f = calcForce(vertex[id], vertex[id2], Natulength, compression);
 			//圧縮のダンピング
-			auto vect_vel = lib::VectorMath::subtract(spring_data[id].velocity, spring_data[id2].velocity);//速度ベクトル
+			auto vect_vel = lib::VectorMath::subtract(spring_data[id2].velocity, spring_data[id].velocity);//速度ベクトル
 			auto f_damp = lib::VectorMath::scale(vect_vel, compression_damping);
 
 			f = lib::VectorMath::add(f, f_damp);

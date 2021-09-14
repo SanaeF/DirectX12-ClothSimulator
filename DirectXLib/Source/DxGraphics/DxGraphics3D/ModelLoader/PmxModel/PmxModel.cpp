@@ -171,6 +171,8 @@ namespace model {
 		sameIndex(data);
 		//インデックスをグループ化する
 		groupIndex(data);
+
+		lib::ModelData::Object.pre_vert = lib::ModelData::Object.vertex;
 	}
 	void PmxModel::setStandardIndex(int id, lib::ModelData& data) {
 		for (int ite2 = 0; ite2 < same_position.size(); ite2++) {

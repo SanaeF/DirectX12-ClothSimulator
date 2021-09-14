@@ -11,8 +11,8 @@ namespace phy {
 	{
 		m_Param.grid_mass = 1.f;
 		m_Param.gravity = 9.8f;
-		m_Param.damping = 0.1f;
-		m_Param.dt = 0.1;
+		m_Param.damping = 0.001f;
+		m_Param.dt = 0.036;
 		m_Param.wind = 25.f;
 		m_Param.spring_constant = 15.f;
 		m_Param.structural.shrink = 15.f;
@@ -66,7 +66,7 @@ namespace phy {
 			/*m_Bending->solver2(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
 			m_Structural->solver2(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
 			m_Shear->solver2(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);*/
-			m_Bending->solver(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
+			//m_Bending->solver(ite, m_Spring_data, vertex, m_Pre_vertex, pre_index_id);
 			m_Structural->solver(ite, m_Spring_data[ite], vertex, m_Pre_vertex, pre_index_id);
 			m_Shear->solver(ite, m_Spring_data[ite], vertex, m_Pre_vertex, pre_index_id);
 		}

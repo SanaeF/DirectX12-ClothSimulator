@@ -1,10 +1,10 @@
-struct Vertex {
-	float3 position;
-	float4 normal;
-	float3 color;
-	float2 tex;
+
+struct inputSpringData {
+	float3 pos;
+	float3 col;
+	int pre_id[8];
 };
-struct SpringData {
+struct outputSpringData {
 	float3 force;
 	float3 velocity;
 	float mass;

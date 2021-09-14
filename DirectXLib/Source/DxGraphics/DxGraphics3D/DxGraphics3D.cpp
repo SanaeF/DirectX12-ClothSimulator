@@ -51,17 +51,8 @@ namespace lib {
 		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
 		model::PmxModel obj;
 		obj.loadFile(file_path); //obj.load("./model/skirt2.fbx");testcloth
-		auto data = lib::ModelData::Object;
-		data.createViewBuffer(m_Dx12->device());
-		//obj.setClothSimulator(mDx12->Device());
-		m_Model_data[handleID].vertex = data.vertex;
-		m_Model_data[handleID].pre_vertex = data.vertex;
-		m_Model_data[handleID].vb = data.vertex_buffer;
-		m_Model_data[handleID].vb_view = data.vb_view;
-		m_Model_data[handleID].index = data.index;
-		m_Model_data[handleID].ib = data.index_buffer;
-		m_Model_data[handleID].ib_view = data.ib_view;
-		m_Model_data[handleID].index_group = data.index_group;
+		m_Model_data[handleID].model = lib::ModelData::Object;
+		m_Model_data[handleID].model.createViewBuffer(m_Dx12->device());
 		return -1;
 	}
 	void DxGraphics3D::draw(float x, float y, float z, float size, double Angle, int Handle) {
@@ -123,8 +114,8 @@ namespace lib {
 	}
 	void DxGraphics3D::drawCommand(int InstancedCount, int Handle) {
 		ID3D12DescriptorHeap* texDH = m_Model_data[Handle].tex_desc_heap_arry[InstancedCount];
-		auto getMatVBView = m_Model_data[Handle].vb_view;
-		auto getIndexCount = m_Model_data[Handle].index.size();
+		auto getMatVBView = m_Model_data[Handle].model.vb_view;
+		auto getIndexCount = m_Model_data[Handle].model.index.size();
 		m_Dx12->cmdList()->IASetVertexBuffers(0, 1, &getMatVBView);
 		m_Dx12->cmdList()->SetDescriptorHeaps(1, &texDH);
 		m_Dx12->cmdList()->SetGraphicsRootDescriptorTable(0, texDH->GetGPUDescriptorHandleForHeapStart());
@@ -138,55 +129,23 @@ namespace lib {
 
 		auto rootsignature = m_Root_signature->getRootSignature();
 		if (rootsignature == nullptr)return;
-		auto getMatIBView = m_Model_data[Handle].ib_view;
+		auto getMatIBView = m_Model_data[Handle].model.ib_view;
 		m_Dx12->cmdList()->IASetIndexBuffer(&getMatIBView);
 		m_Dx12->cmdList()->SetGraphicsRootSignature(rootsignature);
 		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	void DxGraphics3D::setupClothPhis(int Handle) {
-		phy::ClothSimulator sim(m_Model_data[Handle].vertex, m_Model_data[Handle].index, m_Model_data[Handle].index_group);
-		m_Model_data[Handle].pre_index = sim.getPreIndexID();
+		phy::ClothSimulator sim(m_Model_data[Handle].model.vertex, m_Model_data[Handle].model.index, m_Model_data[Handle].model.index_group);
+		m_Model_data[Handle].mass_springs = sim.getPreIndexID();
 	}
 	void DxGraphics3D::updateClothPhis(int Handle) {
-		phy::ClothSimulator::update(
-			m_Model_data[Handle].vertex,
-			m_Model_data[Handle].index,
-			m_Model_data[Handle].pre_vertex,
-			m_Model_data[Handle].pre_index,
-			m_Model_data[Handle].spring_data
-		);
-		ModelData data;
-		data.ib_view = m_Model_data[Handle].ib_view;
-		data.index = m_Model_data[Handle].index;
-		//data.index_buffer = mModelData[Handle].IB;
-		data.vb_view = m_Model_data[Handle].vb_view;
-		data.vertex = m_Model_data[Handle].vertex;
-		//data.vertex_buffer = mModelData[Handle].VB;
-		data.createViewBuffer(m_Dx12->device());
-
-		m_Model_data[Handle].vertex = data.vertex;
-		m_Model_data[Handle].vb = data.vertex_buffer;
-		m_Model_data[Handle].vb_view = data.vb_view;
-		m_Model_data[Handle].index = data.index;
-		m_Model_data[Handle].ib = data.index_buffer;
-		m_Model_data[Handle].ib_view = data.ib_view;
+		phy::ClothSimulator::execution(Handle, m_Model_data[Handle].model, m_Model_data[Handle].spring_data, m_Model_data[Handle].mass_springs, m_Dx12);
+		//phy::ClothSimulator::update(m_Model_data[Handle].model, m_Model_data[Handle].spring_data, m_Model_data[Handle].mass_springs);
+		m_Model_data[Handle].model.createViewBuffer(m_Dx12->device());
 	}
 	void DxGraphics3D::resetClothPhis(int Handle) {
 		phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
-		ModelData data;
-		data.ib_view = m_Model_data[Handle].ib_view;
-		data.index = m_Model_data[Handle].index;
-		//data.index_buffer = mModelData[Handle].IB;
-		data.vb_view = m_Model_data[Handle].vb_view;
-		data.vertex = m_Model_data[Handle].pre_vertex;
-		//data.vertex_buffer = mModelData[Handle].VB;
-		data.createViewBuffer(m_Dx12->device());
-
-		m_Model_data[Handle].vertex = data.vertex;
-		m_Model_data[Handle].vb = data.vertex_buffer;
-		m_Model_data[Handle].vb_view = data.vb_view;
-		m_Model_data[Handle].index = data.index;
-		m_Model_data[Handle].ib = data.index_buffer;
-		m_Model_data[Handle].ib_view = data.ib_view;
+		m_Model_data[Handle].model.vertex = m_Model_data[Handle].model.pre_vert;
+		m_Model_data[Handle].model.createViewBuffer(m_Dx12->device());
 	}
 }
