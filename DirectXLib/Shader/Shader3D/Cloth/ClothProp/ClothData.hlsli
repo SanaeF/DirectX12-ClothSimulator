@@ -1,13 +1,21 @@
-
-struct inputSpringData {
-	float3 pos;
-	float3 col;
-	int pre_id[8];
-};
-struct outputSpringData {
+struct Spring {
 	float3 force;
 	float3 velocity;
 	float mass;
+};
+struct SpringData {
+	Spring spring;
+	float3 pos;
+	float3 pre_pos;
+	float3 col;
+	int id0;
+	int id1;
+	int id2;
+	int id3;
+	int id4;
+	int id5;
+	int id6;
+	int id7;
 };
 
 float3 sub(float3 vec1, float3 vec2) {

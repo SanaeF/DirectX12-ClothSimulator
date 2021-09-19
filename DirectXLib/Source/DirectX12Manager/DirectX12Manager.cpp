@@ -72,6 +72,7 @@ namespace {
 }
 namespace lib {
 	bool DirectX12Manager::init(SIZE pix) {
+		EnableDebugLayer();
 		setPixelSize(pix);
 		//DirectX12ŠÖ˜A‰Šú‰»
 		if (FAILED(initializeDXGIDevice())) {

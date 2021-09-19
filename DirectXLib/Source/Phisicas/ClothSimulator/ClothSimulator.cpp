@@ -14,10 +14,14 @@ namespace phy {
 		m_Pre_IndexID.resize(vertex.size());
 		MassSpringModel ms(MODEL_FILE::PMX,vertex, index, index_group);
 		for (int ite = 0; ite < vertex.size(); ite++) {
-			if (vertex[ite].color.x == 1.f && 
-				vertex[ite].color.y == 0.f && 
+			m_Pre_IndexID[ite].resize(SPRING_NUM);
+			if (vertex[ite].color.x == 1.f &&
+				vertex[ite].color.y == 0.f &&
 				vertex[ite].color.z == 0.f
-				)continue;
+				) {
+				for (int ite2 = 0; ite2 < SPRING_NUM; ite2++)m_Pre_IndexID[ite][ite2] = -1;
+				continue;
+			}
 			m_Pre_IndexID[ite] = ms.create(ite);
 		}
 	}
@@ -54,20 +58,21 @@ namespace phy {
 		std::vector<std::vector<int>>& mass_spring_id,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
-		const int step = 1;
+		const int step = 10;
 		ClothSpringShader cloth_shader(model_id, dx_12);
-		cloth_shader.create(model, spring_data, mass_spring_id);
 		SpringForceCalculator force(model.pre_vert);
 		//モデル全頂点の力と速度データ受け取り
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);
 		//重力を加える
 		force.gravity(m_time, model.vertex, mass_spring_id);
+		spring_data = force.getSpringForceData();
+		cloth_shader.create(model, spring_data, mass_spring_id);
 		//ステップ数だけバネの計算をする
 		for (int i = 0; i < step; i++) {
 			cloth_shader.execution();
+			cloth_shader.dataChange(model_id, model, spring_data);
 		}
-		//force.collision(vertex);
-		spring_data = cloth_shader.getSpring();
+
 		m_time++;
 	}
 	std::vector<std::vector<int>>

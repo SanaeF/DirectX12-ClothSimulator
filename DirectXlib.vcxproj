@@ -195,8 +195,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothData.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RootSignature.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
   </ItemGroup>
   <ItemGroup>
@@ -232,6 +233,9 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
     </FxCompile>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\VectLib.hlsli">
+      <FileType>Document</FileType>
+    </None>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

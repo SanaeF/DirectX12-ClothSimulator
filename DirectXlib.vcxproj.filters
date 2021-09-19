@@ -75,9 +75,6 @@
     <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D">
       <UniqueIdentifier>{4bac114d-d7b5-4708-a113-5bc1321ff1fb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData">
-      <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader">
       <UniqueIdentifier>{8a4f9494-449e-4ea2-8506-e71a8d2a4228}</UniqueIdentifier>
     </Filter>
@@ -146,6 +143,15 @@
     </Filter>
     <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature">
       <UniqueIdentifier>{87a5fe0b-3426-490e-a0de-81f102947a08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData">
+      <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp">
+      <UniqueIdentifier>{ed2f4164-be26-4403-8336-8d686e3ceff8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator">
+      <UniqueIdentifier>{6ac391f4-fea1-4b02-8010-9c86c94aba17}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -354,14 +360,20 @@
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
       <Filter>DirectXLib\Shader\Shader3D</Filter>
     </None>
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothData.hlsli">
-      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
-    </None>
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli">
       <Filter>DirectXLib\Shader\Shader2D</Filter>
     </None>
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature.hlsli">
-      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RootSignature.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\VectLib.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

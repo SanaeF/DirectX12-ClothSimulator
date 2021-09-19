@@ -70,20 +70,20 @@ namespace phy {
 			m_Structural->solver(ite, m_Spring_data[ite], vertex, m_Pre_vertex, pre_index_id);
 			m_Shear->solver(ite, m_Spring_data[ite], vertex, m_Pre_vertex, pre_index_id);
 		}
-		createNewPosition(vertex);
+		createNewPosition(vertex, m_Spring_data);
 	}
-	void SpringForceCalculator::createNewPosition(std::vector<lib::ModelParam>& vertex) {
+	void SpringForceCalculator::createNewPosition(std::vector<lib::ModelParam>& vertex, std::vector<SpringData>& spring_data) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
-			auto v = lib::VectorMath::scale(m_Spring_data[ite].force, 1 / (m_Spring_data[ite].mass+ m_Spring_data[ite].mass));
+			auto v = lib::VectorMath::scale(spring_data[ite].force, 1 / (spring_data[ite].mass + spring_data[ite].mass));
 			v = lib::VectorMath::scale(v, m_Param.dt);
-			m_Spring_data[ite].velocity = lib::VectorMath::add(m_Spring_data[ite].velocity, v);
-			v = lib::VectorMath::scale(m_Spring_data[ite].velocity, m_Param.dt);
+			spring_data[ite].velocity = lib::VectorMath::add(spring_data[ite].velocity, v);
+			v = lib::VectorMath::scale(spring_data[ite].velocity, m_Param.dt);
 			vertex[ite].position = lib::VectorMath::add(vertex[ite].position, v);
 			//—Í‚ðƒ[ƒ‚É‚·‚é
-			m_Spring_data[ite].force = DirectX::XMFLOAT3(0, 0, 0);
+			spring_data[ite].force = DirectX::XMFLOAT3(0, 0, 0);
 			//ƒ‚ƒfƒ‹‚É‡‚í‚¹‚ÄA‚ ‚½‚è”»’è‚ð‹óŠÔ‚ð¶¬‚·‚é
-			m_Collision->createSpaceBox(vertex[ite]);
+			//m_Collision->createSpaceBox(vertex[ite]);
 		}
 	}
 	void SpringForceCalculator::collision(std::vector<lib::ModelParam>& vertex) {

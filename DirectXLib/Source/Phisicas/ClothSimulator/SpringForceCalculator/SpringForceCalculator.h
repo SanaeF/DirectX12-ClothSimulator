@@ -37,7 +37,7 @@ namespace phy {
 		SpringForceCalculator(std::vector<lib::ModelParam>& pre_vert);
 		void gravity(int frame, std::vector<lib::ModelParam>& vertex, std::vector<std::vector<int>>& pre_index_id);
 		void restriction(int frame, std::vector<lib::ModelParam>& vertex, std::vector<std::vector<int>>& pre_index_id);
-		void createNewPosition(std::vector<lib::ModelParam>& vertex);
+		void createNewPosition(std::vector<lib::ModelParam>& vertex, std::vector<SpringData>& spring_data);
 		void collision(std::vector<lib::ModelParam>& vertex);
 		void setSpringForceData(std::vector<SpringData>& spring_data);
 		std::vector<SpringData> getSpringForceData();
