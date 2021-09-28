@@ -12,12 +12,6 @@ namespace phy {
 		using ComPtr = Microsoft::WRL::ComPtr<T>;
 		ID3DBlob* m_Shader;
 		ID3DBlob* m_Root_blob;
-		ID3D12RootSignature* m_RootSig;
-		ID3D12PipelineState* m_Pipeline;
-		ID3D12DescriptorHeap* m_Heap;
-		ID3D12Resource* m_Input_buffer;
-		ID3D12Resource* m_Output_buffer;
-		ID3D12Resource* m_Resource;
 		std::shared_ptr<lib::DirectX12Manager>& m_Dx12;
 		ComPtr<ID3D12Device> m_Device;
 		struct SimulateData {
@@ -36,14 +30,19 @@ namespace phy {
 			int id5;
 			int id6;
 			int id7;
+			int id8;
+			int id9;
+			int id10;
+			int id11;
+			bool simulate;
 			//std::vector<lib::ModelParam> vertex;
 			//std::vector<lib::ModelParam> pre_vert;
 			//std::vector<int> mass_spring_id[SPRING_NUM];
 		};
-		static std::vector<BufferData> m_Input;
+		/*static std::vector<BufferData> m_Input;
 		BufferData* m_pInput;
 		std::vector<SpringData> m_Output_spring;
-		SpringData* m_pOutput_spring;
+		SpringData* m_pOutput_spring;*/
 		struct ShaderInfo {
 			SimulateData param;
 			D3D12_CPU_DESCRIPTOR_HANDLE desc_handle;
@@ -51,8 +50,10 @@ namespace phy {
 			ID3D12PipelineState* pipeline;
 			ID3D12DescriptorHeap* desc_heap;
 			ID3D12DescriptorHeap* input_heap;
-			ID3D12Resource* resource;
+			ID3D12Resource* output_res;
+			ID3D12Resource* input_res;
 			std::vector<BufferData> output;
+			std::vector<BufferData> input;
 			bool is_created;
 			void* data;
 		};
@@ -62,8 +63,9 @@ namespace phy {
 		int m_Model_id;
 	public:
 		ClothSpringShader(int model_id, std::shared_ptr<lib::DirectX12Manager>& dx_12);
+		~ClothSpringShader();
 		void create(lib::ModelData& model, std::vector<SpringData>& spring, std::vector<std::vector<int>>& mass_spring_id);
-		void execution();
+		void execution(int steps);
 		void dataChange(int model_id, lib::ModelData& model, std::vector<SpringData>& spring);
 	private:
 		//シェーダーに送信するためにVectorを使わないデータ構造の初期生成

@@ -37,7 +37,7 @@ namespace phy {
 		std::vector<SpringData>& spring_data,
 		std::vector<std::vector<int>>& mass_spring_id
 	) {
-		const int step = 1;
+		const int step = 10;
 		SpringForceCalculator force(model.pre_vert);
 		//モデル全頂点の力と速度データ受け取り
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);
@@ -58,7 +58,7 @@ namespace phy {
 		std::vector<std::vector<int>>& mass_spring_id,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
-		const int step = 10;
+		const int step = 1;
 		ClothSpringShader cloth_shader(model_id, dx_12);
 		SpringForceCalculator force(model.pre_vert);
 		//モデル全頂点の力と速度データ受け取り
@@ -68,11 +68,8 @@ namespace phy {
 		spring_data = force.getSpringForceData();
 		cloth_shader.create(model, spring_data, mass_spring_id);
 		//ステップ数だけバネの計算をする
-		for (int i = 0; i < step; i++) {
-			cloth_shader.execution();
-			cloth_shader.dataChange(model_id, model, spring_data);
-		}
-
+		cloth_shader.execution(step);
+		cloth_shader.dataChange(model_id, model, spring_data);
 		m_time++;
 	}
 	std::vector<std::vector<int>>

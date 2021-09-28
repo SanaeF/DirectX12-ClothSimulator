@@ -50,7 +50,7 @@ void Application::run() {
 		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
 		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
 		m_Graphics->draw3D(Move[0], Move[1], 6000 + Move[2], 1, angle);
-		if (isSimulate)m_Graphics->clothSimProc(0);
+		if (!isSimulate)m_Graphics->clothSimProc(0);
 		isSimulate = false;
 		m_Graphics->screenFlip();//スワップチェイン
 

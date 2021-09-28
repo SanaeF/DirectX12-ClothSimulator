@@ -21,14 +21,14 @@ namespace phy {
 			if (id2 == -1)continue;
 			float Natulength = lib::VectorMath::distance(pre_vert[id].position, pre_vert[id2].position);//ÇŒÇÀÇÃé©ëRí∑
 			auto f = calcForce(vertex[id], vertex[id2], Natulength, tension);
-			auto size = Natulength - lib::VectorMath::distance(vertex[id].position, vertex[id2].position);
-			if (sqrt(size * size) > Natulength) {
-				size = lib::VectorMath::distance(pre_vert[id].position, vertex[id].position);;
-				auto n = lib::VectorMath::subtract(pre_vert[id].position, vertex[id].position);
-				n = lib::VectorMath::normalize(n);//ê≥ãKâª2
-				n = lib::VectorMath::scale(n, size * tension_damping);
-				f = lib::VectorMath::add(f, n);
-			}
+			//auto size = Natulength - lib::VectorMath::distance(vertex[id].position, vertex[id2].position);
+			//if (sqrt(size * size) > Natulength) {
+			//	size = lib::VectorMath::distance(pre_vert[id].position, vertex[id].position);;
+			//	auto n = lib::VectorMath::subtract(pre_vert[id].position, vertex[id].position);
+			//	n = lib::VectorMath::normalize(n);//ê≥ãKâª2
+			//	n = lib::VectorMath::scale(n, size * tension_damping);
+			//	f = lib::VectorMath::add(f, n);
+			//}
 			//F=f+damping
 			spring_data.force = lib::VectorMath::add(spring_data.force, f);
 		}

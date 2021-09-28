@@ -64,7 +64,14 @@ namespace lib {
 		DirectX::XMFLOAT3 vec1, DirectX::XMFLOAT3 vec2
 	) {
 		auto dist = subtract(vec1, vec2);
-		auto result = sqrt((dist.x * dist.x) + (dist.y * dist.y) + (dist.y * dist.y));
+		auto result = sqrt((dist.x * dist.x) + (dist.y * dist.y) + (dist.z * dist.z));
+		return result;
+	}
+	float VectorMath::distanceF2(DirectX::XMFLOAT2 vec1, DirectX::XMFLOAT2 vec2) {
+		DirectX::XMFLOAT2 dist;
+		dist.x = vec1.x - vec2.x;
+		dist.y = vec1.y - vec2.y;
+		auto result = sqrt((dist.x * dist.x) + (dist.y * dist.y));
 		return result;
 	}
 	float VectorMath::mulAdd(

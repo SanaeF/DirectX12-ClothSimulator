@@ -4,7 +4,7 @@
 #include <memory>
 #include <vector>
 
-#define SPRING_NUM (8)//質点モデルが3x3
+#define SPRING_NUM (12)//質点モデルが3x3
 
 namespace lib {
 	struct ModelParam {

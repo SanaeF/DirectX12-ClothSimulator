@@ -6,6 +6,7 @@ namespace phy {
 	enum MODEL_FILE {
 		FBX,PMX
 	};
+	//pmxモデルのみに対応した質点の生成(モデル形式によって、インデックスの関係が変わってきてしまう。)
 	class MassSpringModel {
 	private:
 		enum EDGE_TYPE {
@@ -25,12 +26,20 @@ namespace phy {
 				}
 			}
 		};
+		int m_Mid_point[4];//中心から十字方向の4点
+		int m_Mid_points[4][4];
+		int m_Cor_point[4];//3x3の十字方向以外4点
+		int m_More_point[4];//3x3さらに外の十字方向4点
+		float m_Semi_high_p4;//十字方向との点の最小距離(折りたたまれたポリゴンを3x3から除外するため)
+		float m_Semi_high_p4s[4];
+		std::vector<int> m_CheckIGP;
 		std::vector<std::vector<int>>m_Index_group;
 		std::vector<lib::ModelParam>m_Vertex;
 		std::vector<UINT>m_Index;
 		std::vector<int> m_Result;
 		MODEL_FILE m_File_type;
 		EDGE_TYPE m_Edge_type;
+		EDGE_TYPE m_Edge_types[4];
 	public:
 		MassSpringModel(
 			MODEL_FILE model_type,
@@ -43,19 +52,31 @@ namespace phy {
 	private:
 		//3x3行列の質点モデルを生成
 		void createMatrix3x3(int vertex_id);
-		//端かどうかを調べる
-		EDGE_TYPE pointType(IndexData& all_index, IndexData& related_index);
+
+		//質点の種類(角、辺、中心)を判定する
+		EDGE_TYPE pointType(IndexData& related_index);
+
 		//調べている頂点番号と一致するインデックス番号を全て取得
 		IndexData loadAllIndex(int vertex_id);
+
 		//関連のある頂点番号を全て取得
 		IndexData loadRelatedIndex(int vertex_id, IndexData& all_index);
-		//取得したインデックスからさらに対応する三角形のインデックスを取得する
-		IndexData loadMoreRelatedIndex(int vertex_id, IndexData& related_index);
-		//最寄りn個の質点を取得
-		std::vector<int> loadNearestIndex(int num, int target_index, IndexData& related_index);
-		//調べた十字方向の質点を除外した最寄りn個の質点を取得
-		std::vector<int> loadCorners(int num, IndexData& related_index, std::vector<int>& four_point);
-		IndexData exclusionMatrix3x3(int vertex_id, std::vector<int>& out_of_matrix_index);
-		IndexData sortIndex(int vertex_id, IndexData& data);
+
+		//十字方向の4点を取得
+		void createMidP(int vertex_id, IndexData& related_index, int* data);
+
+		//3x3で十字方向以外の4点を取得
+		void createCorP(int vertex_id);
+
+		//3x3からさらに外の質点を取得
+		void createMoreP(int vertex_id);
+
+		IndexData sortIndex(int vertex_id, int sort_max, IndexData& data);
+		IndexData sortIndexUsingTextureMap(int vertex_id, int sort_max, IndexData& data);
+		bool isThrowVertex(lib::ModelParam& vert);
+		IndexData changeMatrixData(int num, int* data);
+		IndexData deleteNullIndex(IndexData& data);
+		IndexData deleteOverIndex(IndexData& data);
+		std::vector<int> checkIndexID(IndexData& data);
 	};
 }

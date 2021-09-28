@@ -10,10 +10,10 @@ namespace phy {
 		m_Pre_vertex(pre_vert)
 	{
 		m_Param.grid_mass = 1.f;
-		m_Param.gravity = 9.8f;
-		m_Param.damping = 0.001f;
+		m_Param.gravity = 9.8/10.f;
+		m_Param.damping = 0.10f;
 		m_Param.dt = 0.036;
-		m_Param.wind = 25.f;
+		m_Param.wind = 0.25f;
 		m_Param.spring_constant = 15.f;
 		m_Param.structural.shrink = 15.f;
 		m_Param.structural.stretch = 5.f;
@@ -48,7 +48,7 @@ namespace phy {
 			data.force.y -= data.mass * m_Param.gravity;
 			//•——Í‚ð‰Á‚¦‚é
 			double r1 = frame /10;
-			//data.force.x += m_Param.wind * (sin(r1) * 0.5 + 0.5);
+			data.force.x += m_Param.wind * (sin(r1)* sin(r1) * 0.25 + 0.25);
 
 			//ƒ_ƒ“ƒsƒ“ƒO
 			auto d = lib::VectorMath::scale(data.velocity, m_Param.damping);

@@ -36,7 +36,7 @@ float3 subtract(float3 vec1, float3 vec2) {
 }
 float distance(float3 vec1, float3 vec2) {
 	float3 dist = subtract(vec1, vec2);
-	float result = sqrt((dist.x * dist.x) + (dist.y * dist.y) + (dist.y * dist.y));
+	float result = sqrt((dist.x * dist.x) + (dist.y * dist.y) + (dist.z * dist.z));
 	return result;
 }
 

@@ -16,6 +16,11 @@ struct SpringData {
 	int id5;
 	int id6;
 	int id7;
+	int id8;
+	int id9;
+	int id10;
+	int id11;
+	bool simulate;
 };
 
 float3 sub(float3 vec1, float3 vec2) {

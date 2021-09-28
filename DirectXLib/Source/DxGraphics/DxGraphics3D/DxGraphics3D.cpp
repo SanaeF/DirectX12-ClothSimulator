@@ -132,7 +132,7 @@ namespace lib {
 		auto getMatIBView = m_Model_data[Handle].model.ib_view;
 		m_Dx12->cmdList()->IASetIndexBuffer(&getMatIBView);
 		m_Dx12->cmdList()->SetGraphicsRootSignature(rootsignature);
-		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+ 		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	void DxGraphics3D::setupClothPhis(int Handle) {
 		phy::ClothSimulator sim(m_Model_data[Handle].model.vertex, m_Model_data[Handle].model.index, m_Model_data[Handle].model.index_group);

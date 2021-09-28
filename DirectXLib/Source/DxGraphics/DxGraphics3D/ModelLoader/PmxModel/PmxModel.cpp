@@ -83,7 +83,7 @@ namespace model {
 			{
 				for (int j = 0; j < hederData[NUMBER_OF_ADD_UV]; ++j)
 				{
-					pmxFile.read(reinterpret_cast<char*>(&data.vertex[ite].addUV[j]), 16);
+					//pmxFile.read(reinterpret_cast<char*>(&data.vertex[ite].addUV[j]), 16);
 				}
 			}
 			const byte weightMethod = pmxFile.get();
@@ -198,6 +198,9 @@ namespace model {
 	//同一頂点のインデックスをまとめる
 	void PmxModel::sameIndex(lib::ModelData& data) {
 		for (int ite = 0; ite < data.index.size(); ite++) {
+			if (data.index[ite] == 7288) {
+				int a = 0;
+			}
 			UINT id1 = data.index[ite];
 			if (!is_same[id1])continue;
 			//頂点が同一のインデックス番号を取得
@@ -210,7 +213,12 @@ namespace model {
 					data.vertex[id2].position
 				);
 				//インデックスに同一頂点のIDを格納
-				if (dist == 0)data.index[ite] = id2;
+				if (dist == 0) {
+					data.vertex[id1].color.x = 1.0f;
+					data.vertex[id1].color.y = 0.0f;
+					data.vertex[id1].color.z = 0.0f;
+					data.index[ite] = id2;
+				}
 			}
 		}
 	}
