@@ -1,12 +1,13 @@
-#include "ClothProp/RootSignature.hlsli"
+#include "ClothProp/CSRootSig.hlsli"
 #include "ClothProp/ClothData.hlsli"
 #include "SpringCalculator/SpringCalculator.hlsli"
 
 RWStructuredBuffer<SpringData> output : register(u0);//RWStructuredBuffer<outputSpringData> output : register(u0);
 RWStructuredBuffer<SpringData> input : register(u1);
+RWStructuredBuffer<ModelParamater> param :register(u2);
 
 float3 StructuralSolver(int id) {
-	int tension = 15;
+	int tension = 150;
 	int tension_damping = 5;
 	float3 result;
 	float3 dx = subtract(input[id].pos, input[id].pre_pos);
@@ -34,7 +35,7 @@ float3 StructuralSolver(int id) {
 	return result;
 }
 float3 ShareSolver(int id) {
-	int shear = 15;
+	int shear = 150;
 	int shear_damping = 5;
 	float3 result;
 	float3 dx = subtract(input[id].pos, input[id].pre_pos);
@@ -62,7 +63,7 @@ float3 ShareSolver(int id) {
 	return result;
 }
 float3 BendingSolver(int id) {
-	int tension = 20;
+	int tension = 200;
 	int tension_damping = 5;
 	float3 result;
 	float3 dx = subtract(input[id].pos, input[id].pre_pos);
@@ -90,12 +91,33 @@ float3 BendingSolver(int id) {
 	}
 	return result;
 }
+
+void firstSetting(int id) {
+	output[0].simulate = true;
+
+	if (id == 0) {
+		param[0].max_pos = float3(0, 0, 0);
+		param[0].min_pos = float3(0, 0, 0);
+	}
+}
+void PositionSort(int id) {
+	if (param[0].max_pos.x < output[id].pos.x)param[0].max_pos.x = output[id].pos.x;
+	if (param[0].max_pos.y < output[id].pos.y)param[0].max_pos.y = output[id].pos.y;
+	if (param[0].max_pos.z < output[id].pos.z)param[0].max_pos.z = output[id].pos.z;
+	if (param[0].min_pos.x > output[id].pos.x)param[0].min_pos.x = output[id].pos.x;
+	if (param[0].min_pos.y > output[id].pos.y)param[0].min_pos.y = output[id].pos.y;
+	if (param[0].min_pos.z > output[id].pos.x)param[0].min_pos.z = output[id].pos.z;
+}
+
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
-void ClothSpring( uint3 th_id : SV_GroupID){
-	float dt = 0.05;
-	int id = th_id.x;
-	output[0].simulate = true;
+void ClothSpring(uint3 th_id : SV_GroupID){
+	int dim = sqrt(input[0].vertex_size);
+	int id = (th_id.x * dim) + th_id.y;
+	//int id = th_id.x;
+	float dt = 0.034;
+	if (id >= input[0].vertex_size)return;
+	firstSetting(id);
 	if (isFixed(input[id].col)) {
 		output[id].pos = input[id].pos;
 		return;
@@ -111,4 +133,5 @@ void ClothSpring( uint3 th_id : SV_GroupID){
 	output[id].pos = add(input[id].pos, v);
 	//óÕÇÉ[ÉçÇ…Ç∑ÇÈ
 	output[id].spring.force = float3(0, 0, 0);
+	PositionSort(id);
 }

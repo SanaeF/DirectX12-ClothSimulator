@@ -21,6 +21,11 @@ struct SpringData {
 	int id10;
 	int id11;
 	bool simulate;
+	int vertex_size;
+};
+struct ModelParamater {
+	float3 max_pos;
+	float3 min_pos;
 };
 
 float3 sub(float3 vec1, float3 vec2) {

@@ -10,10 +10,10 @@ namespace phy {
 		m_Pre_vertex(pre_vert)
 	{
 		m_Param.grid_mass = 1.f;
-		m_Param.gravity = 9.8/10.f;
+		m_Param.gravity = 9.8f;
 		m_Param.damping = 0.10f;
 		m_Param.dt = 0.036;
-		m_Param.wind = 0.25f;
+		m_Param.wind = 0.0f;
 		m_Param.spring_constant = 15.f;
 		m_Param.structural.shrink = 15.f;
 		m_Param.structural.stretch = 5.f;
@@ -43,12 +43,13 @@ namespace phy {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
 			auto data = m_Spring_data[ite];
+			data.force = DirectX::XMFLOAT3(0, 0, 0);
 			data.mass = m_Param.grid_mass;
 			//重力を加える
 			data.force.y -= data.mass * m_Param.gravity;
 			//風力を加える
 			double r1 = frame /10;
-			data.force.x += m_Param.wind * (sin(r1)* sin(r1) * 0.25 + 0.25);
+			data.force.x = m_Param.wind * (sin(r1)* sin(r1) * 0.25 + 0.25);
 
 			//ダンピング
 			auto d = lib::VectorMath::scale(data.velocity, m_Param.damping);

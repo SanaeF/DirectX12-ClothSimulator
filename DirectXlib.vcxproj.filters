@@ -138,12 +138,6 @@
     <Filter Include="DirectXLib\Source\LibHelper">
       <UniqueIdentifier>{ec29b673-5c70-4c97-b57c-96bcfb91ab79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader">
-      <UniqueIdentifier>{6723b629-0c31-4cdc-8eeb-f28ec6316a87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature">
-      <UniqueIdentifier>{87a5fe0b-3426-490e-a0de-81f102947a08}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData">
       <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
     </Filter>
@@ -152,6 +146,18 @@
     </Filter>
     <Filter Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator">
       <UniqueIdentifier>{6ac391f4-fea1-4b02-8010-9c86c94aba17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader">
+      <UniqueIdentifier>{6723b629-0c31-4cdc-8eeb-f28ec6316a87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader">
+      <UniqueIdentifier>{994f7c32-89bd-48d4-b39c-84616ea519e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader">
+      <UniqueIdentifier>{6ae83166-806d-491a-ba15-2bce0850d94d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort">
+      <UniqueIdentifier>{c249101c-0ded-4660-af52-fed8b2c8a5b6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -248,11 +254,17 @@
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.h">
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\ClothSpringShader.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader</Filter>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature\CSRootSignature.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature</Filter>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -349,11 +361,17 @@
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.cpp">
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\ClothSpringShader.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader</Filter>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature\CSRootSignature.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature</Filter>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,7 +384,7 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RootSignature.hlsli">
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CSRootSig.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\VectLib.hlsli">

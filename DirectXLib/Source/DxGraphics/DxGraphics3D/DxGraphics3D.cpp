@@ -141,11 +141,11 @@ namespace lib {
 	void DxGraphics3D::updateClothPhis(int Handle) {
 		phy::ClothSimulator::execution(Handle, m_Model_data[Handle].model, m_Model_data[Handle].spring_data, m_Model_data[Handle].mass_springs, m_Dx12);
 		//phy::ClothSimulator::update(m_Model_data[Handle].model, m_Model_data[Handle].spring_data, m_Model_data[Handle].mass_springs);
-		m_Model_data[Handle].model.createViewBuffer(m_Dx12->device());
+		m_Model_data[Handle].model.bufferMap();
 	}
 	void DxGraphics3D::resetClothPhis(int Handle) {
 		phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
 		m_Model_data[Handle].model.vertex = m_Model_data[Handle].model.pre_vert;
-		m_Model_data[Handle].model.createViewBuffer(m_Dx12->device());
+		m_Model_data[Handle].model.bufferMap();
 	}
 }

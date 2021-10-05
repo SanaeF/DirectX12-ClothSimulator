@@ -1,6 +1,11 @@
 #pragma once
 #include <DirectXMath.h>
 
+enum HIT_SPLIT {
+	SINGLE=8,
+	XYZ_ALL= (SINGLE * SINGLE * SINGLE) * 8
+};
+
 struct SpringData {
 	DirectX::XMFLOAT3 force;
 	DirectX::XMFLOAT3 velocity;
@@ -9,4 +14,25 @@ struct SpringData {
 struct Resistance {
 	float stretch;
 	float shrink;
+};
+
+struct ClothData {
+	SpringData spring;
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT3 pre_pos;
+	DirectX::XMFLOAT3 color;
+	int id0;
+	int id1;
+	int id2;
+	int id3;
+	int id4;
+	int id5;
+	int id6;
+	int id7;
+	int id8;
+	int id9;
+	int id10;
+	int id11;
+	bool simulate;
+	int vertex_size;
 };

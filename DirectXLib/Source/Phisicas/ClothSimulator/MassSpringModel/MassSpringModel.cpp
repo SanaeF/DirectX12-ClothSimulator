@@ -1,6 +1,6 @@
 #include "MassSpringModel.h"
 #include "../../../VectorMath/VectorMath.h"
-
+#include "../../DirectXLib/Source/LibHelper/LibHelper.h"
 namespace phy {
 	MassSpringModel::MassSpringModel(
 		MODEL_FILE model_type,
@@ -292,6 +292,10 @@ namespace phy {
 	}
 	MassSpringModel::IndexData 
 	MassSpringModel::deleteOverIndex(IndexData& data) {
+		helper::LibHelper help;
+		for (int ite = 0; ite < data.count; ite++) {
+			if (!help.between(data.constant[ite], 0, m_Index.size()))data.constant[ite] = -1;
+		}
 		for (int ite = 0; ite < data.count; ite++) {
 			if (data.constant[ite] == -1)continue;
 			bool is_delete = false;

@@ -143,9 +143,11 @@
     <ClCompile Include="DirectXLib\Source\DxSound\DxSound.cpp" />
     <ClCompile Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.cpp" />
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.cpp" />
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\ClothSpringShader.cpp" />
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature\CSRootSignature.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.cpp" />
@@ -179,9 +181,11 @@
     <ClInclude Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.h" />
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.h" />
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\ClothSpringShader.h" />
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSpringShader\CSRootSignature\CSRootSignature.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.h" />
@@ -196,7 +200,7 @@
   <ItemGroup>
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RootSignature.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CSRootSig.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
   </ItemGroup>

@@ -43,15 +43,15 @@ void Application::run() {
 
 		if (msg.message == WM_QUIT) {break;}
 		m_Graphics->clearDraw();//画面の初期化
-		//Graph->SetArea(0, 0, 1920, 1440/2);//描画範囲の指定
-		m_Graphics->drawPrototype2D(0, 0, 1, 0, text_img);
+		////Graph->SetArea(0, 0, 1920, 1440/2);//描画範囲の指定
+		//m_Graphics->drawPrototype2D(0, 0, 1, 0, text_img);
 		m_Graphics->setArea(0, 0, 1920, 1440);//描画範囲の指定
-		//Graph->DrawPrototype2D(-Move[1], -Move[0], 1, angle, HandleLif);//描画(テスト用)
-		//Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
-		//if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
+		////Graph->DrawPrototype2D(-Move[1], -Move[0], 1, angle, HandleLif);//描画(テスト用)
+		////Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
+		////if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
 		m_Graphics->draw3D(Move[0], Move[1], 6000 + Move[2], 1, angle);
-		if (!isSimulate)m_Graphics->clothSimProc(0);
-		isSimulate = false;
+		m_Graphics->clothSimProc(0);
+		//isSimulate = false;
 		m_Graphics->screenFlip();//スワップチェイン
 
 		m_Key->checkAll();//キー入力のセット

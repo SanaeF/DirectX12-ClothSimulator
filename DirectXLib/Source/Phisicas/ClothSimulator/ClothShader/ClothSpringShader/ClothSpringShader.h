@@ -14,48 +14,26 @@ namespace phy {
 		ID3DBlob* m_Root_blob;
 		std::shared_ptr<lib::DirectX12Manager>& m_Dx12;
 		ComPtr<ID3D12Device> m_Device;
-		struct SimulateData {
-			int vertex_num;
+		struct ModelParamater {
+			DirectX::XMFLOAT3 max_pos;
+			DirectX::XMFLOAT3 min_pos;
 		};
-		struct BufferData {
-			SpringData spring;
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMFLOAT3 pre_pos;
-			DirectX::XMFLOAT3 color;
-			int id0;
-			int id1;
-			int id2;
-			int id3;
-			int id4;
-			int id5;
-			int id6;
-			int id7;
-			int id8;
-			int id9;
-			int id10;
-			int id11;
-			bool simulate;
-			//std::vector<lib::ModelParam> vertex;
-			//std::vector<lib::ModelParam> pre_vert;
-			//std::vector<int> mass_spring_id[SPRING_NUM];
-		};
-		/*static std::vector<BufferData> m_Input;
-		BufferData* m_pInput;
-		std::vector<SpringData> m_Output_spring;
-		SpringData* m_pOutput_spring;*/
 		struct ShaderInfo {
-			SimulateData param;
 			D3D12_CPU_DESCRIPTOR_HANDLE desc_handle;
 			ID3D12RootSignature* root_sig;
 			ID3D12PipelineState* pipeline;
 			ID3D12DescriptorHeap* desc_heap;
 			ID3D12DescriptorHeap* input_heap;
-			ID3D12Resource* output_res;
-			ID3D12Resource* input_res;
-			std::vector<BufferData> output;
-			std::vector<BufferData> input;
+			ID3D12Resource* out_spring_res;
+			ID3D12Resource* out_param_res;
+			ID3D12Resource* in_spring_res;
+			std::vector<ClothData> out_spring;
+			std::vector<ClothData> in_spring;
+			std::vector<ModelParamater> out_param;
+			DirectX::XMINT3 thread;
 			bool is_created;
-			void* data;
+			void* spring_data;
+			void* param_data;
 		};
 		static std::vector<ShaderInfo> shaderHandler;
 		//	void* data;
@@ -67,31 +45,31 @@ namespace phy {
 		void create(lib::ModelData& model, std::vector<SpringData>& spring, std::vector<std::vector<int>>& mass_spring_id);
 		void execution(int steps);
 		void dataChange(int model_id, lib::ModelData& model, std::vector<SpringData>& spring);
+		static ModelParamater getMaxMinPos(int id);
 	private:
+		void createOutput(
+			lib::ModelData& model,
+			std::vector<std::vector<int>>& mass_spring_id
+		);
+		void createOutParam();
+		bool createInput();
 		//シェーダーに送信するためにVectorを使わないデータ構造の初期生成
 		void createMassSpringforGPU(
 			lib::ModelData& model,
 			std::vector<std::vector<int>>& mass_spring_id
 		);
-		void createOutput(
-			lib::ModelData& model,
-			std::vector<std::vector<int>>& mass_spring_id
-		);
 		bool loadShader();
-		bool createBuffer();
 		bool createPipeline();
 		bool createHeap();
 		bool createOutputResource();
 		bool createUAV();
 		bool outputMap();
-
-		bool createInputUAV();
-		void createInput();
-		bool createInputHeap();
 		bool createInputResource();
-		bool createSRV();
-		bool createInputBuffer();
+		bool createInputUAV();
 		bool inputMap();
-		void output();
+		bool createParamOutResource();
+		bool createParamOutUAV();
+		bool outParamMap();
+		void dataAssign();
 	};
 }

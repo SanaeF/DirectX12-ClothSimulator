@@ -108,10 +108,14 @@ namespace lib {
 	private:
 		template<typename T>
 		using ComPtr = Microsoft::WRL::ComPtr<T>;
-		CD3DX12_RANGE m_Read_range;
+		UINT m_Vert_size;
+		UINT m_Idx_size;
+		ID3D12Resource* m_Vb = nullptr;
+		ID3D12Resource* m_Ib = nullptr;
 	public:
 		ModelData();
 		void createViewBuffer(ComPtr<ID3D12Device> device);
+		void bufferMap();
 	private:
 		bool createVertexBuffer(ComPtr<ID3D12Device> device);
 		bool createIndexBuffer(ComPtr<ID3D12Device> device);
