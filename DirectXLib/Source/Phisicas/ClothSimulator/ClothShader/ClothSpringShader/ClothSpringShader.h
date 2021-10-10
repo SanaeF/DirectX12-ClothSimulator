@@ -49,6 +49,7 @@ namespace phy {
 	private:
 		void createOutput(
 			lib::ModelData& model,
+			std::vector<SpringData>& spring,
 			std::vector<std::vector<int>>& mass_spring_id
 		);
 		void createOutParam();
@@ -56,6 +57,7 @@ namespace phy {
 		//シェーダーに送信するためにVectorを使わないデータ構造の初期生成
 		void createMassSpringforGPU(
 			lib::ModelData& model,
+			std::vector<SpringData>& spring,
 			std::vector<std::vector<int>>& mass_spring_id
 		);
 		bool loadShader();

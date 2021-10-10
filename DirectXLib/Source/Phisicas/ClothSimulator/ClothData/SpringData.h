@@ -2,8 +2,8 @@
 #include <DirectXMath.h>
 
 enum HIT_SPLIT {
-	SINGLE=8,
-	XYZ_ALL= (SINGLE * SINGLE * SINGLE) * 8
+	SINGLE=3,
+	XYZ_ALL= (SINGLE * SINGLE * SINGLE) * 8//480
 };
 
 struct SpringData {

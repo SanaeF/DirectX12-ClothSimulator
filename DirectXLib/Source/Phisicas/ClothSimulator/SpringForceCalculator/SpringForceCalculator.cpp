@@ -43,7 +43,6 @@ namespace phy {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
 			auto data = m_Spring_data[ite];
-			data.force = DirectX::XMFLOAT3(0, 0, 0);
 			data.mass = m_Param.grid_mass;
 			//d—Í‚ð‰Á‚¦‚é
 			data.force.y -= data.mass * m_Param.gravity;

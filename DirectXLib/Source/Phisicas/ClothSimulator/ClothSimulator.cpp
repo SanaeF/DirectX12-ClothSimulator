@@ -86,7 +86,7 @@ namespace phy {
 		std::vector<std::vector<int>>& mass_spring_id,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
-		const int step = 1;
+		const int step = 5;
 		SpringForceCalculator force(model.pre_vert);
 		//モデル全頂点の力と速度データ受け取り
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);

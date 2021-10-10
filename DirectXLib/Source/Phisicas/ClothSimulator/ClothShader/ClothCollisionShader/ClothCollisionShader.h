@@ -12,6 +12,10 @@ namespace phy {
 			ClothData cloth;
 			int area_id;
 		};
+		struct SpaceData{
+			int space_ount;
+			int spaceID[XYZ_ALL];
+		};
 		std::vector<int> split_area;
 		struct HandleData {
 			D3D12_CPU_DESCRIPTOR_HANDLE desc_handle;
@@ -20,9 +24,12 @@ namespace phy {
 			ID3D12DescriptorHeap* desc_heap;
 			ID3D12DescriptorHeap* input_heap;
 			ID3D12Resource* output_res;
-			ID3D12Resource* input_res;
+			ID3D12Resource* in_model_res;
+			ID3D12Resource* in_space_res;
 			std::vector<ColliderData> output;
-			std::vector<ColliderData> input;
+			std::vector<ColliderData> input_model;
+			std::vector<SpaceData> input_space;
+			DirectX::XMINT3 thread;
 			bool is_created;
 			void* data;
 		};
@@ -68,6 +75,10 @@ namespace phy {
 		bool createInputUAV();
 		bool createInputResource();
 		bool inputMap();
+		//スペースデータ
+		bool createInput2UAV();
+		bool createInput2Resource();
+		bool input2Map();
 		void dataAssign();
 	};
 }

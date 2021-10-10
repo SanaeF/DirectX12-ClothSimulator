@@ -33,6 +33,7 @@ namespace phy {
 			std::vector<SpringData>& spring_data,
 			std::vector<std::vector<int>>& mass_spring_id
 		);
+		void forceZero(std::vector<SpringData>& spring_data);
 		bool isNullty(DirectX::XMFLOAT3 pos);
 	};
 }

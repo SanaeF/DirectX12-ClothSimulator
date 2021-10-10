@@ -25,15 +25,18 @@ namespace phy {
 		if (65535 < model.vertex.size()) {
 			assert(0 && "<このモデルは上限を超えています!>DirectX12の使用により、クロスシミュレーターに使用できる頂点数は65535個が限界です。");
 		}
-		auto& output = m_Data_handle[m_Model_id].output;
 		m_Data_handle[m_Model_id].output.resize(model.vertex.size());
-		auto& input = m_Data_handle[m_Model_id].input;
-		input.resize(model.vertex.size());
+		m_Data_handle[m_Model_id].input_model.resize(model.vertex.size());
+		m_Data_handle[m_Model_id].input_space.resize(model.vertex.size());
 		CollisionSort sort(model.vertex.size(), m_High_pos, m_Low_pos);
+		for (int ite = 0; ite < XYZ_ALL; ite++)m_Data_handle[m_Model_id].input_space[ite].space_ount = 0;
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
-			input[ite].cloth.pos = model.vertex[ite].position;
-			input[ite].cloth.spring = spring[ite];
-			input[ite].area_id = sort.spaceInput(ite, input[ite].cloth.pos);
+			m_Data_handle[m_Model_id].input_model[ite].cloth.pos = model.vertex[ite].position;
+			m_Data_handle[m_Model_id].input_model[ite].cloth.spring = spring[ite];
+			m_Data_handle[m_Model_id].input_model[ite].area_id = sort.spaceInput(ite, m_Data_handle[m_Model_id].input_model[ite].cloth.pos);
+			int area_id = m_Data_handle[m_Model_id].input_model[ite].area_id;
+			m_Data_handle[m_Model_id].input_space[area_id].spaceID[m_Data_handle[m_Model_id].input_space[area_id].space_ount] = ite;
+			m_Data_handle[m_Model_id].input_space[area_id].space_ount++;
 		}
 		createDataInOutter(model, mass_spring_id);
 		if (!createDataInputter()) {
@@ -49,7 +52,7 @@ namespace phy {
 		auto handle = m_Data_handle[m_Model_id].desc_heap->GetGPUDescriptorHandleForHeapStart();
 		m_Dx12->cmdList()->SetComputeRootDescriptorTable(0, handle);
 		//コンピュートシェーダーの実行
-		m_Dx12->cmdList()->Dispatch(m_Data_handle[m_Model_id].input.size(), 1, 1);
+		m_Dx12->cmdList()->Dispatch(m_Data_handle[m_Model_id].thread.x, m_Data_handle[m_Model_id].thread.y, 1);
 		dataAssign();
 	}
 	void ClothCollisionShader::createDataInOutter(
@@ -57,6 +60,11 @@ namespace phy {
 		std::vector<std::vector<int>>& mass_spring_id
 	) {
 		if (m_Data_handle[m_Model_id].is_created)return;
+		int size = sqrt(m_Data_handle[m_Model_id].input_model.size());
+		int size_out = m_Data_handle[m_Model_id].input_model.size() - (size * size);
+		auto& thread = m_Data_handle[m_Model_id].thread;
+		thread.x = size + size_out;
+		thread.y = size;
 		createMassSpringforGPU(model, mass_spring_id);
 		if (!loadShader())return;
 		if (!createPipeline())return;
@@ -70,15 +78,19 @@ namespace phy {
 		if (!m_Data_handle[m_Model_id].is_created) {
 			if (!createInputResource())return false;
 			if (!createInputUAV())return false;
+			if (!createInput2Resource())return false;
+			if (!createInput2UAV())return false;
 		}
 		if (!inputMap())return false;
+		if (!input2Map())return false;
 		return true;
 	}
 	void ClothCollisionShader::createMassSpringforGPU(
 		lib::ModelData& model,
 		std::vector<std::vector<int>>& mass_spring_id
 	) {
-		auto& input = m_Data_handle[m_Model_id].input;
+		auto& input = m_Data_handle[m_Model_id].input_model;
+		input[0].cloth.vertex_size = model.vertex.size();
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
 			input[ite].cloth.pre_pos = model.pre_vert[ite].position;
 			input[ite].cloth.color = model.pre_vert[ite].color;
@@ -126,7 +138,7 @@ namespace phy {
 		D3D12_DESCRIPTOR_HEAP_DESC desc{};
 		desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 		desc.NodeMask = 0;
-		desc.NumDescriptors = 2;
+		desc.NumDescriptors = 3;
 		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
 		auto result = m_Dx12->device()->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&m_Data_handle[m_Model_id].desc_heap));
 		if (!SUCCEEDED(result))return false;
@@ -164,11 +176,9 @@ namespace phy {
 		desc.Buffer.NumElements = m_Data_handle[m_Model_id].output.size();
 		desc.Buffer.StructureByteStride = sizeof(ColliderData);
 
-		auto basicHeapHandle = m_Data_handle[m_Model_id].desc_heap->GetCPUDescriptorHandleForHeapStart();
-		m_Dx12->device()->CreateUnorderedAccessView(m_Data_handle[m_Model_id].output_res, nullptr, &desc, basicHeapHandle);
-		basicHeapHandle.ptr += m_Dx12->device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-		m_Data_handle[m_Model_id].desc_handle = basicHeapHandle;
+		m_Data_handle[m_Model_id].desc_handle = m_Data_handle[m_Model_id].desc_heap->GetCPUDescriptorHandleForHeapStart();
+		m_Dx12->device()->CreateUnorderedAccessView(m_Data_handle[m_Model_id].output_res, nullptr, &desc, m_Data_handle[m_Model_id].desc_handle);
+		m_Data_handle[m_Model_id].desc_handle.ptr += m_Dx12->device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		return true;
 	}
 	bool ClothCollisionShader::outputMap() {
@@ -178,7 +188,7 @@ namespace phy {
 		return true;
 	}
 	bool ClothCollisionShader::createInputResource() {
-		const UINT buffer_size = static_cast<UINT>(m_Data_handle[m_Model_id].input.size()) * sizeof(ColliderData);
+		const UINT buffer_size = static_cast<UINT>(m_Data_handle[m_Model_id].input_model.size()) * sizeof(ColliderData);
 		D3D12_HEAP_PROPERTIES prop{};
 		prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 		prop.CreationNodeMask = 1;
@@ -198,7 +208,7 @@ namespace phy {
 		desc.Width = buffer_size;
 		auto result = m_Dx12->device()->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
 			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-			IID_PPV_ARGS(&m_Data_handle[m_Model_id].input_res)
+			IID_PPV_ARGS(&m_Data_handle[m_Model_id].in_model_res)
 		);
 		if (!SUCCEEDED(result))return false;
 		return true;
@@ -207,22 +217,74 @@ namespace phy {
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
 		desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
 		desc.Format = DXGI_FORMAT_UNKNOWN;
-		desc.Buffer.NumElements = m_Data_handle[m_Model_id].input.size();
+		desc.Buffer.NumElements = m_Data_handle[m_Model_id].input_model.size();
 		desc.Buffer.StructureByteStride = sizeof(ColliderData);
-		m_Dx12->device()->CreateUnorderedAccessView(m_Data_handle[m_Model_id].input_res, nullptr, &desc, m_Data_handle[m_Model_id].desc_handle);
+		m_Dx12->device()->CreateUnorderedAccessView(m_Data_handle[m_Model_id].in_model_res, nullptr, &desc, m_Data_handle[m_Model_id].desc_handle);
+		m_Data_handle[m_Model_id].desc_handle.ptr += m_Dx12->device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		return true;
 	}
 	bool ClothCollisionShader::inputMap() {
 		D3D12_RANGE range{ 0, 0 };
 		UINT8* pInputDataBegin;
 		auto& info = m_Data_handle[m_Model_id];
-		auto result = info.input_res->Map(0, &range, reinterpret_cast<void**>(&pInputDataBegin));
+		auto result = info.in_model_res->Map(0, &range, reinterpret_cast<void**>(&pInputDataBegin));
 		memcpy(
 			pInputDataBegin,
-			info.input.data(),
-			static_cast<UINT>(info.input.size()) * sizeof(ColliderData)
+			info.input_model.data(),
+			static_cast<UINT>(info.input_model.size()) * sizeof(ColliderData)
 		);
-		info.input_res->Unmap(0, nullptr);
+		info.in_model_res->Unmap(0, nullptr);
+		if (!SUCCEEDED(result))return false;
+		return true;
+	}
+
+	bool ClothCollisionShader::createInput2Resource() {
+		const UINT buffer_size = static_cast<UINT>(m_Data_handle[m_Model_id].input_space.size()) * sizeof(SpaceData);
+		D3D12_HEAP_PROPERTIES prop{};
+		prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
+		prop.CreationNodeMask = 1;
+		prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
+		prop.Type = D3D12_HEAP_TYPE_CUSTOM;
+		prop.VisibleNodeMask = 1;
+		D3D12_RESOURCE_DESC desc{};
+		desc.Alignment = 0;
+		desc.DepthOrArraySize = 1;
+		desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+		desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		desc.Format = DXGI_FORMAT_UNKNOWN;
+		desc.Height = 1;
+		desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+		desc.MipLevels = 1;
+		desc.SampleDesc = { 1, 0 };
+		desc.Width = buffer_size;
+		auto result = m_Dx12->device()->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
+			D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+			IID_PPV_ARGS(&m_Data_handle[m_Model_id].in_space_res)
+		);
+		if (!SUCCEEDED(result))return false;
+		return true;
+	}
+	bool ClothCollisionShader::createInput2UAV() {
+		D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
+		desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+		desc.Format = DXGI_FORMAT_UNKNOWN;
+		desc.Buffer.NumElements = m_Data_handle[m_Model_id].input_space.size();
+		desc.Buffer.StructureByteStride = sizeof(SpaceData);
+		m_Dx12->device()->CreateUnorderedAccessView(m_Data_handle[m_Model_id].in_space_res, nullptr, &desc, m_Data_handle[m_Model_id].desc_handle);
+		m_Data_handle[m_Model_id].desc_handle.ptr += m_Dx12->device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+		return true;
+	}
+	bool ClothCollisionShader::input2Map() {
+		D3D12_RANGE range{ 0, 0 };
+		UINT8* pInputDataBegin;
+		auto& info = m_Data_handle[m_Model_id];
+		auto result = info.in_space_res->Map(0, &range, reinterpret_cast<void**>(&pInputDataBegin));
+		memcpy(
+			pInputDataBegin,
+			info.input_space.data(),
+			static_cast<UINT>(info.input_space.size()) * sizeof(SpaceData)
+		);
+		info.in_space_res->Unmap(0, nullptr);
 		if (!SUCCEEDED(result))return false;
 		return true;
 	}

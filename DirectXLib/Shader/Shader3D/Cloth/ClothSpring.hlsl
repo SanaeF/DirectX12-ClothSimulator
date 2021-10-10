@@ -6,8 +6,14 @@ RWStructuredBuffer<SpringData> output : register(u0);//RWStructuredBuffer<output
 RWStructuredBuffer<SpringData> input : register(u1);
 RWStructuredBuffer<ModelParamater> param :register(u2);
 
+float3 CompressionSolver(int id) {
+	int tension = 15;
+	int tension_damping = 5;
+	float3 result = float3(0.f, 0.f, 0.f);
+	return result;
+}
 float3 StructuralSolver(int id) {
-	int tension = 150;
+	int tension = 15;
 	int tension_damping = 5;
 	float3 result;
 	float3 dx = subtract(input[id].pos, input[id].pre_pos);
@@ -19,7 +25,7 @@ float3 StructuralSolver(int id) {
 		if (ite == 3)id2 = input[id].id3;
 		if (id2 == -1)continue;
 		float Natulength = distance(input[id].pre_pos, input[id2].pre_pos);//‚Î‚Ë‚Ì©‘R’·
-		float3 f = CalcForce(input[id].pos, input[id2].pos, Natulength, tension);
+		float3 f = CalcForce(input[id].pos, input[id2].pos, Natulength, tension, tension_damping);
 
 		//float size = Natulength - distance(input[id].pos, input[id2].pos);
 		//if (sqrt(size * size) > Natulength) {
@@ -35,9 +41,9 @@ float3 StructuralSolver(int id) {
 	return result;
 }
 float3 ShareSolver(int id) {
-	int shear = 150;
+	int shear = 15;
 	int shear_damping = 5;
-	float3 result;
+	float3 result = float3(0.f, 0.f, 0.f);
 	float3 dx = subtract(input[id].pos, input[id].pre_pos);
 	int id2;
 	for (int ite = 0; ite < 4; ite++) {
@@ -47,7 +53,7 @@ float3 ShareSolver(int id) {
 		if (ite == 3)id2 = input[id].id7;
 		if (id2 == -1)continue;
 		float Natulength = distance(input[id].pre_pos, input[id2].pre_pos);//‚Î‚Ë‚Ì©‘R’·
-		float3 f = CalcForce(input[id].pos, input[id2].pos, Natulength, shear);
+		float3 f = CalcForce(input[id].pos, input[id2].pos, Natulength, shear, shear_damping);
 
 		//float size = Natulength - distance(input[id].pos, input[id2].pos);
 		//if (sqrt(size * size) > Natulength) {
@@ -63,9 +69,9 @@ float3 ShareSolver(int id) {
 	return result;
 }
 float3 BendingSolver(int id) {
-	int tension = 200;
+	int tension = 20;
 	int tension_damping = 5;
-	float3 result;
+	float3 result = float3(0.f, 0.f, 0.f);
 	float3 dx = subtract(input[id].pos, input[id].pre_pos);
 	int id2;
 	for (int ite = 0; ite < 4; ite++) {
@@ -75,7 +81,7 @@ float3 BendingSolver(int id) {
 		if (ite == 3)id2 = input[id].id11;
 		if (id2 == -1)continue;
 		float Natulength = distance(input[id].pre_pos, input[id2].pre_pos);//‚Î‚Ë‚Ì©‘R’·
-		float3 f = CalcForce(input[id].pos, input[id2].pos, Natulength, tension);
+		float3 f = CalcForce(input[id].pos, input[id2].pos, Natulength, tension, tension_damping);
 
 		//float size = Natulength - distance(input[id].pos, input[id2].pos);
 		//if (sqrt(size * size) > Natulength) {

@@ -11,7 +11,7 @@ namespace phy {
 	std::vector<ClothSpringShader::ShaderInfo> ClothSpringShader::shaderHandler;
 	//std::vector<ClothSpringShader::BufferData> ClothSpringShader::m_Input;
 
-	ClothSpringShader::ClothSpringShader(int model_id, std::shared_ptr<lib::DirectX12Manager>& dx_12):
+	ClothSpringShader::ClothSpringShader(int model_id, std::shared_ptr<lib::DirectX12Manager>& dx_12) :
 		m_Model_id(model_id),
 		m_Dx12(dx_12),
 		m_Device(dx_12->device())
@@ -26,16 +26,7 @@ namespace phy {
 		if (65535 < model.vertex.size()) {
 			assert(0 && "<このモデルは上限を超えています!>DirectX12の使用により、クロスシミュレーターに使用できる頂点数は65535個が限界です。");
 		}
-		auto& output = shaderHandler[m_Model_id].out_spring;
-		shaderHandler[m_Model_id].out_spring.resize(model.vertex.size());
-		auto& input = shaderHandler[m_Model_id].in_spring;
-		input.resize(model.vertex.size());
-		for (int ite = 0; ite < model.vertex.size(); ite++) {
-			input[ite].pos = model.vertex[ite].position;
-			input[ite].spring = spring[ite];
-		}
-		input[0].vertex_size = model.vertex.size();
-		createOutput(model, mass_spring_id);
+		createOutput(model, spring, mass_spring_id);
 		if (!createInput()) {
 			shaderHandler[m_Model_id].is_created = false;
 			return;
@@ -56,13 +47,13 @@ namespace phy {
 		m_Dx12->cmdList()->Dispatch(shaderHandler[m_Model_id].thread.x, shaderHandler[m_Model_id].thread.y, 1);
 		dataAssign();
 	}
-
 	void ClothSpringShader::createOutput(
 		lib::ModelData& model,
+		std::vector<SpringData>& spring,
 		std::vector<std::vector<int>>& mass_spring_id
 	) {
 		if (shaderHandler[m_Model_id].is_created)return;
-		createMassSpringforGPU(model, mass_spring_id);
+		createMassSpringforGPU(model, spring, mass_spring_id);
 		if (!loadShader())return;
 		if (!createPipeline())return;
 		if (!createHeap())return;
@@ -95,9 +86,16 @@ namespace phy {
 	}
 	void ClothSpringShader::createMassSpringforGPU(
 		lib::ModelData& model,
-		std::vector<std::vector<int>>&
-		mass_spring_id
+		std::vector<SpringData>& spring,
+		std::vector<std::vector<int>>& mass_spring_id
 	) {
+		shaderHandler[m_Model_id].out_spring.resize(model.vertex.size());
+		shaderHandler[m_Model_id].in_spring.resize(model.vertex.size());
+		for (int ite = 0; ite < model.vertex.size(); ite++) {
+			shaderHandler[m_Model_id].in_spring[ite].pos = model.vertex[ite].position;
+			shaderHandler[m_Model_id].in_spring[ite].spring = spring[ite];
+		}
+		shaderHandler[m_Model_id].in_spring[0].vertex_size = model.vertex.size();
 		auto& input = shaderHandler[m_Model_id].in_spring;
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
 			input[ite].pre_pos = model.pre_vert[ite].position;
@@ -238,14 +236,13 @@ namespace phy {
 	bool ClothSpringShader::inputMap() {
 		D3D12_RANGE range{ 0, 0 };
 		UINT8* pInputDataBegin;
-		auto& info = shaderHandler[m_Model_id];
-		auto result = info.in_spring_res->Map(0, &range, reinterpret_cast<void**>(&pInputDataBegin));
+		auto result = shaderHandler[m_Model_id].in_spring_res->Map(0, &range, reinterpret_cast<void**>(&pInputDataBegin));
 		memcpy(
 			pInputDataBegin,
-			info.in_spring.data(),
-			static_cast<UINT>(info.in_spring.size()) * sizeof(ClothData)
+			shaderHandler[m_Model_id].in_spring.data(),
+			static_cast<UINT>(shaderHandler[m_Model_id].in_spring.size()) * sizeof(ClothData)
 		);
-		info.in_spring_res->Unmap(0, nullptr);
+		shaderHandler[m_Model_id].in_spring_res->Unmap(0, nullptr);
 		if (!SUCCEEDED(result))return false;
 		return true;
 	}
@@ -268,7 +265,7 @@ namespace phy {
 		desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 		desc.MipLevels = 1;
 		desc.SampleDesc = { 1, 0 };
-		desc.Width = (sizeof(ModelParamater)* shaderHandler[m_Model_id].out_param.size() + 0xff) & ~0xff;
+		desc.Width = (sizeof(ModelParamater) * shaderHandler[m_Model_id].out_param.size() + 0xff) & ~0xff;
 		auto result = m_Device->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
 			D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
 			IID_PPV_ARGS(&shaderHandler[m_Model_id].out_param_res));
@@ -303,16 +300,18 @@ namespace phy {
 	}
 	void ClothSpringShader::dataChange(
 		int model_id, lib::ModelData& model, std::vector<SpringData>& spring
-	){
-		auto& output = shaderHandler[m_Model_id].out_spring;
-		if (!output[0].simulate)return;
+	) {
+		//auto& output = shaderHandler[m_Model_id].out_spring;
+		if (!shaderHandler[m_Model_id].out_spring[0].simulate)return;
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
-			model.vertex[ite].position = output[ite].pos;
-			spring[ite].velocity = output[ite].spring.velocity;
+			model.vertex[ite].position = shaderHandler[m_Model_id].out_spring[ite].pos;
+			spring[ite].velocity = shaderHandler[m_Model_id].out_spring[ite].spring.velocity;
+			shaderHandler[m_Model_id].in_spring[ite].pos = model.vertex[ite].position;
+			shaderHandler[m_Model_id].in_spring[ite].spring = spring[ite];
 		}
 	}
-	ClothSpringShader::ModelParamater 
-	ClothSpringShader::getMaxMinPos(int id) {
+	ClothSpringShader::ModelParamater
+		ClothSpringShader::getMaxMinPos(int id) {
 		return shaderHandler[id].out_param[0];
 	}
 	ClothSpringShader::~ClothSpringShader() {

@@ -18,6 +18,7 @@ namespace phy {
 		std::vector<std::vector<int>>& mass_spring_id
 	) {
 		massSpring(model_id, step, time, model, spring_data, mass_spring_id);
+		forceZero(spring_data);
 		collider(model_id, model, spring_data, mass_spring_id);
 	}
 	void ClothShader::massSpring(
@@ -49,6 +50,9 @@ namespace phy {
 		collision.create(model, spring_data, mass_spring_id);
 		collision.execution();
 		collision.dataChange(model_id, model, spring_data);
+	}
+	void ClothShader::forceZero(std::vector<SpringData>& spring_data) {
+		for (int ite = 0; ite < spring_data.size(); ite++)spring_data[ite].force = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 	}
 	bool ClothShader::isNullty(DirectX::XMFLOAT3 pos) {
 		if (pos.x == 0.f && pos.y == 0.f && pos.z == 0.f)return true;

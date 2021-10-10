@@ -393,6 +393,9 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
     </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CCRootSig.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
