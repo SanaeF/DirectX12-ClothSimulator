@@ -4,7 +4,7 @@
 namespace phy {
 	MassSpringModel::MassSpringModel(
 		MODEL_FILE model_type,
-		std::vector<lib::ModelParam>& vertex,
+		std::vector<lib::ModelVertex>& vertex,
 		std::vector<UINT>& index,
 		std::vector<std::vector<int>>& index_group
 	) :
@@ -16,6 +16,7 @@ namespace phy {
 		m_Result.resize(SPRING_NUM);
 	}
 	std::vector<int> MassSpringModel::create(int num) {
+		m_Is_bad_num = false;
 		m_CheckIGP = m_Index_group[num];
 		for (int ite = 0; ite < m_Result.size(); ite++)m_Result[ite] = -1;
 		if (!isThrowVertex(m_Vertex[num])) {
@@ -30,17 +31,15 @@ namespace phy {
 		return m_Result;
 	}
 	void MassSpringModel::createMatrix3x3(int vertex_id) {
-		if (vertex_id == 2) {
+		if (vertex_id == 8889 || vertex_id == 9120) {
 			int a = 0;
 		}
-		auto all_index = loadAllIndex(vertex_id);
-		createMidP(vertex_id, all_index, m_Mid_point);
+		createCross(vertex_id, m_Mid_point);
 		for (int ite = 0; ite < 4; ite++) {
 			if (m_Mid_point[ite] == -1)continue;
-			auto all_index4 = loadAllIndex(m_Index[m_Mid_point[ite]]);
-			createMidP(m_Index[m_Mid_point[ite]], all_index4, m_Mid_points[ite]);
+			createCross(m_Index[m_Mid_point[ite]], m_Mid_points[ite]);
 		}
-		createCorP(vertex_id);
+		createCorner(vertex_id, m_Mid_points, m_Cor_point);
 		createMoreP(vertex_id);
 		for (int ite = 0; ite < 4; ite++) {
 			if (m_Mid_point[ite] != -1)m_Result[ite] = m_Index[m_Mid_point[ite]];
@@ -48,122 +47,74 @@ namespace phy {
 			if (m_More_point[ite] != -1)m_Result[8 + ite] = m_Index[m_More_point[ite]];
 		}
 	}
-	MassSpringModel::IndexData
-		MassSpringModel::loadAllIndex(int vertex_id) {
-		IndexData data;
-		data.reset(m_Index_group[vertex_id].size());
-		//仮想頂点用のインデックスを初期化(-1を代入)
-		for (int ite = 0; ite < data.constant.size(); ite++) {
-			data.constant[ite] = -1;
-		}
-		//調べている頂点番号と一致するインデックス番号を確保
-		auto max = m_Index_group[vertex_id].size();
-		for (int num = 0; num < m_Index_group[vertex_id].size(); num++) {
-			data.constant[data.count] = m_Index_group[vertex_id][num];
-			data.count++;
-		}
-		return data;
-	}
-	void MassSpringModel::createMidP(int vertex_id, IndexData& related_index, int* data) {
-		if (related_index.count == 0)return;
-		//インデックスタイプが
-		//2-〇==〇-0     2-〇
-		//    ＼||   and   ||＼
-		//      〇-1     1-〇==〇-0
-		//の時計回りを想定(pmxのみ)
+	void MassSpringModel::createCross(int vertex_id, int* data) {
+		auto all_index = loadAllIndex(vertex_id);
 		IndexData result;
-		result.reset(related_index.count);
-		for (int ite = 0; ite < related_index.count; ite++) {
-			if (related_index.constant[ite] % 3 == 0) {
-				result.constant[result.count] = related_index.constant[ite] + 1;
+		result.reset(18);
+		//頂点から得られる周囲の頂点
+		for (int ite = 0; ite < all_index.count; ite++) {
+			if (all_index.constant[ite] % 3 == 0) {
+				result.constant[result.count] = all_index.constant[ite] + 1;
+				result.count++;
+				result.constant[result.count] = all_index.constant[ite] + 2;
 				result.count++;
 			}
-			if (related_index.constant[ite] % 3 == 1) {
-				result.constant[result.count] = related_index.constant[ite] - 1;
+			if (all_index.constant[ite] % 3 == 1) {
+				result.constant[result.count] = all_index.constant[ite] - 1;
+				result.count++;
+				result.constant[result.count] = all_index.constant[ite] + 1;
+				result.count++;
+			}
+			if (all_index.constant[ite] % 3 == 2) {
+				result.constant[result.count] = all_index.constant[ite] - 1;
+				result.count++;
+				result.constant[result.count] = all_index.constant[ite] - 2;
 				result.count++;
 			}
 		}
 		result = deleteOverIndex(result);
-		//ソート
+		//indexの距離が近い順にソート
 		result = sortIndex(vertex_id, result.count, result);
-		auto test = checkIndexID(result);
-		//代入
-		for (int ite = 0; ite < result.count; ite++) {
-			if (ite < 4)data[ite] = result.constant[ite];
+		//dataに代入
+		int input_num = 0;
+		if (all_index.count == 6)input_num = 4;//中央
+		if (all_index.count == 3)input_num = 3;//辺
+		if (all_index.count < 3)input_num = 2;//角
+		for (int ite = 0; ite < 4; ite++) {
+			if (ite >= input_num)data[ite] = -1;
+			else data[ite] = result.constant[ite];
 		}
 	}
-	//void MassSpringModel::createDist(int vertex_id, float& high, int* data) {
-	//	// 中心から一番遠い距離を取得
-	//	float size_max = 0.f;
-	//	for (int ite = 0; ite < 4; ite++) {
-	//		if (data[ite] == -1)continue;
-	//		auto id = m_Index[data[ite]];
-	//		auto dist = lib::VectorMath::distance(
-	//			m_Vertex[vertex_id].position, m_Vertex[id].position
-	//		);
-	//		if (size_max < dist)size_max = dist;
-	//	}
-	//	high = size_max;
-	//	size_max = 0.f;
-	//	for (int ite = 0; ite < 4; ite++) {
-	//		if (data[ite] == -1)continue;
-	//		auto id = m_Index[data[ite]];
-	//		auto dist = lib::VectorMath::distance(
-	//			m_Vertex[vertex_id].position, m_Vertex[id].position
-	//		);
-	//		if (dist < high && size_max < dist)size_max = dist;
-	//	}
-	//	high = size_max;
-	//}
-	//void MassSpringModel::createDistUsingTextureMap(int vertex_id, float& high, int* data) {
-	//	// 中心から一番遠い距離を取得
-	//	float size_max = 0.f;
-	//	for (int ite = 0; ite < 4; ite++) {
-	//		if (data[ite] == -1)continue;
-	//		auto id = m_Index[data[ite]];
-	//		auto dist = lib::VectorMath::distanceF2(
-	//			m_Vertex[vertex_id].tex, m_Vertex[id].tex
-	//		);
-	//		if (size_max < dist)size_max = dist;
-	//	}
-	//	high = size_max;
-	//	size_max = 0.f;
-	//	for (int ite = 0; ite < 4; ite++) {
-	//		if (data[ite] == -1)continue;
-	//		auto id = m_Index[data[ite]];
-	//		auto dist = lib::VectorMath::distanceF2(
-	//			m_Vertex[vertex_id].tex, m_Vertex[id].tex
-	//		);
-	//		if (dist < high && size_max < dist)size_max = dist;
-	//	}
-	//	high = size_max;
-	//}
-	void MassSpringModel::createCorP(int vertex_id) {
-		IndexData sort_data;
-		sort_data.reset(16);
-		for (int ite = 0; ite < 2; ite++) {
-			for (int ite2 = 0; ite2 < 2; ite2++) {
-				auto& idx_id = m_Mid_points[ite][2+ite2];//2～2は長い方からにある2質点
-				if (idx_id == -1)continue;
-				bool input = true;
-				//十字方向の質点は除外
-				for (int ite3 = 0; ite3 < 4; ite3++) {
-					if (m_Mid_point[ite3] != -1) {
-						if (m_Index[idx_id] == m_Index[m_Mid_point[ite3]])input = false;
-					}
-				}
-				//基準質点は除外
-				if (vertex_id == m_Index[idx_id])input = false;
-				if (input) {
-					sort_data.constant[sort_data.count] = idx_id;
-					sort_data.count++;
+	void MassSpringModel::createCorner(int vertex_id, int mid_points[4][4], int* data) {
+		//4つの十字質点をまとめる(重複ありのまま)
+		IndexData p4x4;
+		p4x4.reset(4 * 4);
+		for (int ite = 0; ite < 4; ite++) {
+			for (int ite2 = 0; ite2 < 4; ite2++) {
+				p4x4.constant[p4x4.count] = mid_points[ite][ite2];
+				p4x4.count++;
+			}
+		}
+		//重複しているindexID質点のみを結果に代入
+		IndexData result;
+		result.reset(4 * 4);
+		for (int ite = 0; ite < p4x4.count; ite++) {
+			if (p4x4.constant[ite] == -1)continue;//不正なデータは除外
+			if (m_Index[p4x4.constant[ite]] == vertex_id)continue;//基準質点は除外
+			for (int ite2 = 0; ite2 < p4x4.count; ite2++) {
+				if (p4x4.constant[ite2] == -1)continue;//不正なデータは除外
+				if (m_Index[p4x4.constant[ite2]] == vertex_id)continue;//基準質点は除外
+				if (ite == ite2)continue;//同じ配列番号はカウントしない
+				if (m_Index[p4x4.constant[ite]] == m_Index[p4x4.constant[ite2]]) {
+					result.constant[result.count] = p4x4.constant[ite];
+					result.count++;
 				}
 			}
 		}
-		sort_data = deleteNullIndex(sort_data);
-		auto test = checkIndexID(sort_data);
-		for (int ite = 0; ite < sort_data.count; ite++) {
-			if (ite < 4)m_Cor_point[ite] = sort_data.constant[ite];
+		result = deleteOverIndex(result);
+		for (int ite = 0; ite < 4; ite++) {
+			if (ite >= result.count)data[ite] = -1;
+			else data[ite] = result.constant[ite];
 		}
 	}
 	void MassSpringModel::createMoreP(int vertex_id) {
@@ -200,7 +151,23 @@ namespace phy {
 			if (ite < 4)m_More_point[ite] = sort_data.constant[ite];
 		}
 	}
-	MassSpringModel::IndexData 
+	MassSpringModel::IndexData
+		MassSpringModel::loadAllIndex(int vertex_id) {
+		IndexData data;
+		data.reset(m_Index_group[vertex_id].size());
+		//仮想頂点用のインデックスを初期化(-1を代入)
+		for (int ite = 0; ite < data.constant.size(); ite++) {
+			data.constant[ite] = -1;
+		}
+		//調べている頂点番号と一致するインデックス番号を確保
+		auto max = m_Index_group[vertex_id].size();
+		for (int num = 0; num < m_Index_group[vertex_id].size(); num++) {
+			data.constant[data.count] = m_Index_group[vertex_id][num];
+			data.count++;
+		}
+		return data;
+	}
+	MassSpringModel::IndexData
 		MassSpringModel::sortIndex(int vertex_id, int sort_max, IndexData& data) {
 		data = deleteNullIndex(data);
 		//距離が遠い順に並べる
@@ -239,8 +206,8 @@ namespace phy {
 		result.count = sort_max;
 		return result;
 	}
-	MassSpringModel::IndexData 
-	MassSpringModel::sortIndexUsingTextureMap(int vertex_id, int sort_max, IndexData& data) {
+	MassSpringModel::IndexData
+		MassSpringModel::sortIndexUsingTextureMap(int vertex_id, int sort_max, IndexData& data) {
 		data = deleteNullIndex(data);
 		//距離が遠い順に並べる
 		std::vector<int> sort_data(data.count);
@@ -278,8 +245,8 @@ namespace phy {
 		result.count = sort_max;
 		return result;
 	}
-	MassSpringModel::IndexData 
-	MassSpringModel::deleteNullIndex(IndexData& data) {
+	MassSpringModel::IndexData
+		MassSpringModel::deleteNullIndex(IndexData& data) {
 		IndexData result;
 		result.reset(data.count);
 		for (int ite = 0; ite < data.count; ite++) {
@@ -290,8 +257,8 @@ namespace phy {
 		}
 		return result;
 	}
-	MassSpringModel::IndexData 
-	MassSpringModel::deleteOverIndex(IndexData& data) {
+	MassSpringModel::IndexData
+		MassSpringModel::deleteOverIndex(IndexData& data) {
 		helper::LibHelper help;
 		for (int ite = 0; ite < data.count; ite++) {
 			if (!help.between(data.constant[ite], 0, m_Index.size()))data.constant[ite] = -1;
@@ -300,15 +267,15 @@ namespace phy {
 			if (data.constant[ite] == -1)continue;
 			bool is_delete = false;
 			for (int ite2 = 0; ite2 < data.count; ite2++) {
-				if (data.constant[ite] == data.constant[ite2] || data.constant[ite2] == -1)continue;
+				if (ite == ite2 || data.constant[ite2] == -1)continue;
 				if (m_Index[data.constant[ite]] == m_Index[data.constant[ite2]])is_delete = true;
 			}
-			if(is_delete)data.constant[ite] = -1;
+			if (is_delete)data.constant[ite] = -1;
 		}
 		return deleteNullIndex(data);
 	}
-	MassSpringModel::IndexData 
-	MassSpringModel::changeMatrixData(int num, int* data) {
+	MassSpringModel::IndexData
+		MassSpringModel::changeMatrixData(int num, int* data) {
 		IndexData result;
 		result.reset(num);
 		for (int ite = 0; ite < num; ite++) {
@@ -317,7 +284,7 @@ namespace phy {
 		}
 		return result;
 	}
-	std::vector<int> 
+	std::vector<int>
 		MassSpringModel::checkIndexID(IndexData& data) {
 		IndexData result;
 		result.reset(data.count);
@@ -329,9 +296,9 @@ namespace phy {
 		}
 		return result.constant;
 	}
-	bool MassSpringModel::isThrowVertex(lib::ModelParam& vert) {
-		if (vert.color.x == 1.0f && 
-			vert.color.y == 0.0f && 
+	bool MassSpringModel::isThrowVertex(lib::ModelVertex& vert) {
+		if (vert.color.x == 1.0f &&
+			vert.color.y == 0.0f &&
 			vert.color.z == 0.0f
 			)return true;
 		return false;

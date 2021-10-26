@@ -15,21 +15,21 @@ namespace phy {
 		void solver(
 			int vert_id,
 			SpringData& spring_data,
-			std::vector<lib::ModelParam>& vertex,
-			std::vector<lib::ModelParam>& pre_vert,
+			std::vector<lib::ModelVertex>& vertex,
+			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<std::vector<int>>& pre_index_id
 		);
 		void solver2(
 			int vert_id,
 			std::vector<SpringData>& spring_data,
-			std::vector<lib::ModelParam>& vertex,
-			std::vector<lib::ModelParam>& pre_vert,
+			std::vector<lib::ModelVertex>& vertex,
+			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<std::vector<int>>& pre_index_id
 		);
 	private:
 		DirectX::XMFLOAT3 calcForce(
-			lib::ModelParam& vert1,
-			lib::ModelParam& vert2,
+			lib::ModelVertex& vert1,
+			lib::ModelVertex& vert2,
 			float length,
 			float constant
 		);

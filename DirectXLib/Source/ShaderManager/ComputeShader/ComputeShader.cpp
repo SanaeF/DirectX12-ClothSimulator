@@ -1,115 +1,142 @@
 #include "ComputeShader.h"
+#include "../../DirectXLib/Source/DirectX12Manager/DirectX12Manager.h"
 #include<d3dcompiler.h>
 #pragma comment(lib,"d3dcompiler.lib")
 namespace lib {
+	std::vector<ComputeShader::ComputeShaderInfo> ComputeShader::m_Shader_handle;
+	int ComputeShader::m_Handle_count = 0;
 	ComputeShader::ComputeShader(
-		ComPtr<ID3D12Device> device, const char* file_path, const char* func_name
-	) {
-		load(file_path, func_name);
-		rootSignature(device);
-		piplineState(device);
+		const char* file_path, 
+		const char* func_name, 
+		int slot_max, 
+		int& handle,
+		std::shared_ptr<lib::DirectX12Manager> dx12
+	):
+		m_Dx12(dx12)
+	{
+		m_Handle_id = m_Handle_count;
+		m_Handle_count++;
+		m_Shader_handle.resize(m_Handle_count);
+		m_Shader_handle[m_Handle_id].resource.resize(slot_max);
+		m_Shader_handle[m_Handle_id].element.resize(slot_max);
+		m_Shader_handle[m_Handle_id].data.resize(slot_max);
+		loadShaderFile(file_path, func_name);
+		createPipline();
+		createHeap(slot_max);
+		handle = m_Handle_id;
 	}
-	inline void ComputeShader::load(const char* file_path, const char* func_name) {
-		wchar_t wfxFilePath[256] = { L"" };
-		mbstowcs(wfxFilePath, file_path, 256);
-		auto result = D3DCompileFromFile(wfxFilePath, nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE, func_name, "cs_5_1", 
-			D3DCOMPILE_DEBUG |D3DCOMPILE_SKIP_OPTIMIZATION, 
-			0, &m_Blob, nullptr);
+	ComputeShader::ComputeShader(int handle, std::shared_ptr<lib::DirectX12Manager> dx12):
+		m_Handle_id(handle),
+		m_Dx12(dx12)
+	{
+
 	}
-	inline void ComputeShader::rootSignature(ComPtr<ID3D12Device> device) {
+	void ComputeShader::loadShaderFile(const char* file_path, const char* func_name) {
+		wchar_t w_file_path[256] = { L"" };
+		mbstowcs(w_file_path, file_path, 256);
+		auto result = D3DCompileFromFile(
+			w_file_path, nullptr,
+			D3D_COMPILE_STANDARD_FILE_INCLUDE, func_name, "cs_5_1",
+			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+			0, &m_Shader_handle[m_Handle_id].shader, nullptr
+		);
 		ID3DBlob* sig = nullptr;
-		auto result = D3DGetBlobPart(m_Blob->GetBufferPointer(), m_Blob->GetBufferSize(),
+		result = D3DGetBlobPart(
+			m_Shader_handle[m_Handle_id].shader->GetBufferPointer(), 
+			m_Shader_handle[m_Handle_id].shader->GetBufferSize(),
 			D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
-		result = device->CreateRootSignature(0, sig->GetBufferPointer(), sig->GetBufferSize(),
-			IID_PPV_ARGS(&m_Root_sig));
+		//ルートシグネチャの生成
+		result = m_Dx12->device()->CreateRootSignature(
+			0, 
+			sig->GetBufferPointer(), 
+			sig->GetBufferSize(), 
+			IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].root_sig)
+		);
 	}
-	inline void ComputeShader::piplineState(ComPtr<ID3D12Device> device) {
-		D3D12_COMPUTE_PIPELINE_STATE_DESC  psoDesc = { 0 };
-		psoDesc.pRootSignature = m_Root_sig;
-		psoDesc.CS = CD3DX12_SHADER_BYTECODE(m_Blob);
-		psoDesc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-		psoDesc.NodeMask = 0;
-		auto result = device->CreateComputePipelineState(&psoDesc, IID_PPV_ARGS(&m_pipeline));
+	void ComputeShader::createPipline() {
+		D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
+		desc.CS.pShaderBytecode = m_Shader_handle[m_Handle_id].shader->GetBufferPointer();
+		desc.CS.BytecodeLength = m_Shader_handle[m_Handle_id].shader->GetBufferSize();
+		desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
+		desc.NodeMask = 0;
+		desc.pRootSignature = m_Shader_handle[m_Handle_id].root_sig;
+		auto hr = m_Dx12->device()->CreateComputePipelineState(
+			&desc,
+			IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].pipeline_state)
+		);
 	}
-	void ComputeShader::setInputData(
-		ComPtr<ID3D12Device> device,
-		int sizeOfElement,
-		int numElement,
-		void* initData
-	) {
-		auto m_sizeOfElement = sizeOfElement;
-		auto m_numElement = numElement;
-
-		int bufferNo = 0;
-		auto heapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-		auto rDesc = CD3DX12_RESOURCE_DESC::Buffer(m_sizeOfElement * m_numElement);
-		for (auto& buffer : m_Buffers_on_gpu) {
-			auto hr = device->CreateCommittedResource(
-				&heapProp,
-				D3D12_HEAP_FLAG_NONE,
-				&rDesc,
-				D3D12_RESOURCE_STATE_GENERIC_READ,
-				nullptr,
-				IID_PPV_ARGS(&buffer)
-			);
-
-
-			//構造化バッファをCPUからアクセス可能な仮想アドレス空間にマッピングする。
-			//マップ、アンマップのオーバーヘッドを軽減するためにはこのインスタンスが生きている間は行わない。
-			{
-				CD3DX12_RANGE readRange(0, 0);        //     intend to read from this resource on the CPU.
-				buffer->Map(0, &readRange, reinterpret_cast<void**>(&m_Buffers_on_cpu[bufferNo]));
-			}
-			if (initData != nullptr) {
-				memcpy(m_Buffers_on_cpu[bufferNo], initData, m_sizeOfElement * m_numElement);
-			}
-
-			bufferNo++;
-		}
-		//m_isInited = true;
+	void ComputeShader::createHeap(int slot_max) {
+		D3D12_DESCRIPTOR_HEAP_DESC desc{};
+		desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+		desc.NodeMask = 0;
+		desc.NumDescriptors = slot_max;
+		desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+		auto result = m_Dx12->device()->CreateDescriptorHeap(
+			&desc, 
+			IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].desc_heap)
+		);
 	}
-	void ComputeShader::setOutputData(
-		ComPtr<ID3D12Device> device,
-		int sizeOfElement,
-		int numElement,
-		void* initData
-	) {
-		auto m_sizeOfElement = sizeOfElement;
-		auto m_numElement = numElement;
-		D3D12_RESOURCE_DESC desc = CD3DX12_RESOURCE_DESC::Buffer(m_sizeOfElement * m_numElement);
-		desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-		int bufferNo = 0;
+	void ComputeShader::inputBufferSize(int slot_id, int size, int type) {
+		m_Shader_handle[m_Handle_id].element[slot_id] = { type,size };
+	}
 
+	void ComputeShader::createResource(bool is_alingnment, int slot_id) {
 		D3D12_HEAP_PROPERTIES prop{};
 		prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 		prop.CreationNodeMask = 1;
 		prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 		prop.Type = D3D12_HEAP_TYPE_CUSTOM;
 		prop.VisibleNodeMask = 1;
-
-		for (auto& buffer : m_Buffers_on_gpu) {
-			device->CreateCommittedResource(
-				&prop,
-				D3D12_HEAP_FLAG_NONE,
-				&desc,
-				D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-				nullptr,
-				IID_PPV_ARGS(&buffer)
+		//サイズは定数バッファと同じように指定
+		D3D12_RESOURCE_DESC desc =
+			CD3DX12_RESOURCE_DESC::Buffer(
+				m_Shader_handle[m_Handle_id].element[slot_id].num *
+				m_Shader_handle[m_Handle_id].element[slot_id].size_of
 			);
-			//構造化バッファをCPUからアクセス可能な仮想アドレス空間にマッピングする。
-			//マップ、アンマップのオーバーヘッドを軽減するためにはこのインスタンスが生きている間は行わない。
-			{
-				CD3DX12_RANGE readRange(0, 0);        //     intend to read from this resource on the CPU.
-				buffer->Map(0, &readRange, reinterpret_cast<void**>(&m_Buffers_on_cpu[bufferNo]));
-			}
-			if (initData != nullptr) {
-				memcpy(m_Buffers_on_cpu[bufferNo], initData, m_sizeOfElement * m_numElement);
-			}
-			bufferNo++;
+		desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+		auto result = m_Dx12->device()->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
+			D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
+			IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].resource[slot_id]));
+	}
+	void ComputeShader::createUnorderdAccessView() {
+		auto handle = m_Shader_handle[m_Handle_id].desc_heap->GetCPUDescriptorHandleForHeapStart();
+		for (int ite = 0; ite < m_Shader_handle[m_Handle_id].resource.size(); ite++) {
+			D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
+			desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
+			desc.Format = DXGI_FORMAT_UNKNOWN;
+			desc.Buffer.NumElements = m_Shader_handle[m_Handle_id].element[ite].num;
+			desc.Buffer.StructureByteStride = m_Shader_handle[m_Handle_id].element[ite].size_of;
+
+			m_Dx12->device()->CreateUnorderedAccessView(m_Shader_handle[m_Handle_id].resource[ite], nullptr, &desc, handle);
+			handle.ptr += m_Dx12->device()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 		}
 	}
-	void ComputeShader::commitData() {
+	void ComputeShader::mapInput(int slot_id, const void* data) {
+		D3D12_RANGE range{ 0, 0 };
+		UINT8* input_data;
+		auto result = m_Shader_handle[m_Handle_id].resource[slot_id]->Map(0, &range, reinterpret_cast<void**>(&input_data));
+		memcpy(input_data, data, 
+			m_Shader_handle[m_Handle_id].element[slot_id].num * 
+			m_Shader_handle[m_Handle_id].element[slot_id].size_of
+		);
+		//m_Shader_handle[m_Handle_id].resource[slot_id]->Unmap(0, nullptr);
+	}
+	void ComputeShader::mapOutput(int slot_id) {
+		D3D12_RANGE range{ 0, 0 };
+		auto result = m_Shader_handle[m_Handle_id].resource[slot_id]->Map(
+			0, &range, &m_Shader_handle[m_Handle_id].data[slot_id]);
+	}
+	void ComputeShader::execution(int x, int y, int z) {
+		m_Dx12->cmdList()->SetComputeRootSignature(m_Shader_handle[m_Handle_id].root_sig);
+		m_Dx12->cmdList()->SetPipelineState(m_Shader_handle[m_Handle_id].pipeline_state);
+		m_Dx12->cmdList()->SetDescriptorHeaps(1, &m_Shader_handle[m_Handle_id].desc_heap);
+		auto handle = m_Shader_handle[m_Handle_id].desc_heap->GetGPUDescriptorHandleForHeapStart();
+		m_Dx12->cmdList()->SetComputeRootDescriptorTable(0, handle);
 
+		//コンピュートシェーダーの実行
+		m_Dx12->cmdList()->Dispatch(x, y, z);
+	}
+	void* ComputeShader::getData(int slot_id) {
+		return m_Shader_handle[m_Handle_id].data[slot_id];
 	}
 }

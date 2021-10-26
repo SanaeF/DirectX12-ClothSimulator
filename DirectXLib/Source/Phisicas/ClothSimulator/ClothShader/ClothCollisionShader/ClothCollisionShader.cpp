@@ -27,7 +27,7 @@ namespace phy {
 		}
 		m_Data_handle[m_Model_id].output.resize(model.vertex.size());
 		m_Data_handle[m_Model_id].input_model.resize(model.vertex.size());
-		m_Data_handle[m_Model_id].input_space.resize(model.vertex.size());
+		m_Data_handle[m_Model_id].input_space.resize(XYZ_ALL);
 		CollisionSort sort(model.vertex.size(), m_High_pos, m_Low_pos);
 		for (int ite = 0; ite < XYZ_ALL; ite++)m_Data_handle[m_Model_id].input_space[ite].space_ount = 0;
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
@@ -35,7 +35,15 @@ namespace phy {
 			m_Data_handle[m_Model_id].input_model[ite].cloth.spring = spring[ite];
 			m_Data_handle[m_Model_id].input_model[ite].area_id = sort.spaceInput(ite, m_Data_handle[m_Model_id].input_model[ite].cloth.pos);
 			int area_id = m_Data_handle[m_Model_id].input_model[ite].area_id;
-			m_Data_handle[m_Model_id].input_space[area_id].spaceID[m_Data_handle[m_Model_id].input_space[area_id].space_ount] = ite;
+			if (m_Data_handle[m_Model_id].input_space[area_id].space_ount>=47) {
+				for (int ite2 = 0; ite2 < XYZ_ALL; ite2++) {
+					if (m_Data_handle[m_Model_id].input_space[ite2].space_ount < 47) {
+						area_id = ite2;
+						break;
+					}
+				}
+			}
+			m_Data_handle[m_Model_id].input_space[m_Data_handle[m_Model_id].input_space[area_id].space_ount].spaceID[area_id] = ite;
 			m_Data_handle[m_Model_id].input_space[area_id].space_ount++;
 		}
 		createDataInOutter(model, mass_spring_id);
@@ -92,8 +100,8 @@ namespace phy {
 		auto& input = m_Data_handle[m_Model_id].input_model;
 		input[0].cloth.vertex_size = model.vertex.size();
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
-			input[ite].cloth.pre_pos = model.pre_vert[ite].position;
-			input[ite].cloth.color = model.pre_vert[ite].color;
+			/*input[ite].cloth.pre_pos = model.pre_vert[ite].position;
+			input[ite].cloth.color = model.pre_vert[ite].color;*/
 			input[ite].cloth.id0 = mass_spring_id[ite][0];
 			input[ite].cloth.id1 = mass_spring_id[ite][1];
 			input[ite].cloth.id2 = mass_spring_id[ite][2];
@@ -301,8 +309,8 @@ namespace phy {
 		auto& output = m_Data_handle[m_Model_id].output;
 		if (!output[0].cloth.simulate)return;
 		for (int ite = 0; ite < model.vertex.size(); ite++) {
-			//model.vertex[ite].position = output[ite].pos;
-			spring[ite].force = output[ite].cloth.spring.force;
+			model.vertex[ite].position = output[ite].cloth.pos;
+			//spring[ite].force = output[ite].cloth.spring.force;
 		}
 	}
 }

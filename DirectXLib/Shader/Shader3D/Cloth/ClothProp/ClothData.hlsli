@@ -1,13 +1,16 @@
-struct Spring {
+struct SimulateParam {
+	int vert_max;
+	float gravity;
+	float dt;
+};
+
+struct SpringData {
 	float3 force;
 	float3 velocity;
 	float mass;
 };
-struct SpringData {
-	Spring spring;
-	float3 pos;
-	float3 pre_pos;
-	float3 col;
+
+struct MassModel {
 	int id0;
 	int id1;
 	int id2;
@@ -20,25 +23,15 @@ struct SpringData {
 	int id9;
 	int id10;
 	int id11;
-	bool simulate;
-	int vertex_size;
 };
-struct ModelParamater {
+struct ModelVertex {
+	float3 pos;
+	float4 normal;
+	float2 tex;
+	float3 color;
+};
+struct MaxPosition {
+	bool is_simulated;
 	float3 max_pos;
 	float3 min_pos;
 };
-
-float3 sub(float3 vec1, float3 vec2) {
-	float3 result;
-	result.x = vec1.x - vec2.x;
-	result.y = vec1.y - vec2.y;
-	result.z = vec1.z - vec2.z;
-	return result;
-}
-float3 add(float3 vec1, float3 vec2) {
-	float3 result;
-	result.x = vec1.x + vec2.x;
-	result.y = vec1.y + vec2.y;
-	result.z = vec1.z + vec2.z;
-	return result;
-}

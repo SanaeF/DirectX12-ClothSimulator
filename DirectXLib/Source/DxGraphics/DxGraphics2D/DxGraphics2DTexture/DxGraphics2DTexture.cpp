@@ -123,6 +123,11 @@ void DxGraphics2DTexture::descriptorRange() {
 	m_Desc_tbl_range[1].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
 	m_Desc_tbl_range[1].BaseShaderRegister = 0;
 	m_Desc_tbl_range[1].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
+
+	m_Desc_tbl_range[2].NumDescriptors = 1;
+	m_Desc_tbl_range[2].RangeType = D3D12_DESCRIPTOR_RANGE_TYPE_CBV;
+	m_Desc_tbl_range[2].BaseShaderRegister = 1;
+	m_Desc_tbl_range[2].OffsetInDescriptorsFromTableStart = D3D12_DESCRIPTOR_RANGE_OFFSET_APPEND;
 }
 
 void DxGraphics2DTexture::rootParameters() {
@@ -130,7 +135,7 @@ void DxGraphics2DTexture::rootParameters() {
 	m_Root_parameter.ParameterType = D3D12_ROOT_PARAMETER_TYPE_DESCRIPTOR_TABLE;
 	m_Root_parameter.ShaderVisibility = D3D12_SHADER_VISIBILITY_ALL;
 	m_Root_parameter.DescriptorTable.pDescriptorRanges = m_Desc_tbl_range;
-	m_Root_parameter.DescriptorTable.NumDescriptorRanges = 2;
+	m_Root_parameter.DescriptorTable.NumDescriptorRanges = 3;
 
 }
 

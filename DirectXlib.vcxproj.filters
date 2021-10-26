@@ -254,9 +254,6 @@
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.h">
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.h">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader</Filter>
     </ClInclude>
@@ -265,6 +262,9 @@
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.h">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

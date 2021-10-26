@@ -41,7 +41,9 @@ namespace libGraph {
 		);
 		auto result = m_pConst_buffer->Map(0, nullptr, (void**)&m_pMatrix_data);
 		m_pMatrix_data->world = m_matrix;
-		m_pMatrix_data->viewproj = m_Look_at * m_Perspective_fov;
+		m_pMatrix_data->eye = m_Eye;
+		m_pMatrix_data->view = m_Look_at;
+		m_pMatrix_data->proj = m_Perspective_fov;
 		//mConstBuffer->Unmap(0, nullptr);
 	}
 	void Dx2DMatrix::changeMatrix(
@@ -97,6 +99,7 @@ namespace libGraph {
 			1.f,
 			10.f
 		);
+		m_Eye = eye;
 	}
 
 	ID3D12Resource*

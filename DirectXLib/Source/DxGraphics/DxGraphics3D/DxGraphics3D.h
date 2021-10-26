@@ -33,6 +33,7 @@ namespace lib {
 
 			ModelData model;
 			std::vector<std::vector<int>>mass_springs;
+			std::vector<MassModel>mass_model;
 			/*D3D12_VERTEX_BUFFER_VIEW vb_view;
 			D3D12_INDEX_BUFFER_VIEW ib_view;
 			ComPtr<ID3D12Resource> vb;

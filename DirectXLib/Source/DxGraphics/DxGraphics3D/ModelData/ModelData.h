@@ -7,12 +7,13 @@
 #define SPRING_NUM (12)//éøì_ÉÇÉfÉãÇ™3x3
 
 namespace lib {
-	struct ModelParam {
+	struct ModelVertex {
 		DirectX::XMFLOAT3 position;
 		DirectX::XMFLOAT4 normal;
-		DirectX::XMFLOAT3 color;
 		DirectX::XMFLOAT2 tex;
-
+		DirectX::XMFLOAT3 color;
+	};
+	struct ModelParam{
 		// í«â¡UVç¿ïW
 		std::vector<DirectX::XMFLOAT4> addUV;
 
@@ -94,8 +95,9 @@ namespace lib {
 	class ModelData {
 	public:
 		static ModelData Object;
-		std::vector<lib::ModelParam>vertex;
-		std::vector<lib::ModelParam>pre_vert;
+		std::vector<ModelVertex>vertex;
+		std::vector<ModelVertex>pre_vert;
+		std::vector<ModelParam>param;
 		std::vector<UINT>index;
 		std::vector<std::vector<int>>index_group;
 		std::vector<std::wstring> texturePaths;
@@ -105,6 +107,7 @@ namespace lib {
 		ID3D12Resource* index_buffer;
 		D3D12_VERTEX_BUFFER_VIEW vb_view;
 		D3D12_INDEX_BUFFER_VIEW ib_view;
+		ID3D12DescriptorHeap* mat_heap;
 	private:
 		template<typename T>
 		using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -115,6 +118,7 @@ namespace lib {
 	public:
 		ModelData();
 		void createViewBuffer(ComPtr<ID3D12Device> device);
+		void createMaterialBuffer(ComPtr<ID3D12Device> device);
 		void bufferMap();
 	private:
 		bool createVertexBuffer(ComPtr<ID3D12Device> device);

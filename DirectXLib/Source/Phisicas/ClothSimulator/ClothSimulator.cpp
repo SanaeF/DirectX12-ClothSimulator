@@ -11,19 +11,28 @@ namespace phy {
 	ClothSimulator::ClothSimulator() {
 
 	}
-	ClothSimulator::ClothSimulator(std::vector<lib::ModelParam> vertex, std::vector<UINT> index, std::vector<std::vector<int>> index_group) {
-		m_Pre_IndexID.resize(vertex.size());
-		MassSpringModel ms(MODEL_FILE::PMX,vertex, index, index_group);
+	void ClothSimulator::createMassModel(
+		std::vector<MassModel>& mass_model,
+		std::vector<lib::ModelVertex> vertex,
+		std::vector<UINT> index,
+		std::vector<std::vector<int>> index_group
+	) {
+		mass_model.resize(vertex.size());
+		MassSpringModel ms(MODEL_FILE::PMX, vertex, index, index_group);
 		for (int ite = 0; ite < vertex.size(); ite++) {
-			m_Pre_IndexID[ite].resize(SPRING_NUM);
-			if (vertex[ite].color.x == 1.f &&
-				vertex[ite].color.y == 0.f &&
-				vertex[ite].color.z == 0.f
-				) {
-				for (int ite2 = 0; ite2 < SPRING_NUM; ite2++)m_Pre_IndexID[ite][ite2] = -1;
-				continue;
-			}
-			m_Pre_IndexID[ite] = ms.create(ite);
+			auto m3x3_4 = ms.create(ite);
+			mass_model[ite].id0 = m3x3_4[0];
+			mass_model[ite].id1 = m3x3_4[1];
+			mass_model[ite].id2 = m3x3_4[2];
+			mass_model[ite].id3 = m3x3_4[3];
+			mass_model[ite].id4 = m3x3_4[4];
+			mass_model[ite].id5 = m3x3_4[5];
+			mass_model[ite].id6 = m3x3_4[6];
+			mass_model[ite].id7 = m3x3_4[7];
+			mass_model[ite].id8 = m3x3_4[8];
+			mass_model[ite].id9 = m3x3_4[9];
+			mass_model[ite].id10 = m3x3_4[10];
+			mass_model[ite].id11 = m3x3_4[11];
 		}
 	}
 	void ClothSimulator::createClothData(
@@ -60,12 +69,22 @@ namespace phy {
 			spring_data[ite].velocity = DirectX::XMFLOAT3(0, 0, 0);
 		}
 	}
+	void ClothSimulator::setupForce(
+		int size,
+		std::vector<SpringData>& spring_data
+	) {
+		spring_data.resize(size);
+		for (int ite = 0; ite < size; ite++) {
+			spring_data[ite].force = DirectX::XMFLOAT3(0, 0, 0);
+			spring_data[ite].velocity = DirectX::XMFLOAT3(0, 0, 0);
+		}
+	}
 	void ClothSimulator::update(
 		lib::ModelData& model,
 		std::vector<SpringData>& spring_data,
 		std::vector<std::vector<int>>& mass_spring_id
 	) {
-		const int step = 10;
+		const int step = 1;//15;
 		SpringForceCalculator force(model.pre_vert);
 		//モデル全頂点の力と速度データ受け取り
 		if (spring_data.size() > 0) force.setSpringForceData(spring_data);
@@ -82,19 +101,13 @@ namespace phy {
 	void ClothSimulator::execution(
 		int model_id,
 		lib::ModelData& model,
+		std::vector<MassModel>& mass_model,
 		std::vector<SpringData>& spring_data,
-		std::vector<std::vector<int>>& mass_spring_id,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
 		const int step = 5;
-		SpringForceCalculator force(model.pre_vert);
-		//モデル全頂点の力と速度データ受け取り
-		if (spring_data.size() > 0) force.setSpringForceData(spring_data);
-		//重力を加える
-		force.gravity(m_time, model.vertex, mass_spring_id);
-		spring_data = force.getSpringForceData();
 		ClothShader cloth(dx_12);
-		cloth.execution(model_id, step, m_time, model, spring_data, mass_spring_id);
+		cloth.execution(model_id, step, m_time, model, mass_model, spring_data);
 		m_time++;
 	}
 	std::vector<std::vector<int>>

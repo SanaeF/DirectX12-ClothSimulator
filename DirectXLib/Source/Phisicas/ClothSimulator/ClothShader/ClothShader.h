@@ -7,6 +7,7 @@ namespace lib {
 namespace phy {
 	class ClothShader {
 	private:
+		static bool m_Is_simulated;
 		std::shared_ptr<lib::DirectX12Manager> m_Dx12;
 	public:
 		ClothShader(std::shared_ptr<lib::DirectX12Manager>& dx_12);
@@ -15,8 +16,8 @@ namespace phy {
 			int step,
 			int time,
 			lib::ModelData& model,
-			std::vector<SpringData>& spring_data,
-			std::vector<std::vector<int>>& mass_spring_id
+			std::vector<MassModel>& mass_model,
+			std::vector<SpringData>& spring_data
 		);
 	private:
 		void massSpring(
@@ -24,8 +25,8 @@ namespace phy {
 			int step,
 			int time,
 			lib::ModelData& model,
-			std::vector<SpringData>& spring_data,
-			std::vector<std::vector<int>>& mass_spring_id
+			std::vector<MassModel>& mass_model,
+			std::vector<SpringData>& spring_data
 		);
 		void collider(
 			int model_id,
@@ -33,7 +34,10 @@ namespace phy {
 			std::vector<SpringData>& spring_data,
 			std::vector<std::vector<int>>& mass_spring_id
 		);
+
+		void worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data);
 		void forceZero(std::vector<SpringData>& spring_data);
 		bool isNullty(DirectX::XMFLOAT3 pos);
+		bool isFixed(lib::ModelVertex vert);
 	};
 }

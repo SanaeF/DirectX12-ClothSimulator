@@ -18,7 +18,7 @@ private:
 	CD3DX12_ROOT_PARAMETER m_Root_params[2] = {};
 	CD3DX12_ROOT_SIGNATURE_DESC m_Root_sig_desc = {};
 	D3D12_ROOT_SIGNATURE_DESC m_RS_desc = {};
-	D3D12_DESCRIPTOR_RANGE m_Desc_tbl_range[2] = {};
+	D3D12_DESCRIPTOR_RANGE m_Desc_tbl_range[3] = {};
 	D3D12_STATIC_SAMPLER_DESC m_Sampler_desc = {};
 	DirectX::TexMetadata m_Meta_data = {}; 
 	DirectX::ScratchImage m_Scratch_img = {};

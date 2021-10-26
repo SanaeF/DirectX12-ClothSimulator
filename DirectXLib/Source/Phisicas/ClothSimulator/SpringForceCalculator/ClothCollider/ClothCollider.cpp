@@ -17,7 +17,7 @@ namespace phy {
 		m_Space_vert.resize(vert_size);
 	}
 	//モデルサイズに合わせて、あたり判定空間を生成する
-	void ClothCollider::createSpaceBox(lib::ModelParam p) {
+	void ClothCollider::createSpaceBox(lib::ModelVertex p) {
 		//四角形p1を求める
 		if (m_High_dist.x < p.position.x)m_High_dist.x = p.position.x;
 		if (m_High_dist.y < p.position.y)m_High_dist.y = p.position.y;
@@ -31,7 +31,7 @@ namespace phy {
 		if (m_High_pos.x == m_Low_pos.x && m_High_pos.y == m_Low_pos.y && m_High_pos.z == m_Low_pos.z)return;
 		m_Position_zero = lib::VectorMath::slplitPoint(m_High_pos, m_Low_pos);
 	}
-	void ClothCollider::spaceInput(int id, lib::ModelParam p) {
+	void ClothCollider::spaceInput(int id, lib::ModelVertex p) {
 		int box = 1;
 		if (m_High_pos.x != 0)box *= m_Split_num;
 		if (m_High_pos.y != 0)box *= m_Split_num;
@@ -56,8 +56,8 @@ namespace phy {
 	void ClothCollider::repulsion(
 		int vert_id,
 		SpringData& spring_data,
-		std::vector<lib::ModelParam>& vert,
-		std::vector<lib::ModelParam>& pre_vert
+		std::vector<lib::ModelVertex>& vert,
+		std::vector<lib::ModelVertex>& pre_vert
 	) {
 		if (m_Hit_space.size() == 1)return;
 		auto id = m_Space_vert[vert_id];

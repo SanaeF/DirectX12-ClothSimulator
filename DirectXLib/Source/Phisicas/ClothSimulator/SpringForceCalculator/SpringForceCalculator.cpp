@@ -6,14 +6,14 @@
 #include "BendingSpring/BendingSpring.h"
 #include <thread>
 namespace phy {
-	SpringForceCalculator::SpringForceCalculator(std::vector<lib::ModelParam>& pre_vert):
+	SpringForceCalculator::SpringForceCalculator(std::vector<lib::ModelVertex>& pre_vert):
 		m_Pre_vertex(pre_vert)
 	{
 		m_Param.grid_mass = 1.f;
 		m_Param.gravity = 9.8f;
-		m_Param.damping = 0.10f;
+		m_Param.damping = 1.3f;
 		m_Param.dt = 0.036;
-		m_Param.wind = 0.0f;
+		m_Param.wind = 5.f;
 		m_Param.spring_constant = 15.f;
 		m_Param.structural.shrink = 15.f;
 		m_Param.structural.stretch = 5.f;
@@ -37,7 +37,7 @@ namespace phy {
 		m_Bending->bend = 3;
 	}
 	void SpringForceCalculator::gravity(
-		int frame, std::vector<lib::ModelParam>& vertex, std::vector<std::vector<int>>& pre_index_id
+		int frame, std::vector<lib::ModelVertex>& vertex, std::vector<std::vector<int>>& pre_index_id
 	) {
 		m_Spring_data.resize(vertex.size());
 		for (int ite = 0; ite < vertex.size(); ite++) {
@@ -48,7 +48,7 @@ namespace phy {
 			data.force.y -= data.mass * m_Param.gravity;
 			//•——Í‚ð‰Á‚¦‚é
 			double r1 = frame /10;
-			data.force.x = m_Param.wind * (sin(r1)* sin(r1) * 0.25 + 0.25);
+			data.force.x += m_Param.wind * (sin(r1)* sin(r1) * 0.25 + 0.25);
 
 			//ƒ_ƒ“ƒsƒ“ƒO
 			auto d = lib::VectorMath::scale(data.velocity, m_Param.damping);
@@ -58,7 +58,7 @@ namespace phy {
 	}
 	void SpringForceCalculator::restriction(
 		int frame,
-		std::vector<lib::ModelParam>& vertex, 
+		std::vector<lib::ModelVertex>& vertex, 
 		std::vector<std::vector<int>>& pre_index_id
 	) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
@@ -72,7 +72,7 @@ namespace phy {
 		}
 		createNewPosition(vertex, m_Spring_data);
 	}
-	void SpringForceCalculator::createNewPosition(std::vector<lib::ModelParam>& vertex, std::vector<SpringData>& spring_data) {
+	void SpringForceCalculator::createNewPosition(std::vector<lib::ModelVertex>& vertex, std::vector<SpringData>& spring_data) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
 			auto v = lib::VectorMath::scale(spring_data[ite].force, 1 / (spring_data[ite].mass + spring_data[ite].mass));
@@ -86,7 +86,7 @@ namespace phy {
 			//m_Collision->createSpaceBox(vertex[ite]);
 		}
 	}
-	void SpringForceCalculator::collision(std::vector<lib::ModelParam>& vertex) {
+	void SpringForceCalculator::collision(std::vector<lib::ModelVertex>& vertex) {
 		for (int ite = 0; ite < vertex.size(); ite++) {
 			if (isFixed(vertex[ite]))continue;
 			m_Collision->spaceInput(ite, vertex[ite]);
@@ -102,7 +102,7 @@ namespace phy {
 	std::vector<SpringData> SpringForceCalculator::getSpringForceData() {
 		return m_Spring_data;
 	}
-	inline bool SpringForceCalculator::isFixed(lib::ModelParam vert) {
+	inline bool SpringForceCalculator::isFixed(lib::ModelVertex vert) {
 		if (vert.color.x == 1.f &&
 			vert.color.y == 0.f &&
 			vert.color.z == 0.f)return true;

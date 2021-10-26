@@ -24,13 +24,13 @@ namespace phy {
 	public:
 		ClothCollider(int split_num, int vert_size);
 		//モデルサイズに合わせて、あたり判定空間を生成する
-		void createSpaceBox(lib::ModelParam p);
-		void spaceInput(int id, lib::ModelParam p);
+		void createSpaceBox(lib::ModelVertex p);
+		void spaceInput(int id, lib::ModelVertex p);
 		void repulsion(
 			int vert_id,
 			SpringData& spring_data,
-			std::vector<lib::ModelParam>& vert,
-			std::vector<lib::ModelParam>& pre_vert
+			std::vector<lib::ModelVertex>& vert,
+			std::vector<lib::ModelVertex>& pre_vert
 		);
 	private:
 		bool isHitCircle(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2);

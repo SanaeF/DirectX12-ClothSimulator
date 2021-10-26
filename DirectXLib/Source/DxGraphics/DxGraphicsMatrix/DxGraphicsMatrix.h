@@ -13,13 +13,16 @@ namespace libGraph {
 		//ID3D12Resource* mInstBuffer = nullptr;
 		struct MatricesData {
 			DirectX::XMMATRIX world;
-			DirectX::XMMATRIX viewproj;
+			DirectX::XMMATRIX view;
+			DirectX::XMMATRIX proj;
+			DirectX::XMFLOAT3 eye;
 		};
 		MatricesData* m_pMatrix_data;
 		DirectX::XMMATRIX* m_pConst_matrix;
 		DirectX::XMMATRIX m_matrix;
 		DirectX::XMMATRIX* m_pMap_matrix;
 		DirectX::XMMATRIX m_Worl_mat;
+		DirectX::XMFLOAT3 m_Eye;
 		DirectX::XMMATRIX m_Look_at;
 		DirectX::XMMATRIX m_Perspective_fov;
 		D3D12_SHADER_RESOURCE_VIEW_DESC m_Inst_srv_desc = {};

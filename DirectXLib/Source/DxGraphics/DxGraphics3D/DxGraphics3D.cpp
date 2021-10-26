@@ -45,14 +45,19 @@ namespace lib {
 	int DxGraphics3D::loadPmx(const std::wstring& file_path, libGraph::DxGraphicsPipeline& pipeline) {
 		int handleID = 0;
 		m_Model_data.resize(handleID + 1);
-		m_Texture->loadWIC(L"./model/skirt/skirt.png");
-		m_Texture->createResource(m_Dx12);
-		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
-		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
 		model::PmxModel obj;
 		obj.loadFile(file_path); //obj.load("./model/skirt2.fbx");testcloth
 		m_Model_data[handleID].model = lib::ModelData::Object;
 		m_Model_data[handleID].model.createViewBuffer(m_Dx12->device());
+		m_Model_data[handleID].model.createMaterialBuffer(m_Dx12->device());
+		phy::ClothSimulator::setupForce(
+			lib::ModelData::Object.vertex.size(),
+			m_Model_data[handleID].spring_data
+		);
+		m_Texture->loadWIC(lib::ModelData::Object.texturePaths[0].c_str());
+		m_Texture->createResource(m_Dx12);
+		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
+		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
 		return -1;
 	}
 	void DxGraphics3D::draw(float x, float y, float z, float size, double Angle, int Handle) {
@@ -115,10 +120,12 @@ namespace lib {
 	void DxGraphics3D::drawCommand(int InstancedCount, int Handle) {
 		ID3D12DescriptorHeap* texDH = m_Model_data[Handle].tex_desc_heap_arry[InstancedCount];
 		auto getMatVBView = m_Model_data[Handle].model.vb_view;
+		auto mat_heap = m_Model_data[Handle].model.mat_heap;
 		auto getIndexCount = m_Model_data[Handle].model.index.size();
 		m_Dx12->cmdList()->IASetVertexBuffers(0, 1, &getMatVBView);
 		m_Dx12->cmdList()->SetDescriptorHeaps(1, &texDH);
 		m_Dx12->cmdList()->SetGraphicsRootDescriptorTable(0, texDH->GetGPUDescriptorHandleForHeapStart());
+		m_Dx12->cmdList()->SetDescriptorHeaps(1, &mat_heap);
 		m_Dx12->cmdList()->DrawIndexedInstanced(getIndexCount, 1, 0, 0, 0);
 	}
 
@@ -135,17 +142,27 @@ namespace lib {
  		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	void DxGraphics3D::setupClothPhis(int Handle) {
-		phy::ClothSimulator sim(m_Model_data[Handle].model.vertex, m_Model_data[Handle].model.index, m_Model_data[Handle].model.index_group);
-		m_Model_data[Handle].mass_springs = sim.getPreIndexID();
+		phy::ClothSimulator::createMassModel(
+			m_Model_data[Handle].mass_model,
+			m_Model_data[Handle].model.vertex,
+			m_Model_data[Handle].model.index, 
+			m_Model_data[Handle].model.index_group
+		);
+		phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
 	}
 	void DxGraphics3D::updateClothPhis(int Handle) {
-		phy::ClothSimulator::execution(Handle, m_Model_data[Handle].model, m_Model_data[Handle].spring_data, m_Model_data[Handle].mass_springs, m_Dx12);
-		//phy::ClothSimulator::update(m_Model_data[Handle].model, m_Model_data[Handle].spring_data, m_Model_data[Handle].mass_springs);
+		phy::ClothSimulator::execution(
+			Handle, 
+			m_Model_data[Handle].model, 
+			m_Model_data[Handle].mass_model, 
+			m_Model_data[Handle].spring_data,
+			m_Dx12
+		);
 		m_Model_data[Handle].model.bufferMap();
 	}
 	void DxGraphics3D::resetClothPhis(int Handle) {
-		phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
+		/*phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
 		m_Model_data[Handle].model.vertex = m_Model_data[Handle].model.pre_vert;
-		m_Model_data[Handle].model.bufferMap();
+		m_Model_data[Handle].model.bufferMap();*/
 	}
 }
