@@ -35,9 +35,6 @@ namespace lib {
         //送るデータのサイズをスロット指定で配置
         void inputBufferSize(int slot_id, int size, int type);
 
-        //アライメントするかどうか
-        void createResource(bool is_alingnment, int slot_id);
-
         //UAVが作られます
         void createUnorderdAccessView();
 
@@ -60,5 +57,8 @@ namespace lib {
 
         //ヒープの作成
         void createHeap(int slot_max);
+
+        //リソースを作成
+        void createResource();
 	};
 }

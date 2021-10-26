@@ -61,8 +61,8 @@ namespace lib {
 		//void draw(std::shared_ptr<PMDRenderer> renderer);
 		//void update();
 		void clearScreen();
-		void commandClear();
-		void setNextCommand();
+		void closeCommand();
+		void exeCommand();
 		///テクスチャパスから必要なテクスチャバッファへのポインタを返す
 		///@param texpath テクスチャファイルパス
 		ComPtr<ID3D12Resource> getTextureByPath(const char* texpath);

@@ -48,7 +48,7 @@ namespace phy {
 			m_Shader.reset(
 				new lib::ComputeShader(
 					"./DirectXLib/Shader/Shader3D/Cloth/ClothSpring.hlsl",
-					"ClothSpring", 8, shaderHandler[m_Model_id].compute_handle, m_Dx12)
+					"ClothSpring", 9, shaderHandler[m_Model_id].compute_handle, m_Dx12)
 			);
 			//取得用モデルデータ
 			m_Shader->inputBufferSize(0, model.vertex.size(), sizeof(lib::ModelVertex));//シミュレートして変わったモデル情報
@@ -60,16 +60,7 @@ namespace phy {
 			m_Shader->inputBufferSize(5, model.pre_vert.size(), sizeof(lib::ModelVertex));//固定用のモデル情報
 			m_Shader->inputBufferSize(6, model.vertex.size(), sizeof(lib::ModelVertex));//描画で使ったモデル情報
 			m_Shader->inputBufferSize(7, spring.size(), sizeof(SpringData));//バネモデル情報
-
-			m_Shader->createResource(true, 0);
-			m_Shader->createResource(true, 1);
-			m_Shader->createResource(true, 2);
-			m_Shader->createResource(false, 3);
-			m_Shader->createResource(false, 4);
-			m_Shader->createResource(false, 5);
-			m_Shader->createResource(false, 6);
-			m_Shader->createResource(false, 7);
-
+			m_Shader->inputBufferSize(8, spring.size(), sizeof(SpringData));//バネモデル情報
 			m_Shader->createUnorderdAccessView();
 
 			m_Shader->mapOutput(0);
@@ -84,6 +75,7 @@ namespace phy {
 		}
 		m_Shader->mapInput(6, model.vertex.data());
 		m_Shader->mapInput(7, spring.data());
+		m_Shader->mapInput(8, spring.data());
 		is_input = true;
 	}
 
@@ -95,243 +87,6 @@ namespace phy {
 		);
 		dataAssign(is_simulated, model, spring);
 	}
-
-	//void ClothSpringShader::createOutput(
-	//	lib::ModelData& model,
-	//	std::vector<SpringData>& spring,
-	//	std::vector<std::vector<int>>& mass_spring_id
-	//) {
-	//	if (shaderHandler[m_Model_id].is_created)return;
-	//	createMassSpringforGPU(model, spring, mass_spring_id);
-	//	if (!loadShader())return;
-	//	if (!createPipeline())return;
-	//	if (!createHeap())return;
-	//	if (!createOutputResource())return;
-	//	if (!createUAV())return;
-	//	if (!outputMap())return;
-	//	m_Is_looped = false;
-	//}
-	//void ClothSpringShader::createOutParam() {
-	//	if (shaderHandler[m_Model_id].is_created)return;
-	//	shaderHandler[m_Model_id].out_param.resize(1);
-	//	shaderHandler[m_Model_id].out_param[0].max_pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-	//	shaderHandler[m_Model_id].out_param[0].min_pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
-	//	int size = sqrt(shaderHandler[m_Model_id].in_spring.size());
-	//	int size_out = shaderHandler[m_Model_id].in_spring.size() - (size * size);
-	//	auto& thread = shaderHandler[m_Model_id].thread;
-	//	thread.x = size + size_out;
-	//	thread.y = size;
-	//	if (!createParamOutResource())return;
-	//	if (!createParamOutUAV())return;
-	//	if (!outParamMap())return;
-	//}
-	//bool ClothSpringShader::createInput() {
-	//	if (!shaderHandler[m_Model_id].is_created) {
-	//		if (!createInputResource())return false;
-	//		if (!createInputUAV())return false;
-	//	}
-	//	if (!inputMap())return false;
-	//	return true;
-	//}
-	//void ClothSpringShader::createMassSpringforGPU(
-	//	lib::ModelData& model,
-	//	std::vector<SpringData>& spring,
-	//	std::vector<std::vector<int>>& mass_spring_id
-	//) {
-	//	shaderHandler[m_Model_id].out_spring.resize(model.vertex.size());
-	//	shaderHandler[m_Model_id].in_spring.resize(model.vertex.size());
-	//	for (int ite = 0; ite < model.vertex.size(); ite++) {
-	//		shaderHandler[m_Model_id].in_spring[ite].pos = model.vertex[ite].position;
-	//		shaderHandler[m_Model_id].in_spring[ite].spring = spring[ite];
-	//	}
-	//	shaderHandler[m_Model_id].in_spring[0].vertex_size = model.vertex.size();
-	//	auto& input = shaderHandler[m_Model_id].in_spring;
-	//	for (int ite = 0; ite < model.vertex.size(); ite++) {
-	//		input[ite].pre_pos = model.pre_vert[ite].position;
-	//		input[ite].color = model.pre_vert[ite].color;
-	//		input[ite].id0 = mass_spring_id[ite][0];
-	//		input[ite].id1 = mass_spring_id[ite][1];
-	//		input[ite].id2 = mass_spring_id[ite][2];
-	//		input[ite].id3 = mass_spring_id[ite][3];
-	//		input[ite].id4 = mass_spring_id[ite][4];
-	//		input[ite].id5 = mass_spring_id[ite][5];
-	//		input[ite].id6 = mass_spring_id[ite][6];
-	//		input[ite].id7 = mass_spring_id[ite][7];
-	//		input[ite].id8 = mass_spring_id[ite][8];
-	//		input[ite].id9 = mass_spring_id[ite][9];
-	//		input[ite].id10 = mass_spring_id[ite][10];
-	//		input[ite].id11 = mass_spring_id[ite][11];
-	//	}
-	//}
-	//bool ClothSpringShader::loadShader() {
-	//	auto result = D3DCompileFromFile(
-	//		L"./DirectXLib/Shader/Shader3D/Cloth/ClothSpring.hlsl", nullptr,
-	//		D3D_COMPILE_STANDARD_FILE_INCLUDE, "ClothSpring", "cs_5_1",
-	//		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-	//		0, &m_Shader, nullptr
-	//	);
-	//	ID3DBlob* sig = nullptr;
-	//	result = D3DGetBlobPart(m_Shader->GetBufferPointer(), m_Shader->GetBufferSize(),
-	//		D3D_BLOB_ROOT_SIGNATURE, 0, &sig);
-	//	//ルートシグネチャの生成
-	//	result = m_Device->CreateRootSignature(0, sig->GetBufferPointer(), sig->GetBufferSize(), IID_PPV_ARGS(&shaderHandler[m_Model_id].root_sig));
-	//	if (!SUCCEEDED(result))return false;
-	//	return true;
-	//}
-	//bool ClothSpringShader::createPipeline() {
-	//	D3D12_COMPUTE_PIPELINE_STATE_DESC desc{};
-	//	desc.CS.pShaderBytecode = m_Shader->GetBufferPointer();
-	//	desc.CS.BytecodeLength = m_Shader->GetBufferSize();
-	//	desc.Flags = D3D12_PIPELINE_STATE_FLAG_NONE;
-	//	desc.NodeMask = 0;
-	//	desc.pRootSignature = shaderHandler[m_Model_id].root_sig;
-	//	auto hr = m_Device->CreateComputePipelineState(&desc, IID_PPV_ARGS(&shaderHandler[m_Model_id].pipeline));
-	//	return true;
-	//}
-	//bool ClothSpringShader::createHeap() {
-	//	D3D12_DESCRIPTOR_HEAP_DESC desc{};
-	//	desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	//	desc.NodeMask = 0;
-	//	desc.NumDescriptors = 3;
-	//	desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	//	auto result = m_Device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&shaderHandler[m_Model_id].desc_heap));
-	//	if (!SUCCEEDED(result))return false;
-	//	return true;
-	//}
-	//bool ClothSpringShader::createOutputResource() {
-	//	D3D12_HEAP_PROPERTIES prop{};
-	//	prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	//	prop.CreationNodeMask = 1;
-	//	prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	//	prop.Type = D3D12_HEAP_TYPE_CUSTOM;
-	//	prop.VisibleNodeMask = 1;
-	//	//サイズは定数バッファと同じように指定
-	//	D3D12_RESOURCE_DESC desc{};
-	//	desc.Alignment = 0;
-	//	desc.DepthOrArraySize = 1;
-	//	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	//	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	//	desc.Format = DXGI_FORMAT_UNKNOWN;
-	//	desc.Height = 1;
-	//	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//	desc.MipLevels = 1;
-	//	desc.SampleDesc = { 1, 0 };
-	//	desc.Width = (sizeof(ClothData) * shaderHandler[m_Model_id].out_spring.size() + 0xff) & ~0xff;
-	//	auto result = m_Device->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
-	//		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
-	//		IID_PPV_ARGS(&shaderHandler[m_Model_id].out_spring_res));
-	//	if (!SUCCEEDED(result))return false;
-	//	return true;
-	//}
-	//bool ClothSpringShader::createUAV() {
-	//	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
-	//	desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-	//	desc.Format = DXGI_FORMAT_UNKNOWN;
-	//	desc.Buffer.NumElements = shaderHandler[m_Model_id].out_spring.size();
-	//	desc.Buffer.StructureByteStride = sizeof(ClothData);
-	//	auto basicHeapHandle = shaderHandler[m_Model_id].desc_heap->GetCPUDescriptorHandleForHeapStart();
-	//	m_Device->CreateUnorderedAccessView(shaderHandler[m_Model_id].out_spring_res, nullptr, &desc, basicHeapHandle);
-	//	basicHeapHandle.ptr += m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	//	shaderHandler[m_Model_id].desc_handle = basicHeapHandle;
-	//	return true;
-	//}
-	//bool ClothSpringShader::outputMap() {
-	//	D3D12_RANGE range{ 0, 0 };
-	//	UINT8* pOutputDataBegin;
-	//	auto result = shaderHandler[m_Model_id].out_spring_res->Map(0, &range, &shaderHandler[m_Model_id].spring_data);
-	//	return true;
-	//}
-	//bool ClothSpringShader::createInputResource() {
-	//	const UINT buffer_size = static_cast<UINT>(shaderHandler[m_Model_id].in_spring.size()) * sizeof(ClothData);
-	//	D3D12_HEAP_PROPERTIES prop{};
-	//	prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	//	prop.CreationNodeMask = 1;
-	//	prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	//	prop.Type = D3D12_HEAP_TYPE_CUSTOM;
-	//	prop.VisibleNodeMask = 1;
-	//	D3D12_RESOURCE_DESC desc{};
-	//	desc.Alignment = 0;
-	//	desc.DepthOrArraySize = 1;
-	//	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	//	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	//	desc.Format = DXGI_FORMAT_UNKNOWN;
-	//	desc.Height = 1;
-	//	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//	desc.MipLevels = 1;
-	//	desc.SampleDesc = { 1, 0 };
-	//	desc.Width = buffer_size;
-	//	auto result = m_Device->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
-	//		D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-	//		IID_PPV_ARGS(&shaderHandler[m_Model_id].in_spring_res)
-	//	);
-	//	if (!SUCCEEDED(result))return false;
-	//	return true;
-	//}
-	//bool ClothSpringShader::createInputUAV() {
-	//	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
-	//	desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-	//	desc.Format = DXGI_FORMAT_UNKNOWN;
-	//	desc.Buffer.NumElements = shaderHandler[m_Model_id].in_spring.size();
-	//	desc.Buffer.StructureByteStride = sizeof(ClothData);
-	//	m_Device->CreateUnorderedAccessView(shaderHandler[m_Model_id].in_spring_res, nullptr, &desc, shaderHandler[m_Model_id].desc_handle);
-	//	shaderHandler[m_Model_id].desc_handle.ptr += m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	//	return true;
-	//}
-	//bool ClothSpringShader::inputMap() {
-	//	D3D12_RANGE range{ 0, 0 };
-	//	UINT8* pInputDataBegin;
-	//	auto result = shaderHandler[m_Model_id].in_spring_res->Map(0, &range, reinterpret_cast<void**>(&pInputDataBegin));
-	//	memcpy(
-	//		pInputDataBegin,
-	//		shaderHandler[m_Model_id].in_spring.data(),
-	//		static_cast<UINT>(shaderHandler[m_Model_id].in_spring.size()) * sizeof(ClothData)
-	//	);
-	//	shaderHandler[m_Model_id].in_spring_res->Unmap(0, nullptr);
-	//	if (!SUCCEEDED(result))return false;
-	//	return true;
-	//}
-	//bool ClothSpringShader::createParamOutResource() {
-	//	D3D12_HEAP_PROPERTIES prop{};
-	//	prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
-	//	prop.CreationNodeMask = 1;
-	//	prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
-	//	prop.Type = D3D12_HEAP_TYPE_CUSTOM;
-	//	prop.VisibleNodeMask = 1;
-	//	//サイズは定数バッファと同じように指定
-	//	D3D12_RESOURCE_DESC desc{};
-	//	desc.Alignment = 0;
-	//	desc.DepthOrArraySize = 1;
-	//	desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	//	desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	//	desc.Format = DXGI_FORMAT_UNKNOWN;
-	//	desc.Height = 1;
-	//	desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//	desc.MipLevels = 1;
-	//	desc.SampleDesc = { 1, 0 };
-	//	desc.Width = (sizeof(ModelParamater) * shaderHandler[m_Model_id].out_param.size() + 0xff) & ~0xff;
-	//	auto result = m_Device->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
-	//		D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
-	//		IID_PPV_ARGS(&shaderHandler[m_Model_id].out_param_res));
-	//	if (!SUCCEEDED(result))return false;
-	//	return true;
-	//}
-	//bool ClothSpringShader::createParamOutUAV() {
-	//	D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
-	//	desc.ViewDimension = D3D12_UAV_DIMENSION_BUFFER;
-	//	desc.Format = DXGI_FORMAT_UNKNOWN;
-	//	desc.Buffer.NumElements = shaderHandler[m_Model_id].out_param.size();
-	//	desc.Buffer.StructureByteStride = sizeof(ModelParamater);
-	//	m_Device->CreateUnorderedAccessView(shaderHandler[m_Model_id].out_param_res, nullptr, &desc, shaderHandler[m_Model_id].desc_handle);
-	//	shaderHandler[m_Model_id].desc_handle.ptr += m_Device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-	//	return true;
-	//}
-	//bool ClothSpringShader::outParamMap() {
-	//	D3D12_RANGE range{ 0, 0 };
-	//	UINT8* pOutputDataBegin;
-	//	auto result = shaderHandler[m_Model_id].out_param_res->Map(0, &range, &shaderHandler[m_Model_id].param_data);
-	//	return true;
-	//}
-
 	void ClothSpringShader::dataAssign(bool is_simulated, lib::ModelData& model, std::vector<SpringData>& spring) {
 		auto& hd = shaderHandler[m_Model_id];
 		auto result = (lib::ModelVertex*)m_Shader->getData(0);
@@ -355,24 +110,6 @@ namespace phy {
 			(MaxPosition*)m_Shader->getData(2),
 			(MaxPosition*)m_Shader->getData(2) + hd.out_param.size());
 		if (hd.out_param[0].is_simulated)m_Is_simulated = true;
-	}
-	void ClothSpringShader::dataChange(
-		int model_id, lib::ModelData& model, std::vector<SpringData>& spring
-	) {
-		////auto& output = shaderHandler[m_Model_id].out_spring;
-		//DirectX::XMFLOAT3 check(0,0,0);
-		//int id;
-		//if (!shaderHandler[m_Model_id].out_spring[0].simulate)return;
-		//for (int ite = 0; ite < model.vertex.size(); ite++) {
-		//	model.vertex[ite].position = shaderHandler[m_Model_id].out_spring[ite].pos;
-		//	spring[ite].velocity = shaderHandler[m_Model_id].out_spring[ite].spring.velocity;
-		//	if (model.vertex[ite].position.y < check.y) {
-		//		check = model.vertex[ite].position;
-		//		id = ite;
-		//	}
-		//	shaderHandler[m_Model_id].in_spring[ite].pos = model.vertex[ite].position;
-		//	shaderHandler[m_Model_id].in_spring[ite].spring = spring[ite];
-		//}
 	}
 	ClothSpringShader::MaxPosition
 		ClothSpringShader::getMaxMinPos(int id) {

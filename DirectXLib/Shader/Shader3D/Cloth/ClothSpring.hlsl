@@ -18,6 +18,8 @@ float3 StructuralSolver(int id) {
 	float3 result = float3(0.f, 0.f, 0.f);
 	int id2;
 	for (int ite = 0; ite < 2; ite++) {
+		if (ite == 0)id2 = mass_model[id].id0;
+		if (ite == 1)id2 = mass_model[id].id1;
 		if (ite == 0)id2 = mass_model[id].id2;
 		if (ite == 1)id2 = mass_model[id].id3;
 		if (id2 == -1)continue;
@@ -35,6 +37,8 @@ float3 CompressionSolver(int id) {
 	for (int ite = 0; ite < 4; ite++) {
 		if (ite == 0)id2 = mass_model[id].id0;
 		if (ite == 1)id2 = mass_model[id].id1;
+		if (ite == 0)id2 = mass_model[id].id2;
+		if (ite == 1)id2 = mass_model[id].id3;
 		if (id2 == -1)continue;
 		float Natulength = distance(pre_vert[id].pos, pre_vert[id2].pos);//‚Î‚Ë‚Ì©‘R’·
 		float3 f = CalcForce(vertex[id].pos, pre_vert[id].pos, Natulength, tension, tension_damping);
@@ -108,7 +112,7 @@ void ClothSpring(uint3 th_id : SV_GroupID){
 	if (isNullData(spring[id].velocity))return;
 	float3 f = float3(0, 0, 0);
 	f = add(f, StructuralSolver(id));
-	f = add(f, CompressionSolver(id));
+	//f = add(f, CompressionSolver(id));
 	f = add(f, ShareSolver(id));
 	f = add(f, BendingSolver(id));
 	out_spring[id].force = f;
@@ -120,67 +124,6 @@ void ClothSpring(uint3 th_id : SV_GroupID){
 	out_vert[id].pos = add(vertex[id].pos, v);
 
 	////—Í‚ğƒ[ƒ‚É‚·‚é
-	//out_spring[id].force = spring[id].velocity;
-	//PositionSort(id);
+	out_spring[id].force = float3(0, 0, 0);
+	PositionSort(id);
 }
-
-//
-//void SpringForce(int step, int id1, int id2, float k, float shrink, float stretch) {
-//	float width = 1;
-//	float rest = distance(input[id2].pre_pos, input[id1].pre_pos);
-//	float d = distance(input[id2].pos, input[id1].pos);
-//	float f = (d - rest) * k;
-//	if (f >= 0)f = f * shrink;//L‚Ñ‚é’·‚³‚Å‚ ‚ê‚ÎŒ¸‘Ş
-//	else f = f * stretch;
-//
-//	float3 dx = subtract(input[id2].pos, input[id1].pos);
-//	dx = normalize(dx);
-//	dx = scale(dx, f);
-//	dx = scale(dx, step * step * 0.5 / input[id1].spring.mass);
-//	float3 p1_dx = scale(dx, width / (width + width));
-//	output[id1].pos = add(input[id1].pos, p1_dx);
-//	float3 p2_dx = scale(dx, width / (width + width));
-//	output[id2].pos = subtract(input[id2].pos, p2_dx);
-//}
-//
-//[RootSignature(RS)]
-//[numthreads(1, 1, 1)]
-//void ClothSpring(uint3 th_id : SV_GroupID) {
-//	int dim = sqrt(input[0].vertex_size);
-//	int id = (th_id.x * dim) + th_id.y;
-//	int id2;
-//	int step = input[0].step;
-//	//int id = th_id.x;
-//	float dt = 0.026;
-//	if (id >= input[0].vertex_size)return;
-//	firstSetting(id);
-//	if (isFixed(input[id].col)) {
-//		output[id].pos = input[id].pos;
-//		return;
-//	}
-//	//structural
-//	for (int ite = 0; ite < 4; ite++) {
-//		if (ite == 0)id2 = input[id].id0;
-//		if (ite == 1)id2 = input[id].id1;
-//		if (ite == 2)id2 = input[id].id2;
-//		if (ite == 3)id2 = input[id].id3;
-//		SpringForce(step, id, id2, 10, 15, 15);
-//	}
-//	//sharing
-//	for (int ite = 0; ite < 4; ite++) {
-//		if (ite == 0)id2 = input[id].id4;
-//		if (ite == 1)id2 = input[id].id5;
-//		if (ite == 2)id2 = input[id].id6;
-//		if (ite == 3)id2 = input[id].id7;
-//		SpringForce(step, id, id2, 10, 15, 5);
-//	}
-//	//bending
-//	for (int ite = 0; ite < 4; ite++) {
-//		if (ite == 0)id2 = input[id].id8;
-//		if (ite == 1)id2 = input[id].id9;
-//		if (ite == 2)id2 = input[id].id10;
-//		if (ite == 3)id2 = input[id].id11;
-//		SpringForce(step, id, id2, 10, 25, 2);
-//	}
-//	PositionSort(id);
-//}

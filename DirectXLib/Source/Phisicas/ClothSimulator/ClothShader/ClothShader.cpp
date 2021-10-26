@@ -33,8 +33,8 @@ namespace phy {
 	) {
 		//ステップ数だけバネの計算をする
 		ClothSpringShader cloth_shader(model_id, m_Dx12);
+		if (m_Is_simulated)worldForce(time, 0, model, spring_data);
 		for (int ite = 0; ite < step; ite++) {
-			if (m_Is_simulated)worldForce(time, 0, model, spring_data);
 			cloth_shader.create(ite, model, mass_model, spring_data);
 			cloth_shader.execution(m_Is_simulated, model, spring_data);
 			forceZero(spring_data);
@@ -59,7 +59,7 @@ namespace phy {
 		WorldForce world_force;
 		world_force.grid_mass = 1.f;
 		world_force.gravity = 9.8f;
-		world_force.damping = 0.f;
+		world_force.damping = 1.3f;
 		world_force.dt = 0.026;
 		world_force.wind = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 		for (int ite = 0; ite < spring_data.size(); ite++) {
@@ -82,39 +82,6 @@ namespace phy {
 			spring_data[ite].force = DirectX::XMFLOAT3(0, 0, 0);
 		}
 	}
-
-	//void ClothShader::worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data) {
-	//	WorldForce world_force;
-	//	world_force.grid_mass = 1.f;
-	//	world_force.gravity = 9.8f;
-	//	world_force.damping = 1.3f;
-	//	world_force.dt = 0.036;
-	//	world_force.wind = DirectX::XMFLOAT3(5.f, 0.f, 0.f);
-
-	//	float weight = 1;
-	//	float r = world_force.damping;
-	//	float acc = time / 10;
-	//	auto w = lib::VectorMath::scale(world_force.wind, sin(acc) * 0.5 + 0.5);
-
-	//	DirectX::XMFLOAT3 f(0.f, 0.f, 0.f);
-	//	f.y = -world_force.gravity;
-	//	f = lib::VectorMath::add(f, f);
-	//	f = lib::VectorMath::add(f, w);
-	//	f = lib::VectorMath::scale(f, step * step * 0.5 / world_force.grid_mass);
-	//	r = 1.0 - r * step;
-
-	//	for (int ite = 0; ite < model.vertex.size(); ite++) {
-	//		if (isFixed(model.vertex[ite]))continue;
-	//		spring_data[ite].mass = world_force.grid_mass;
-	//		auto dx = lib::VectorMath::subtract(model.vertex[ite].position, model.pre_vert[ite].position);
-	//		//model.pre_vert[ite].position = model.vertex[ite].position;
-	//		dx = lib::VectorMath::add(dx, f);
-	//		dx = lib::VectorMath::scale(dx, r);
-
-	//		dx = lib::VectorMath::scale(dx, weight);
-	//		model.vertex[ite].position = lib::VectorMath::add(model.vertex[ite].position, dx);
-	//	}
-	//}
 	void ClothShader::forceZero(std::vector<SpringData>& spring_data) {
 		for (int ite = 0; ite < spring_data.size(); ite++) {
 			spring_data[ite].force = DirectX::XMFLOAT3(0.f, 0.f, 0.f);

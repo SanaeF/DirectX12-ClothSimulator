@@ -416,7 +416,7 @@ namespace lib {
 
 	}
 
-	void DirectX12Manager::commandClear() {
+	void DirectX12Manager::closeCommand() {
 		/*_cmdList->ClearDepthStencilView(_dsvHeap->GetCPUDescriptorHandleForHeapStart(),
 			D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);*/
 
@@ -434,7 +434,7 @@ namespace lib {
 		m_Cmd_list->Close();
 	}
 
-	void DirectX12Manager::setNextCommand() {
+	void DirectX12Manager::exeCommand() {
 		//コマンドリストの実行
 		ID3D12CommandList* cmdlists[] = { m_Cmd_list.Get() };
 		m_Cmd_queue->ExecuteCommandLists(1, cmdlists);
@@ -459,8 +459,8 @@ namespace lib {
 		//_cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		//_cmdList->DrawIndexedInstanced(6, getCount(), 0, 0, 0);
 		clearCount();
-		commandClear();
-		setNextCommand();
+		closeCommand();
+		exeCommand();
 		auto result = m_Swapchain->Present(0, 0);
 		assert(SUCCEEDED(result));
 		//BeginDraw();

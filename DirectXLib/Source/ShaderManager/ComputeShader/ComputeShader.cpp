@@ -76,29 +76,31 @@ namespace lib {
 			IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].desc_heap)
 		);
 	}
-	void ComputeShader::inputBufferSize(int slot_id, int size, int type) {
-		m_Shader_handle[m_Handle_id].element[slot_id] = { type,size };
-	}
-
-	void ComputeShader::createResource(bool is_alingnment, int slot_id) {
+	void ComputeShader::createResource() {
 		D3D12_HEAP_PROPERTIES prop{};
 		prop.CPUPageProperty = D3D12_CPU_PAGE_PROPERTY_WRITE_BACK;
 		prop.CreationNodeMask = 1;
 		prop.MemoryPoolPreference = D3D12_MEMORY_POOL_L0;
 		prop.Type = D3D12_HEAP_TYPE_CUSTOM;
 		prop.VisibleNodeMask = 1;
-		//サイズは定数バッファと同じように指定
-		D3D12_RESOURCE_DESC desc =
-			CD3DX12_RESOURCE_DESC::Buffer(
-				m_Shader_handle[m_Handle_id].element[slot_id].num *
-				m_Shader_handle[m_Handle_id].element[slot_id].size_of
-			);
-		desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-		auto result = m_Dx12->device()->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
-			IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].resource[slot_id]));
+		for (int ite = 0; ite < m_Shader_handle[m_Handle_id].resource.size(); ite++) {
+			//サイズは定数バッファと同じように指定
+			D3D12_RESOURCE_DESC desc =
+				CD3DX12_RESOURCE_DESC::Buffer(
+					m_Shader_handle[m_Handle_id].element[ite].num *
+					m_Shader_handle[m_Handle_id].element[ite].size_of
+				);
+			desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+			auto result = m_Dx12->device()->CreateCommittedResource(&prop, D3D12_HEAP_FLAG_NONE, &desc,
+				D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
+				IID_PPV_ARGS(&m_Shader_handle[m_Handle_id].resource[ite]));
+		}
+	}
+	void ComputeShader::inputBufferSize(int slot_id, int size, int type) {
+		m_Shader_handle[m_Handle_id].element[slot_id] = { type,size };
 	}
 	void ComputeShader::createUnorderdAccessView() {
+		createResource();
 		auto handle = m_Shader_handle[m_Handle_id].desc_heap->GetCPUDescriptorHandleForHeapStart();
 		for (int ite = 0; ite < m_Shader_handle[m_Handle_id].resource.size(); ite++) {
 			D3D12_UNORDERED_ACCESS_VIEW_DESC desc{};
@@ -135,6 +137,9 @@ namespace lib {
 
 		//コンピュートシェーダーの実行
 		m_Dx12->cmdList()->Dispatch(x, y, z);
+
+		m_Dx12->closeCommand();
+		m_Dx12->exeCommand();
 	}
 	void* ComputeShader::getData(int slot_id) {
 		return m_Shader_handle[m_Handle_id].data[slot_id];
