@@ -45,7 +45,7 @@ namespace lib {
         void mapOutput(int slot_id);
 
         //シェーダー実行
-        void execution(int x, int y, int z);
+        void execution(int x, int y, int z, int handle);
 
         void* getData(int slot_id);
     private:

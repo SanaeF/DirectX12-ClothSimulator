@@ -1,4 +1,5 @@
-#include "ClothProp/CSRootSig.hlsli"
+#include "ClothProp/RSClothSpring.hlsli"
+#include "ClothProp/ModelData.hlsli"
 #include "ClothProp/ClothData.hlsli"
 #include "SpringCalculator/SpringCalculator.hlsli"
 //CPUに送る構造体
@@ -17,11 +18,11 @@ float3 StructuralSolver(int id) {
 	int tension_damping = 15;
 	float3 result = float3(0.f, 0.f, 0.f);
 	int id2;
-	for (int ite = 0; ite < 2; ite++) {
+	for (int ite = 0; ite < 4; ite++) {
 		if (ite == 0)id2 = mass_model[id].id0;
 		if (ite == 1)id2 = mass_model[id].id1;
-		if (ite == 0)id2 = mass_model[id].id2;
-		if (ite == 1)id2 = mass_model[id].id3;
+		if (ite == 2)id2 = mass_model[id].id2;
+		if (ite == 3)id2 = mass_model[id].id3;
 		if (id2 == -1)continue;
 		float Natulength = distance(pre_vert[id].pos, pre_vert[id2].pos);//ばねの自然長
 		float3 f = CalcForce(vertex[id].pos, vertex[id2].pos, Natulength, tension, tension_damping);
@@ -29,7 +30,7 @@ float3 StructuralSolver(int id) {
 	}
 	return result;
 }
-float3 CompressionSolver(int id) {
+float3 CompressionSolver(int id) {//質点の向きに働く力
 	int tension = 15;
 	int tension_damping = 5;
 	float3 result = float3(0.f, 0.f, 0.f);
@@ -37,11 +38,11 @@ float3 CompressionSolver(int id) {
 	for (int ite = 0; ite < 4; ite++) {
 		if (ite == 0)id2 = mass_model[id].id0;
 		if (ite == 1)id2 = mass_model[id].id1;
-		if (ite == 0)id2 = mass_model[id].id2;
-		if (ite == 1)id2 = mass_model[id].id3;
+		if (ite == 2)id2 = mass_model[id].id2;
+		if (ite == 3)id2 = mass_model[id].id3;
 		if (id2 == -1)continue;
 		float Natulength = distance(pre_vert[id].pos, pre_vert[id2].pos);//ばねの自然長
-		float3 f = CalcForce(vertex[id].pos, pre_vert[id].pos, Natulength, tension, tension_damping);
+		float3 f = CalcForce(vertex[id].pos, vertex[id2].pos, Natulength, tension, tension_damping);
 		result = add(result, f);
 	}
 	return result;
@@ -108,11 +109,14 @@ void ClothSpring(uint3 th_id : SV_GroupID){
 	float dt = 0.026;
 	if (id >= param.vert_max)return;
 	firstSetting(id);
-	if (isFixed(vertex[id].color))return;
+	if (isFixed(vertex[id].color)) {
+		PositionSort(id);
+		return;
+	}
 	if (isNullData(spring[id].velocity))return;
 	float3 f = float3(0, 0, 0);
 	f = add(f, StructuralSolver(id));
-	//f = add(f, CompressionSolver(id));
+	f = add(f, CompressionSolver(id));
 	f = add(f, ShareSolver(id));
 	f = add(f, BendingSolver(id));
 	out_spring[id].force = f;
@@ -122,8 +126,8 @@ void ClothSpring(uint3 th_id : SV_GroupID){
 	out_spring[id].velocity = add(spring[id].velocity, v);
 	v = scale(out_spring[id].velocity, dt);
 	out_vert[id].pos = add(vertex[id].pos, v);
-
 	////力をゼロにする
 	out_spring[id].force = float3(0, 0, 0);
+
 	PositionSort(id);
 }

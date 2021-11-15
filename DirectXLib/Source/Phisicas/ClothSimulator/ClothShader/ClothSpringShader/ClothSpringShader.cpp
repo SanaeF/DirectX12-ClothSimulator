@@ -24,7 +24,6 @@ namespace phy {
 		}
 	}
 	void ClothSpringShader::create(
-		int step,
 		lib::ModelData& model,
 		std::vector<MassModel>& mass_model,
 		std::vector<SpringData>& spring
@@ -44,16 +43,17 @@ namespace phy {
 			auto& thread = shaderHandler[m_Model_id].thread;
 			thread.x = size + size_out;
 			thread.y = size;
+			thread.z = 1;
 
 			m_Shader.reset(
 				new lib::ComputeShader(
 					"./DirectXLib/Shader/Shader3D/Cloth/ClothSpring.hlsl",
 					"ClothSpring", 9, shaderHandler[m_Model_id].compute_handle, m_Dx12)
 			);
-			//取得用モデルデータ
+			//取得用データ
 			m_Shader->inputBufferSize(0, model.vertex.size(), sizeof(lib::ModelVertex));//シミュレートして変わったモデル情報
 			m_Shader->inputBufferSize(1, spring.size(), sizeof(SpringData));//シミュレートして変わったバネ情報
-			m_Shader->inputBufferSize(2, shaderHandler[m_Model_id].out_param.size(), sizeof(MaxPosition));//最大座標と最小座標の情報
+			m_Shader->inputBufferSize(2, shaderHandler[m_Model_id].out_param.size(), sizeof(ResultParam));//最大座標と最小座標の情報
 			//転送用のモデルデータ
 			m_Shader->inputBufferSize(3, shaderHandler[m_Model_id].sim_param.size(), sizeof(SimulateParam));//シミュレート情報
 			m_Shader->inputBufferSize(4, mass_model.size(), sizeof(MassModel));//質点ID
@@ -81,9 +81,10 @@ namespace phy {
 
 	void ClothSpringShader::execution(bool is_simulated, lib::ModelData& model, std::vector<SpringData>& spring) {
 		m_Shader->execution(
-			shaderHandler[m_Model_id].thread.x, 
-			shaderHandler[m_Model_id].thread.y, 
-			1
+			shaderHandler[m_Model_id].thread.x,
+			shaderHandler[m_Model_id].thread.y,
+			shaderHandler[m_Model_id].thread.z,
+			m_Model_id
 		);
 		dataAssign(is_simulated, model, spring);
 	}
@@ -98,21 +99,13 @@ namespace phy {
 				(SpringData*)m_Shader->getData(1),
 				(SpringData*)m_Shader->getData(1) + spring.size());
 		}
-		else {
-			hd.out_model.assign(
-				(lib::ModelVertex*)m_Shader->getData(0),
-				(lib::ModelVertex*)m_Shader->getData(0) + model.vertex.size());
-			hd.out_spring.assign(
-				(SpringData*)m_Shader->getData(1),
-				(SpringData*)m_Shader->getData(1) + spring.size());
-		}
 		hd.out_param.assign(
-			(MaxPosition*)m_Shader->getData(2),
-			(MaxPosition*)m_Shader->getData(2) + hd.out_param.size());
+			(ResultParam*)m_Shader->getData(2),
+			(ResultParam*)m_Shader->getData(2) + hd.out_param.size());
 		if (hd.out_param[0].is_simulated)m_Is_simulated = true;
 	}
-	ClothSpringShader::MaxPosition
-		ClothSpringShader::getMaxMinPos(int id) {
+	ClothSpringShader::ResultParam
+		ClothSpringShader::getResultParam(int id) {
 		return shaderHandler[id].out_param[0];
 	}
 	bool ClothSpringShader::isSimulated() {

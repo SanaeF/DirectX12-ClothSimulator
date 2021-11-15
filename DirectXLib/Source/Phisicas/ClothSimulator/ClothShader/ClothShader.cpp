@@ -21,7 +21,7 @@ namespace phy {
 		std::vector<SpringData>& spring_data
 	) {
 		massSpring(model_id, step, time, model, mass_model, spring_data);
-		//collider(model_id, model, spring_data, mass_spring_id);
+		collider(model_id, model, mass_model);
 	}
 	void ClothShader::massSpring(
 		int model_id,
@@ -32,10 +32,11 @@ namespace phy {
 		std::vector<SpringData>& spring_data
 	) {
 		//ステップ数だけバネの計算をする
+		//if (time>60)return;
 		ClothSpringShader cloth_shader(model_id, m_Dx12);
-		if (m_Is_simulated)worldForce(time, 0, model, spring_data);
+		worldForce(time, 0, model, spring_data);
 		for (int ite = 0; ite < step; ite++) {
-			cloth_shader.create(ite, model, mass_model, spring_data);
+			cloth_shader.create(model, mass_model, spring_data);
 			cloth_shader.execution(m_Is_simulated, model, spring_data);
 			forceZero(spring_data);
 		}
@@ -44,23 +45,23 @@ namespace phy {
 	void ClothShader::collider(
 		int model_id,
 		lib::ModelData& model,
-		std::vector<SpringData>& spring_data,
-		std::vector<std::vector<int>>& mass_spring_id
+		std::vector<MassModel>& mass_model
 	) {
-		auto param = ClothSpringShader::getMaxMinPos(model_id);
+		auto param = ClothSpringShader::getResultParam(model_id);
 		if (isNullty(param.min_pos) && isNullty(param.max_pos))return;
 		//当たり判定の計算をする
-		ClothCollisionShader collision(model_id, param.max_pos, param.min_pos, m_Dx12);
-		collision.create(model, spring_data, mass_spring_id);
-		collision.execution();
-		collision.dataChange(model_id, model, spring_data);
+		ClothCollisionShader collision(model_id, m_Dx12);
+		for (int ite = 0; ite < 2; ite++) {
+			collision.create(param.max_pos, param.min_pos, model, mass_model);
+			collision.execution(model);
+		}
 	}
 	void ClothShader::worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data) {
 		WorldForce world_force;
 		world_force.grid_mass = 1.f;
 		world_force.gravity = 9.8f;
-		world_force.damping = 0.3f;
-		world_force.dt = 0.026;
+		world_force.damping = 0;// 1.3f;
+		world_force.dt = 0.001;
 		world_force.wind = DirectX::XMFLOAT3(10.f, 0.f, 0.f);
 		for (int ite = 0; ite < spring_data.size(); ite++) {
 			if (isFixed(model.vertex[ite]))continue;
@@ -69,8 +70,7 @@ namespace phy {
 			spring_data[ite].force.y -= spring_data[ite].mass * world_force.gravity;
 			//風力を加える
 			double r1 = time / 10;
-			if (time % 120 > 0 && time % 120 < 20)spring_data[ite].force.x += world_force.wind.x * (sin(r1) * sin(r1) * 0.25 + 0.25) /
-				lib::VectorMath::distance(model.vertex[ite].position, DirectX::XMFLOAT3(0, 0, 0));
+			//spring_data[ite].force.x += world_force.wind.x * (sin(r1) * sin(r1) * 0.25 + 0.25);
 			//ダンピング
 			auto d = lib::VectorMath::scale(spring_data[ite].velocity, world_force.damping);
 			spring_data[ite].force = lib::VectorMath::subtract(spring_data[ite].force, d);

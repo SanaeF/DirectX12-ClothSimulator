@@ -4,81 +4,58 @@
 #include "../../DirectXLib/Source/Phisicas/ClothSimulator/ClothData/SpringData.h"
 namespace lib {
 	class DirectX12Manager;
+	class ComputeShader;
 }
 namespace phy {
 	class ClothCollisionShader {
 	private:
-		struct ColliderData {
-			ClothData cloth;
-			int area_id;
-		};
+		template<typename T>
+		using ComPtr = Microsoft::WRL::ComPtr<T>;
+		std::shared_ptr<lib::DirectX12Manager>& m_Dx12;
+		std::shared_ptr<lib::ComputeShader> m_Shader;
+		ComPtr<ID3D12Device> m_Device;
+
 		struct SpaceData{
 			int space_ount;
 			int spaceID[XYZ_ALL];
 		};
-		std::vector<int> split_area;
-		struct HandleData {
-			D3D12_CPU_DESCRIPTOR_HANDLE desc_handle;
-			ID3D12RootSignature* root_sig;
-			ID3D12PipelineState* pipeline;
-			ID3D12DescriptorHeap* desc_heap;
-			ID3D12DescriptorHeap* input_heap;
-			ID3D12Resource* output_res;
-			ID3D12Resource* in_model_res;
-			ID3D12Resource* in_space_res;
-			std::vector<ColliderData> output;
-			std::vector<ColliderData> input_model;
-			std::vector<SpaceData> input_space;
+		struct SendParam {
+			int vertex_size;
+			int split_num;
+			DirectX::XMFLOAT3 max_pos;
+			DirectX::XMFLOAT3 min_pos;
+			DirectX::XMFLOAT3 zero_pos;
+		};
+		struct CollisionParam {
+			int vertex_size;
+		};
+
+		struct ResultParam {
+			bool is_simulated;
+		};
+		struct CSSInfo {
+			std::vector<SendParam> send_param;
+			std::vector<CollisionParam> collision_param;
 			DirectX::XMINT3 thread;
 			bool is_created;
-			void* data;
+			int compute_handle;
+			int sort_handle;
 		};
-		static std::vector<HandleData> m_Data_handle;
-		std::shared_ptr<lib::DirectX12Manager>& m_Dx12;
+		static std::vector<CSSInfo> shaderHandler;
 
-		ID3DBlob* m_Shader;
-		ID3DBlob* m_Root_blob;
-		DirectX::XMFLOAT3 m_High_pos;//モデル空間p1
-		DirectX::XMFLOAT3 m_Low_pos;//モデル空間p2
-		bool m_Is_looped;
+		std::vector<int> split_area;
+		std::vector<SpaceData> space;
+
 		int m_Model_id;
 	public:
 		ClothCollisionShader(
 			int id,
-			DirectX::XMFLOAT3 max, DirectX::XMFLOAT3 min,
 			std::shared_ptr<lib::DirectX12Manager>& dx12
 		);
-		void create(
-			lib::ModelData& model,
-			std::vector<SpringData>& spring,
-			std::vector<std::vector<int>>& mass_spring_id
-		);
-		void execution();
-		void dataChange(int model_id, lib::ModelData& model, std::vector<SpringData>& spring);
+		void create(DirectX::XMFLOAT3 max, DirectX::XMFLOAT3 min, lib::ModelData& model, std::vector<MassModel>& mass_model);
+		void execution(lib::ModelData& model);
 	private:
-		void createDataInOutter(
-			lib::ModelData& model,
-			std::vector<std::vector<int>>& mass_spring_id
-		);
-		bool createDataInputter();
-		//シェーダーに送信するためにVectorを使わないデータ構造の初期生成
-		void createMassSpringforGPU(
-			lib::ModelData& model,
-			std::vector<std::vector<int>>& mass_spring_id
-		);
-		bool loadShader();
-		bool createPipeline();
-		bool createHeap();
-		bool createOutputResource();
-		bool createUAV();
-		bool outputMap();
-		bool createInputUAV();
-		bool createInputResource();
-		bool inputMap();
-		//スペースデータ
-		bool createInput2UAV();
-		bool createInput2Resource();
-		bool input2Map();
-		void dataAssign();
+		void executeSortShader(bool is_input, lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos);
+		void dataAssign(lib::ModelData& model);
 	};
 }

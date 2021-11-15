@@ -24,12 +24,6 @@ struct MassModel {
 	int id10;
 	int id11;
 };
-struct ModelVertex {
-	float3 pos;
-	float4 normal;
-	float2 tex;
-	float3 color;
-};
 struct MaxPosition {
 	bool is_simulated;
 	float3 max_pos;

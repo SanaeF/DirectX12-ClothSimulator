@@ -144,7 +144,6 @@
     <ClCompile Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.cpp" />
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.cpp" />
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.cpp" />
@@ -182,7 +181,6 @@
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.h" />
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\CollisionSort\CollisionSort.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.h" />
@@ -199,9 +197,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CCRootSig.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CollisionData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ModelData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothCollider.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CSRootSig.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSCollisionSpace.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothSpring.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
   </ItemGroup>
@@ -241,6 +242,14 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\VectLib.hlsli">
       <FileType>Document</FileType>
     </None>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\CollisionSpace.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CollisionSpace</EntryPointName>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CollisionSpace</EntryPointName>
+    </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel3D</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

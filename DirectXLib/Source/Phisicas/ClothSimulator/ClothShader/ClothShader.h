@@ -28,12 +28,7 @@ namespace phy {
 			std::vector<MassModel>& mass_model,
 			std::vector<SpringData>& spring_data
 		);
-		void collider(
-			int model_id,
-			lib::ModelData& model,
-			std::vector<SpringData>& spring_data,
-			std::vector<std::vector<int>>& mass_spring_id
-		);
+		void collider(int model_id, lib::ModelData& model, std::vector<MassModel>& mass_model);
 
 		void worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data);
 		void forceZero(std::vector<SpringData>& spring_data);

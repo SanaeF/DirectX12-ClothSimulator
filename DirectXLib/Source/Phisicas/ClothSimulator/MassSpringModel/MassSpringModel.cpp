@@ -31,7 +31,7 @@ namespace phy {
 		return m_Result;
 	}
 	void MassSpringModel::createMatrix3x3(int vertex_id) {
-		if (vertex_id == 8889 || vertex_id == 9120) {
+		if (vertex_id == 498 || vertex_id == 9120) {
 			int a = 0;
 		}
 		createCross(vertex_id, m_Mid_point);

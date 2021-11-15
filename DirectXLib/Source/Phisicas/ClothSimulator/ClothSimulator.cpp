@@ -105,7 +105,7 @@ namespace phy {
 		std::vector<SpringData>& spring_data,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
-		const int step = 5;
+		const int step = 5;//ƒoƒl’è”‚æ‚è¬‚³‚­‚È‚¢‚Æ‚¢‚¯‚È‚¢
 		ClothShader cloth(dx_12);
 		cloth.execution(model_id, step, m_time, model, mass_model, spring_data);
 		m_time++;

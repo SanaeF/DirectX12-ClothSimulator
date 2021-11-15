@@ -48,16 +48,16 @@ float3 add(float3 vec1, float3 vec2) {
 //}
 
 float3 CalcForce(float3 pos1, float3 pos2, float length, float constant, float damping) {
-	//damping = damping;
-	//constant = constant;
-	float k = 5;
+	//damping = damping/10;
+	//constant = constant / 10;
+	float k = 1.2;
 	float3 result = float3(0, 0, 0);
 	float3 n = subtract(pos1, pos2);
 	float leg = mulAdd(n, n);
 	n = normalize(n);//ê≥ãKâª2
 	float f = (length - leg) * k;
-	if (f < 0)f = f * damping;//êLÇ—ÇÈí∑Ç≥Ç≈Ç†ÇÍÇŒå∏ëﬁ
-	else f = f * constant;
+	if (f < 0)f = f * (damping);//êLÇ—ÇÈí∑Ç≥Ç≈Ç†ÇÍÇŒå∏ëﬁ
+	else f = f * (constant);
 	result = scale(n, f);
 	return result;
 }
