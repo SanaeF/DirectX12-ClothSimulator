@@ -60,8 +60,8 @@ namespace phy {
 		WorldForce world_force;
 		world_force.grid_mass = 1.f;
 		world_force.gravity = 9.8f;
-		world_force.damping = 0;// 1.3f;
-		world_force.dt = 0.001;
+		world_force.damping = 0;//
+		world_force.dt = 0.00026;//シェーダーのdtの100分の1
 		world_force.wind = DirectX::XMFLOAT3(10.f, 0.f, 0.f);
 		for (int ite = 0; ite < spring_data.size(); ite++) {
 			if (isFixed(model.vertex[ite]))continue;
@@ -70,7 +70,7 @@ namespace phy {
 			spring_data[ite].force.y -= spring_data[ite].mass * world_force.gravity;
 			//風力を加える
 			double r1 = time / 10;
-			//spring_data[ite].force.x += world_force.wind.x * (sin(r1) * sin(r1) * 0.25 + 0.25);
+			spring_data[ite].force.x += world_force.wind.x * (sin(r1) * sin(r1) * 0.25 + 0.25);
 			//ダンピング
 			auto d = lib::VectorMath::scale(spring_data[ite].velocity, world_force.damping);
 			spring_data[ite].force = lib::VectorMath::subtract(spring_data[ite].force, d);

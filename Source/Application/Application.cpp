@@ -24,7 +24,7 @@ void Application::run() {
 	int imageHandle[2];//ハンドル
 	int HandleLif;
 	int MusicHandle;
-	m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//./model/skirt/SchoolSkirt.pmx/./model/制服JK(素体&モデル)v0.61/素体_制服JK_ベスト.pmx
+	m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//TestCloth,SchoolSkirt
 	//imageHandle[0] = Graph->Load2D(L"./dat/back.png");//2D画像ロード
 	//imageHandle[1] = Graph->Load2D(L"./dat/titleback.png");
 	//HandleLif = Graph->Load2D(L"./dat/Bullet02.png");

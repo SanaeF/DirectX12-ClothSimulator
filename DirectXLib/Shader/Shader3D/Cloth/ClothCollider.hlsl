@@ -16,6 +16,7 @@ float3 solver(float3 p1, float3 p2, float hit_dist, float now_dist) {
 	n = scale(n, hit_dist / now_dist);
 	return add(p2, n);
 }
+
 void firstSetting(int id) {
 	out_vert[id] = in_vert[id];
 }
@@ -28,16 +29,31 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 	firstSetting(id1);
 	if (isFixed(in_vert[id1].color))return;
 	int space_id = split_area[id1];
-	float hit_dist = 0.0138;
+	float hit_dist = 0;
+	float now_dist = 0;
+	float3 ball = float3(1, -2, 0);
+
+	//実験用球体
+	//now_dist = distance(in_vert[id1].pos, ball);
+	//hit_dist = 2.3;
+	//if (now_dist < hit_dist) {
+	//	float3 last_pos = in_vert[id1].pos;
+	//	out_vert[id1].pos = solver(in_vert[id1].pos, ball, hit_dist, now_dist);
+	//}
+
+	//空間内同士の当たり判定
+	hit_dist = 0.0138;
 	for (int ite = 0; ite < space[space_id].count; ite++) {
 		int id2 = space[ite].id[space_id];
 		if (id1 == id2)continue;
-		float now_dist = distance(in_vert[id1].pos, in_vert[id2].pos);
+		now_dist = distance(in_vert[id1].pos, in_vert[id2].pos);
 		if (now_dist < hit_dist) {
 			float3 last_pos = in_vert[id1].pos;
 			out_vert[id1].pos = solver(in_vert[id1].pos, in_vert[id2].pos, hit_dist, now_dist);
 		}
 	}
+
+	//質点との当たり判定(不要?)
 	for (int ite = 0; ite < 4; ite++) {
 		int id2;
 		if (ite == 0)id2 = mass_model[id1].id0;
@@ -45,17 +61,10 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 		if (ite == 2)id2 = mass_model[id1].id2;
 		if (ite == 3)id2 = mass_model[id1].id3;
 		if (id2 == -1)continue;
-		float now_dist = distance(in_vert[id1].pos, in_vert[id2].pos);
+		now_dist = distance(in_vert[id1].pos, in_vert[id2].pos);
 		if (now_dist < hit_dist) {
 			float3 last_pos = in_vert[id1].pos;
 			out_vert[id1].pos = solver(in_vert[id1].pos, in_vert[id2].pos, hit_dist, now_dist);
 		}
 	}
-	/*float3 ball = float3(0, -4, 0);
-	float now_dist = distance(in_vert[id1].pos, ball);
-	float hit_dist = 2;
-	if (now_dist < hit_dist) {
-		float3 last_pos = in_vert[id1].pos;
-		out_vert[id1].pos = solver(in_vert[id1].pos, ball, hit_dist, now_dist);
-	}*/
 }
