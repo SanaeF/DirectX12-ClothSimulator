@@ -24,6 +24,7 @@ void Application::run() {
 	skirt = m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//TestCloth,SchoolSkirt
 	bool isSimulate = false;
 	ClothForce cloth_f;
+	cloth_f.is_self_collision = true;
 	cloth_f.gravity = 9.8f;
 	cloth_f.grid_mass = 1.f;
 	cloth_f.damping = 0.3;
@@ -35,7 +36,7 @@ void Application::run() {
 	cloth_f.shareParam(15, 5);
 	cloth_f.bendParam(25, 2);
 
-	m_Graphics->setupClothSimulator(2, cloth_f, skirt);
+	m_Graphics->setupClothSimulator(5, cloth_f, skirt);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {

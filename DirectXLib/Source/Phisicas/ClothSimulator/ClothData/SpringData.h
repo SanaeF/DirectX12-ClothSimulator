@@ -64,6 +64,8 @@ struct MassModel {
 
 
 struct ClothForce {//何も指定しないと、素朴な値が代入されます
+	bool is_self_collision;//自己衝突を行うかどうか
+
 	float grid_mass;//質点の重さ
 	float gravity;//重力
 	float damping;//空気抵抗
@@ -101,6 +103,7 @@ struct ClothForce {//何も指定しないと、素朴な値が代入されます
 		bend.shrink = shrink;
 	}
 	ClothForce() {
+		is_self_collision = false;
 		tension.stretch = 15;
 		compress.stretch = 15;
 		share.stretch = 15;

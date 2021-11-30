@@ -82,7 +82,6 @@ namespace phy {
 		lib::ModelData& model,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
-		const int step = 2;//ƒoƒl’è”‚æ‚è¬‚³‚­‚È‚¢‚Æ‚¢‚¯‚È‚¢
 		ClothShader cloth(dx_12);
 		cloth.execution(
 			handle, 

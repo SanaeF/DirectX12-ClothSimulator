@@ -15,8 +15,6 @@ RWStructuredBuffer<SpringData> spring : register(u7);//Žó‚¯Žæ‚ê‚Ä‚¢‚È‚¢
 
 float3 StructuralSolver(int id) {
 	SimulateParam param = sim_param[0];
-	int tension = 15;
-	int tension_damping = 15;
 	float3 result = float3(0.f, 0.f, 0.f);
 	int id2;
 	for (int ite = 0; ite < 4; ite++) {
@@ -40,8 +38,6 @@ float3 StructuralSolver(int id) {
 }
 float3 CompressionSolver(int id) {//Ž¿“_‚ÌŒü‚«‚É“­‚­—Í
 	SimulateParam param = sim_param[0];
-	int tension = 15;
-	int tension_damping = 5;
 	float3 result = float3(0.f, 0.f, 0.f);
 	int id2;
 	for (int ite = 0; ite < 4; ite++) {
@@ -65,8 +61,6 @@ float3 CompressionSolver(int id) {//Ž¿“_‚ÌŒü‚«‚É“­‚­—Í
 }
 float3 ShareSolver(int id) {
 	SimulateParam param = sim_param[0];
-	int shear = 15;
-	int shear_damping = 5;
 	float3 result = float3(0.f, 0.f, 0.f);
 	int id2;
 	for (int ite = 0; ite < 4; ite++) {
@@ -90,8 +84,6 @@ float3 ShareSolver(int id) {
 }
 float3 BendingSolver(int id) {
 	SimulateParam param = sim_param[0];
-	int tension = 25;
-	int tension_damping = 2;
 	float3 result = float3(0.f, 0.f, 0.f);
 	int id2;
 	for (int ite = 0; ite < 4; ite++) {

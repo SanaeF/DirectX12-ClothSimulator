@@ -25,7 +25,7 @@ namespace phy {
 	) {
 		last_vertex = model.vertex;
 		massSpring(model_id, step, time, world_f, model, pre_vert, mass_model, spring_data);
-		collider(model_id, time, model, mass_model, pre_vert, last_vertex, spring_data);
+		if (world_f.is_self_collision)collider(model_id, time, model, mass_model, pre_vert, last_vertex, spring_data);
 	}
 	void ClothShader::massSpring(
 		int model_id,
@@ -66,7 +66,7 @@ namespace phy {
 	}
 	void ClothShader::worldForce(int time, int step, ClothForce& world_f, lib::ModelData& model, std::vector<SpringData>& spring_data) {
 		auto world_force= world_f;
-		world_force.dt = world_force.dt/10000;//シェーダーのdtの100分の1
+		world_force.dt = world_force.dt/5000;//シェーダーのdtの100分の1
 		for (int ite = 0; ite < spring_data.size(); ite++) {
 			if (isFixed(model.vertex[ite]))continue;
 			spring_data[ite].mass = world_force.grid_mass;
