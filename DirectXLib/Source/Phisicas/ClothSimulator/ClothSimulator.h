@@ -8,11 +8,13 @@
 namespace lib {
 	class DirectX12Manager;
 	struct ClothHandleData {
+		int step;
 		std::vector<ModelVertex>pre_vert;
 		std::vector<ModelVertex>last_vert;
 		std::vector<std::vector<int>>mass_springs;
 		std::vector<MassModel>mass_model;
 		std::vector<SpringData>spring_data;
+		ClothForce world_f;
 	};
 }
 namespace phy {
@@ -27,7 +29,7 @@ namespace phy {
 	public:
 		ClothSimulator();
 		//モデルから得られるシミュレート用の情報を設定
-		static void initialize(int handle, lib::ModelData& model);
+		static void initialize(int handle, int step, lib::ModelData& model, ClothForce world_f);
 
 		static void resetPower(std::vector<SpringData>& spring_data);
 		//物理演算の計算を更新

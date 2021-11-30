@@ -15,6 +15,7 @@ namespace phy {
 			int model_id,
 			int step,
 			int time,
+			ClothForce& world_f,
 			lib::ModelData& model,
 			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<lib::ModelVertex>& last_vertex,
@@ -26,6 +27,7 @@ namespace phy {
 			int model_id,
 			int step,
 			int time,
+			ClothForce& world_f,
 			lib::ModelData& model,
 			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<MassModel>& mass_model,
@@ -41,7 +43,7 @@ namespace phy {
 			std::vector<SpringData>& spring_data
 		);
 
-		void worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data);
+		void worldForce(int time, int step, ClothForce& world_f, lib::ModelData& model, std::vector<SpringData>& spring_data);
 		void forceZero(std::vector<SpringData>& spring_data);
 		bool isNullty(DirectX::XMFLOAT3 pos);
 		bool isFixed(lib::ModelVertex vert);

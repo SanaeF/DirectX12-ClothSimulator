@@ -24,6 +24,7 @@ namespace phy {
 		}
 	}
 	void ClothSpringShader::create(
+		ClothForce& world_f,
 		lib::ModelData& model,
 		std::vector<MassModel>& mass_model,
 		std::vector<SpringData>& spring,
@@ -36,6 +37,13 @@ namespace phy {
 		if (!is_input) {
 			shaderHandler[m_Model_id].sim_param[0].vert_max = model.vertex.size();
 
+			shaderHandler[m_Model_id].sim_param[0].tension = world_f.tension;
+			shaderHandler[m_Model_id].sim_param[0].compress = world_f.compress;
+			shaderHandler[m_Model_id].sim_param[0].share = world_f.share;
+			shaderHandler[m_Model_id].sim_param[0].bend = world_f.bend;
+
+			shaderHandler[m_Model_id].sim_param[0].dt = world_f.dt;
+			shaderHandler[m_Model_id].sim_param[0].k = world_f.k;
 
 			shaderHandler[m_Model_id].out_param[0].max_pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 			shaderHandler[m_Model_id].out_param[0].min_pos = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
@@ -49,7 +57,7 @@ namespace phy {
 			m_Shader.reset(
 				new lib::ComputeShader(
 					"./DirectXLib/Shader/Shader3D/Cloth/ClothSpring.hlsl",
-					"ClothSpring", 9, shaderHandler[m_Model_id].compute_handle, m_Dx12)
+					"ClothSpring", 8, shaderHandler[m_Model_id].compute_handle, m_Dx12)
 			);
 			//取得用データ
 			m_Shader->inputBufferSize(0, model.vertex.size(), sizeof(lib::ModelVertex));//シミュレートして変わったモデル情報
@@ -61,7 +69,6 @@ namespace phy {
 			m_Shader->inputBufferSize(5, pre_vert.size(), sizeof(lib::ModelVertex));//固定用のモデル情報
 			m_Shader->inputBufferSize(6, model.vertex.size(), sizeof(lib::ModelVertex));//描画で使ったモデル情報
 			m_Shader->inputBufferSize(7, spring.size(), sizeof(SpringData));//バネモデル情報
-			m_Shader->inputBufferSize(8, spring.size(), sizeof(SpringData));//バネモデル情報
 			m_Shader->createUnorderdAccessView();
 
 			m_Shader->mapOutput(0);
@@ -76,7 +83,6 @@ namespace phy {
 		}
 		m_Shader->mapInput(6, model.vertex.data());
 		m_Shader->mapInput(7, spring.data());
-		m_Shader->mapInput(8, spring.data());
 		is_input = true;
 	}
 

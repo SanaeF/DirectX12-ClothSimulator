@@ -17,7 +17,7 @@ RWStructuredBuffer<SpringData>spring : register(u8);
 RWStructuredBuffer<MassModel> mass_model : register(u9);
 
 float3 solver(float3 now_p1, float3 last_p1, float3 p2, float hit_size) {
-	int test_type = 1;
+	int test_type = 0;
 	float3 result = float3(0, 0, 0);
 	if (test_type == 0) {
 		//last_p1ƒ‚ƒfƒ‹‚ª“–‚½‚è”»’èp2‚ÉH‚¢‚ñ‚Å‚¢‚é‚©‚Ç‚¤‚©

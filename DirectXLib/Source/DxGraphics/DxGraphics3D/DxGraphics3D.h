@@ -19,8 +19,6 @@ namespace phy {	class ClothSimulator;}
 namespace lib {
 	class DirectX12Manager;
 	class DxGraphics3D {
-	public:
-		static int m_Handle_count;
 	private:
 		template<typename T>
 		using ComPtr = Microsoft::WRL::ComPtr<T>;
@@ -39,7 +37,7 @@ namespace lib {
 			double angle;
 			double size;
 		};
-		std::vector<ModelHandleData> m_Model_data;
+		static std::vector<ModelHandleData> m_Model_data;
 		std::shared_ptr<DirectX12Manager> m_Dx12;
 		std::shared_ptr <libGraph::Dx2DMatrix>m_Matrix;
 		std::shared_ptr<libGraph::UploadTexture>m_Texture;
@@ -48,7 +46,7 @@ namespace lib {
 		DxGraphics3D(std::shared_ptr<DirectX12Manager>& dx_12);
 		int loadFbx(const char* path, libGraph::DxGraphicsPipeline& pipeline);
 		int loadPmx(const std::wstring& file_path, libGraph::DxGraphicsPipeline& pipeline);
-		void setupClothPhis(int Handle);
+		void setupClothPhis(int step, ClothForce world_f, int Handle);
 		void draw(float x, float y, float z, float size, double Angle, int Handle);
 		void beginDraw(libGraph::DxGraphicsPipeline& pipeline, int Handle);
 		void updateClothPhis(int Handle);

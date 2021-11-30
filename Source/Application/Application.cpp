@@ -20,20 +20,22 @@ bool Application::initialize() {
 
 
 void Application::run() {
-	//Graph3d->loadFbx();
-	int imageHandle[2];//ハンドル
-	int HandleLif;
-	int MusicHandle;
-	m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//TestCloth,SchoolSkirt
-	//imageHandle[0] = Graph->Load2D(L"./dat/back.png");//2D画像ロード
-	//imageHandle[1] = Graph->Load2D(L"./dat/titleback.png");
-	//HandleLif = Graph->Load2D(L"./dat/Bullet02.png");
-	int text_img = m_Graphics->load2D(L"./dat/shadow_wing.png");
-	MusicHandle = m_Sound->loadFile("./dat/music.wav");
-	m_Sound->setVolume(-3000, MusicHandle);
+	int skirt;
+	skirt = m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//TestCloth,SchoolSkirt
 	bool isSimulate = false;
-	//Sound->Play(MusicHandle, SOUND::eDXSOUND_LOOP);
-	m_Graphics->setupClothSimulator(0);
+	ClothForce cloth_f;
+	cloth_f.gravity = 9.8f;
+	cloth_f.grid_mass = 1.f;
+	cloth_f.damping = 0.3;
+	cloth_f.dt = 2.6;
+	cloth_f.windF(0, 0, 0);
+
+	cloth_f.tensionParam(15,15);
+	cloth_f.compressParam(15, 5);
+	cloth_f.shareParam(15, 5);
+	cloth_f.bendParam(25, 2);
+
+	m_Graphics->setupClothSimulator(2, cloth_f, skirt);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -43,15 +45,9 @@ void Application::run() {
 
 		if (msg.message == WM_QUIT) {break;}
 		m_Graphics->clearDraw();//画面の初期化
-		////Graph->SetArea(0, 0, 1920, 1440/2);//描画範囲の指定
-		//m_Graphics->drawPrototype2D(0, 0, 1, 0, text_img);
 		m_Graphics->setArea(0, 0, 1920, 1440);//描画範囲の指定
-		////Graph->DrawPrototype2D(-Move[1], -Move[0], 1, angle, HandleLif);//描画(テスト用)
-		////Graph->DrawPrototype2D(Move[1], Move[0], 1, -angle, HandleLif);//描画(テスト用)
-		////if (count > 960)Graph->DrawPrototype2D(0, 0, 2, -angle, HandleLif);//描画(テスト用)
 		m_Graphics->draw3D(Move[0], Move[1], 6000 + Move[2], 1, angle);
-		m_Graphics->clothSimProc(0);
-		//isSimulate = false;
+		if(isSimulate)m_Graphics->clothSimProc(skirt);
 		m_Graphics->screenFlip();//スワップチェイン
 
 		m_Key->checkAll();//キー入力のセット
@@ -67,11 +63,9 @@ void Application::run() {
 		if (m_Key->checkHitKey(DIK_Z) == 1)angle += 0.002f * 10;
 		if (m_Key->checkHitKey(DIK_X) == 1)angle -= 0.002f * 10;
 		if (m_Key->checkHitKey(DIK_C) == 0)count++;
-		if (m_Key->checkHitKey(DIK_R))m_Graphics->clothReset(0);
-		if (m_Key->checkHitKey(DIK_P)) {
-			if (isSimulate)isSimulate = false;
-			else isSimulate = true;
-		}
+		if (m_Key->checkHitKey(DIK_R))m_Graphics->clothReset(skirt);
+		isSimulate = false;
+		if (m_Key->checkHitKey(DIK_P))isSimulate = true;
 		if (count == 1920)count = 0;
 		angle += 0.005f;
 	}

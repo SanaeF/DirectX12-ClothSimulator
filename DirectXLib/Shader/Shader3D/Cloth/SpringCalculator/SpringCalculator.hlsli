@@ -38,15 +38,12 @@ float subtendedAngle(float3 pos1, float3 pos2) {
 	return acos(axb / AxB);
 }
 
-float3 CalcForce(float3 pos1, float3 pos2, float length, float constant, float damping) {
-	//damping = damping/10;
-	//constant = constant / 10;
-	float k = 1.2;
+float3 CalcForce(float3 pos1, float3 pos2, float length, float constant, float damping,float k) {
 	float3 result = float3(0, 0, 0);
 	float3 n = subtract(pos1, pos2);
 	float leg = mulAdd(n, n);
 	n = normalize(n);//ê≥ãKâª2
-	float f = (length - leg) * k;
+	float f = (length - leg) * (k/10);
 	if (f < 0)f = f * (damping);//êLÇ—ÇÈí∑Ç≥Ç≈Ç†ÇÍÇŒå∏ëﬁ
 	else f = f * (constant);
 	result = scale(n, f);

@@ -8,7 +8,7 @@
 #include "../DxGraphicsPipeline/DxGraphicsPipeline.h"
 #include "../../Phisicas/ClothSimulator/ClothSimulator.h"
 namespace lib {
-	int DxGraphics3D::m_Handle_count = 0;
+	std::vector<DxGraphics3D::ModelHandleData> DxGraphics3D::m_Model_data;
 	DxGraphics3D::DxGraphics3D(std::shared_ptr<DirectX12Manager>& dx_12) :
 		m_Dx12(dx_12)
 	{
@@ -43,8 +43,8 @@ namespace lib {
 	//	return -1;
 	//}
 	int DxGraphics3D::loadPmx(const std::wstring& file_path, libGraph::DxGraphicsPipeline& pipeline) {
-		int handleID = 0;
-		m_Model_data.resize(handleID + 1);
+		int handleID = m_Model_data.size();
+		if (m_Model_data.size() <= handleID)m_Model_data.resize(handleID + 1);
 		model::PmxModel obj;
 		obj.loadFile(file_path); //obj.load("./model/skirt2.fbx");testcloth
 		m_Model_data[handleID].model = lib::ModelData::Object;
@@ -54,9 +54,10 @@ namespace lib {
 		m_Texture->createResource(m_Dx12);
 		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
 		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
-		return -1;
+		return handleID;
 	}
 	void DxGraphics3D::draw(float x, float y, float z, float size, double Angle, int Handle) {
+		if (Handle == -1)return;
 		//if (Handle == -1 || Handle >= mHandleCount)return;
 		DrawGraphParam Param;
 		Param.x = x / static_cast<float>(m_Dx12->getPixelSize().cx);
@@ -72,6 +73,7 @@ namespace lib {
 	}
 
 	void DxGraphics3D::createMatrix(int Handle, int num) {
+		if (Handle == -1)return;
 		int ArrySize = num + 1;
 		if (m_Model_data[Handle].tex_desc_heap_arry.size() <= num &&
 			m_Model_data[Handle].matrix_arry.size() <= num) {
@@ -98,6 +100,7 @@ namespace lib {
 	}
 
 	void DxGraphics3D::drawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle) {
+		if (Handle == -1)return;
 		//mMatrix->update();
 		if (Paramater.x == 0 &&
 			Paramater.y == 0 &&
@@ -114,6 +117,7 @@ namespace lib {
 		);
 	}
 	void DxGraphics3D::drawCommand(int InstancedCount, int Handle) {
+		if (Handle == -1)return;
 		ID3D12DescriptorHeap* texDH = m_Model_data[Handle].tex_desc_heap_arry[InstancedCount];
 		auto getMatVBView = m_Model_data[Handle].model.vb_view;
 		auto mat_heap = m_Model_data[Handle].model.mat_heap;
@@ -126,6 +130,7 @@ namespace lib {
 	}
 
 	void DxGraphics3D::beginDraw(libGraph::DxGraphicsPipeline& pipeline, int Handle) {
+		if (Handle == -1)return;
 		auto pipeline_state = pipeline.getPipelineState();
 		if (pipeline_state == nullptr)return;
 		m_Dx12->cmdList()->SetPipelineState(pipeline_state);
@@ -137,10 +142,12 @@ namespace lib {
 		m_Dx12->cmdList()->SetGraphicsRootSignature(rootsignature);
  		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-	void DxGraphics3D::setupClothPhis(int Handle) {
-		phy::ClothSimulator::initialize(Handle, m_Model_data[Handle].model);
+	void DxGraphics3D::setupClothPhis(int step, ClothForce world_f, int Handle) {
+		if (Handle == -1)return;
+		phy::ClothSimulator::initialize(Handle, step, m_Model_data[Handle].model, world_f);
 	}
 	void DxGraphics3D::updateClothPhis(int Handle) {
+		if (Handle == -1)return;
 		phy::ClothSimulator::execution(
 			Handle, 
 			m_Model_data[Handle].model, 
@@ -148,6 +155,7 @@ namespace lib {
 		);
 	}
 	void DxGraphics3D::resetClothPhis(int Handle) {
+		if (Handle == -1)return;
 		phy::ClothSimulator::resetModel(Handle, m_Model_data[Handle].model);
 	}
 }

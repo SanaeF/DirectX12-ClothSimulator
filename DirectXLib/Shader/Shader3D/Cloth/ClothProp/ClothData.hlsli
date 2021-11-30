@@ -1,9 +1,16 @@
+struct Resistance {
+	float stretch;
+	float shrink;
+};
 struct SimulateParam {
 	int vert_max;
-	float gravity;
+	Resistance tension;
+	Resistance compress;
+	Resistance share;
+	Resistance bend;
 	float dt;
+	float k;
 };
-
 struct SpringData {
 	float3 force;
 	float3 velocity;

@@ -12,7 +12,7 @@ namespace phy {
 	ClothSimulator::ClothSimulator() {
 
 	}
-	void ClothSimulator::initialize(int handle, lib::ModelData& model) {
+	void ClothSimulator::initialize(int handle, int step, lib::ModelData& model, ClothForce world_f) {
 		if (m_Cloth_handle_data.size() <= handle)m_Cloth_handle_data.resize(handle + 1);
 		int size = model.vertex.size();
 		m_Cloth_handle_data[handle].spring_data.resize(size);
@@ -42,6 +42,8 @@ namespace phy {
 			m_Cloth_handle_data[handle].mass_model[ite].id10 = m3x3_4[10];
 			m_Cloth_handle_data[handle].mass_model[ite].id11 = m3x3_4[11];
 		}
+		m_Cloth_handle_data[handle].world_f = world_f;
+		m_Cloth_handle_data[handle].step = step;
 		m_time = 0;
 	}
 	void ClothSimulator::resetPower(std::vector<SpringData>& spring_data) {
@@ -84,8 +86,9 @@ namespace phy {
 		ClothShader cloth(dx_12);
 		cloth.execution(
 			handle, 
-			step, 
+			m_Cloth_handle_data[handle].step,
 			m_time, 
+			m_Cloth_handle_data[handle].world_f,
 			model,
 			m_Cloth_handle_data[handle].pre_vert,
 			m_Cloth_handle_data[handle].last_vert,

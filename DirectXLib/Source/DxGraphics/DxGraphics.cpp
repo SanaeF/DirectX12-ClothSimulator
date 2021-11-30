@@ -50,8 +50,8 @@ namespace lib {
 		m_Graphics3D->draw(x, y, z, size, Angle, 0);
 		//mDraw2D->BeingDraw();
 	}
-	void DxGraphics::setupClothSimulator(int Handle) {
-		m_Graphics3D->setupClothPhis(Handle);
+	void DxGraphics::setupClothSimulator(int step, ClothForce world_f, int Handle) {
+		m_Graphics3D->setupClothPhis(step, world_f, Handle);
 	}
 	void DxGraphics::clothSimProc(int Handle) {
 		m_Graphics3D->updateClothPhis(Handle);

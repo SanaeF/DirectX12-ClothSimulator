@@ -35,6 +35,7 @@ namespace phy {
 		ClothSpringShader(int model_id, std::shared_ptr<lib::DirectX12Manager>& dx_12);
 		~ClothSpringShader();
 		void create(
+			ClothForce& world_f,
 			lib::ModelData& model,
 			std::vector<MassModel>& mass_model,
 			std::vector<SpringData>& spring,

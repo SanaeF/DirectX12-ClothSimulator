@@ -16,6 +16,7 @@ namespace phy {
 		int model_id,
 		int step,
 		int time,
+		ClothForce& world_f,
 		lib::ModelData& model,
 		std::vector<lib::ModelVertex>& pre_vert,
 		std::vector<lib::ModelVertex>& last_vertex,
@@ -23,13 +24,14 @@ namespace phy {
 		std::vector<SpringData>& spring_data
 	) {
 		last_vertex = model.vertex;
-		massSpring(model_id, step, time, model, pre_vert, mass_model, spring_data);
+		massSpring(model_id, step, time, world_f, model, pre_vert, mass_model, spring_data);
 		collider(model_id, time, model, mass_model, pre_vert, last_vertex, spring_data);
 	}
 	void ClothShader::massSpring(
 		int model_id,
 		int step,
 		int time,
+		ClothForce& world_f,
 		lib::ModelData& model,
 		std::vector<lib::ModelVertex>& pre_vert,
 		std::vector<MassModel>& mass_model,
@@ -38,9 +40,9 @@ namespace phy {
 		//ステップ数だけバネの計算をする
 		//if (time>180)return;
 		ClothSpringShader cloth_shader(model_id, m_Dx12);
-		worldForce(time, 0, model, spring_data);
+		worldForce(time, 0, world_f, model, spring_data);
 		for (int ite = 0; ite < step; ite++) {
-			cloth_shader.create(model, mass_model, spring_data, pre_vert);
+			cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
 			cloth_shader.execution(m_Is_simulated, model, spring_data);
 			forceZero(spring_data);
 		}
@@ -62,13 +64,9 @@ namespace phy {
 		collision.create(param.max_pos, param.min_pos, model, mass_model, spring_data, pre_vert, last_vertex);
 		collision.execution(model, spring_data);
 	}
-	void ClothShader::worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data) {
-		WorldForce world_force;
-		world_force.grid_mass = 1.f;
-		world_force.gravity = 9.8f;
-		world_force.damping = 0;//
-		world_force.dt = 0.0001;//シェーダーのdtの100分の1
-		world_force.wind = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
+	void ClothShader::worldForce(int time, int step, ClothForce& world_f, lib::ModelData& model, std::vector<SpringData>& spring_data) {
+		auto world_force= world_f;
+		world_force.dt = world_force.dt/10000;//シェーダーのdtの100分の1
 		for (int ite = 0; ite < spring_data.size(); ite++) {
 			if (isFixed(model.vertex[ite]))continue;
 			spring_data[ite].mass = world_force.grid_mass;
