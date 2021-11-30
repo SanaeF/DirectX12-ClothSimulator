@@ -240,8 +240,6 @@ namespace model {
 		sameIndex(data);
 		//インデックスをグループ化する
 		groupIndex(data);
-
-		lib::ModelData::Object.pre_vert = lib::ModelData::Object.vertex;
 	}
 	void PmxModel::setStandardIndex(int id, lib::ModelData& data) {
 		for (int ite2 = 0; ite2 < m_Same_pos.size(); ite2++) {
@@ -266,6 +264,7 @@ namespace model {
 	}
 	//同一頂点のインデックスをまとめる
 	void PmxModel::sameIndex(lib::ModelData& data) {
+		std::vector<int> null_index;
 		for (int ite = 0; ite < data.index.size(); ite++) {
 			if (data.index[ite] == 7288) {
 				int a = 0;
@@ -287,9 +286,11 @@ namespace model {
 					data.vertex[id1].color.y = 0.0f;
 					data.vertex[id1].color.z = 0.0f;
 					data.index[ite] = id2;
+					null_index.push_back(id1);
 				}
 			}
 		}
+		for(int ite = 0; ite < null_index.size(); ite++)data.vertex[null_index[ite]].position = DirectX::XMFLOAT3(0, 0, 0);
 	}
 	//インデックスをグループ化する
 	void PmxModel::groupIndex(lib::ModelData& data) {

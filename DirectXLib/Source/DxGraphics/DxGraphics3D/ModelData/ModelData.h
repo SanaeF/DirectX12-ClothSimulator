@@ -96,7 +96,6 @@ namespace lib {
 	public:
 		static ModelData Object;
 		std::vector<ModelVertex>vertex;
-		std::vector<ModelVertex>pre_vert;
 		std::vector<ModelParam>param;
 		std::vector<UINT>index;
 		std::vector<std::vector<int>>index_group;

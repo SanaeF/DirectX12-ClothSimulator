@@ -396,6 +396,9 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ModelData.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\CollisionCalculator.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
@@ -403,9 +406,6 @@
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Vertex3D.hlsl">
       <Filter>DirectXLib\Shader\Shader3D</Filter>
-    </FxCompile>
-    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothCollider.hlsl">
-      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader2D\Pixel2D.hlsl">
       <Filter>DirectXLib\Shader\Shader2D</Filter>
@@ -417,6 +417,9 @@
       <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\CollisionSpace.hlsl">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothCollider.hlsl">
       <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
   </ItemGroup>

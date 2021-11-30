@@ -73,7 +73,7 @@ void Application::run() {
 			else isSimulate = true;
 		}
 		if (count == 1920)count = 0;
-		angle += 0.0005f;
+		angle += 0.005f;
 	}
 }
 

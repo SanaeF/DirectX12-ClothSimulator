@@ -203,6 +203,7 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSCollisionSpace.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothSpring.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\CollisionCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
   </ItemGroup>

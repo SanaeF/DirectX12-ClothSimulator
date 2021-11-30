@@ -106,7 +106,7 @@ void ClothSpring(uint3 th_id : SV_GroupID){
 	out_max_pos[0].is_simulated = true;
 	int dim = sqrt(param.vert_max);
 	int id = (th_id.x * dim) + th_id.y;
-	float dt = 0.026;
+	float dt = 0.036;
 	if (id >= param.vert_max)return;
 	firstSetting(id);
 	if (isFixed(vertex[id].color)) {

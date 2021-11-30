@@ -50,10 +50,6 @@ namespace lib {
 		m_Model_data[handleID].model = lib::ModelData::Object;
 		m_Model_data[handleID].model.createViewBuffer(m_Dx12->device());
 		m_Model_data[handleID].model.createMaterialBuffer(m_Dx12->device());
-		phy::ClothSimulator::setupForce(
-			lib::ModelData::Object.vertex.size(),
-			m_Model_data[handleID].spring_data
-		);
 		m_Texture->loadWIC(lib::ModelData::Object.texturePaths[0].c_str());
 		m_Texture->createResource(m_Dx12);
 		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
@@ -142,27 +138,16 @@ namespace lib {
  		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
 	void DxGraphics3D::setupClothPhis(int Handle) {
-		phy::ClothSimulator::createMassModel(
-			m_Model_data[Handle].mass_model,
-			m_Model_data[Handle].model.vertex,
-			m_Model_data[Handle].model.index, 
-			m_Model_data[Handle].model.index_group
-		);
-		phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
+		phy::ClothSimulator::initialize(Handle, m_Model_data[Handle].model);
 	}
 	void DxGraphics3D::updateClothPhis(int Handle) {
 		phy::ClothSimulator::execution(
 			Handle, 
 			m_Model_data[Handle].model, 
-			m_Model_data[Handle].mass_model, 
-			m_Model_data[Handle].spring_data,
 			m_Dx12
 		);
-		m_Model_data[Handle].model.bufferMap();
 	}
 	void DxGraphics3D::resetClothPhis(int Handle) {
-		/*phy::ClothSimulator::resetPower(m_Model_data[Handle].spring_data);
-		m_Model_data[Handle].model.vertex = m_Model_data[Handle].model.pre_vert;
-		m_Model_data[Handle].model.bufferMap();*/
+		phy::ClothSimulator::resetModel(Handle, m_Model_data[Handle].model);
 	}
 }

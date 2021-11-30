@@ -15,7 +15,7 @@ namespace phy {
 		std::shared_ptr<lib::ComputeShader> m_Shader;
 		ComPtr<ID3D12Device> m_Device;
 
-		struct SpaceData{
+		struct SpaceData {
 			int space_ount;
 			int spaceID[XYZ_ALL];
 		};
@@ -52,10 +52,17 @@ namespace phy {
 			int id,
 			std::shared_ptr<lib::DirectX12Manager>& dx12
 		);
-		void create(DirectX::XMFLOAT3 max, DirectX::XMFLOAT3 min, lib::ModelData& model, std::vector<MassModel>& mass_model);
-		void execution(lib::ModelData& model);
+		void create(
+			DirectX::XMFLOAT3 max, DirectX::XMFLOAT3 min,
+			lib::ModelData& model,
+			std::vector<MassModel>& mass_model,
+			std::vector<SpringData>& spring_data,
+			std::vector<lib::ModelVertex>& pre_vert,
+			std::vector<lib::ModelVertex>& last_vertex
+		);
+		void execution(lib::ModelData& model, std::vector<SpringData>& spring_data);
 	private:
 		void executeSortShader(bool is_input, lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos);
-		void dataAssign(lib::ModelData& model);
+		void dataAssign(lib::ModelData& model, std::vector<SpringData>& spring_data);
 	};
 }

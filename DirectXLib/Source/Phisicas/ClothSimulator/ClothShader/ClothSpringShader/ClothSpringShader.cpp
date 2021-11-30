@@ -26,7 +26,8 @@ namespace phy {
 	void ClothSpringShader::create(
 		lib::ModelData& model,
 		std::vector<MassModel>& mass_model,
-		std::vector<SpringData>& spring
+		std::vector<SpringData>& spring,
+		std::vector<lib::ModelVertex>& pre_vert
 	) {
 		if (65535 < model.vertex.size()) {
 			assert(0 && "<このモデルは上限を超えています!>DirectX12の使用により、クロスシミュレーターに使用できる頂点数は65535個が限界です。");
@@ -57,7 +58,7 @@ namespace phy {
 			//転送用のモデルデータ
 			m_Shader->inputBufferSize(3, shaderHandler[m_Model_id].sim_param.size(), sizeof(SimulateParam));//シミュレート情報
 			m_Shader->inputBufferSize(4, mass_model.size(), sizeof(MassModel));//質点ID
-			m_Shader->inputBufferSize(5, model.pre_vert.size(), sizeof(lib::ModelVertex));//固定用のモデル情報
+			m_Shader->inputBufferSize(5, pre_vert.size(), sizeof(lib::ModelVertex));//固定用のモデル情報
 			m_Shader->inputBufferSize(6, model.vertex.size(), sizeof(lib::ModelVertex));//描画で使ったモデル情報
 			m_Shader->inputBufferSize(7, spring.size(), sizeof(SpringData));//バネモデル情報
 			m_Shader->inputBufferSize(8, spring.size(), sizeof(SpringData));//バネモデル情報
@@ -71,7 +72,7 @@ namespace phy {
 		if (!is_input) {
 			m_Shader->mapInput(3, shaderHandler[m_Model_id].sim_param.data());
 			m_Shader->mapInput(4, mass_model.data());
-			m_Shader->mapInput(5, model.pre_vert.data());
+			m_Shader->mapInput(5, pre_vert.data());
 		}
 		m_Shader->mapInput(6, model.vertex.data());
 		m_Shader->mapInput(7, spring.data());
@@ -106,6 +107,12 @@ namespace phy {
 	}
 	ClothSpringShader::ResultParam
 		ClothSpringShader::getResultParam(int id) {
+		if (shaderHandler.size() <= 0) {
+			ResultParam result;
+			result.max_pos = DirectX::XMFLOAT3(0,0,0);
+			result.min_pos = DirectX::XMFLOAT3(0, 0, 0);
+			return result;
+		}
 		return shaderHandler[id].out_param[0];
 	}
 	bool ClothSpringShader::isSimulated() {

@@ -1,4 +1,3 @@
-//#include "VectLib.hlsli"
 
 float mulAdd(float3 vec1, float3 vec2) {
 	float x = vec1.x * vec2.x;
@@ -7,19 +6,7 @@ float mulAdd(float3 vec1, float3 vec2) {
 	float result = x + y + z;
 	return sqrt(result);
 }
-//float3 normalize(float3 pos) {
-//	float x = pos.x;
-//	float y = pos.y;
-//	float z = pos.z;
-//	float length = mulAdd(pos, pos);
-//	float3 result = float3(0, 0, 0);
-//	if (length != 0) {
-//		result.x = pos.x / length;
-//		result.y = pos.y / length;
-//		result.z = pos.z / length;
-//	}
-//	return result;
-//}
+
 float3 scale(float3 vec, float size) {
 	float3 result;
 	result.x = vec.x * size;
@@ -41,11 +28,15 @@ float3 add(float3 vec1, float3 vec2) {
 	result.z = vec1.z + vec2.z;
 	return vec1 + vec2;
 }
-//float distance(float3 vec1, float3 vec2) {
-//	float3 dist = subtract(vec1, vec2);
-//	float result = sqrt((dist.x * dist.x) + (dist.y * dist.y) + (dist.z * dist.z));
-//	return result;
-//}
+//‚È‚·Šp‚ÌŒvŽZ
+float subtendedAngle(float3 pos1, float3 pos2) {
+	float axb = pos1.x * pos2.x + pos1.y * pos2.y + pos1.z * pos2.z;
+	float AxB = 
+		sqrt((pos1.x * pos1.x) + (pos1.y * pos1.y) + (pos1.z * pos1.z))*
+		sqrt((pos2.x * pos2.x) + (pos2.y * pos2.y) + (pos2.z * pos2.z));
+	if (axb == 0 || AxB == 0)return acos(0);
+	return acos(axb / AxB);
+}
 
 float3 CalcForce(float3 pos1, float3 pos2, float length, float constant, float damping) {
 	//damping = damping/10;

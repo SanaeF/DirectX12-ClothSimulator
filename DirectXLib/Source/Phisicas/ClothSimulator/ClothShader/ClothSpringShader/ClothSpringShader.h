@@ -34,7 +34,12 @@ namespace phy {
 	public:
 		ClothSpringShader(int model_id, std::shared_ptr<lib::DirectX12Manager>& dx_12);
 		~ClothSpringShader();
-		void create(lib::ModelData& model, std::vector<MassModel>& mass_model, std::vector<SpringData>& spring);
+		void create(
+			lib::ModelData& model,
+			std::vector<MassModel>& mass_model,
+			std::vector<SpringData>& spring,
+			std::vector<lib::ModelVertex>& pre_vert
+		);
 		void execution(bool is_simulated, lib::ModelData& model, std::vector<SpringData>& spring);
 		static ResultParam getResultParam(int id);
 		bool isSimulated();

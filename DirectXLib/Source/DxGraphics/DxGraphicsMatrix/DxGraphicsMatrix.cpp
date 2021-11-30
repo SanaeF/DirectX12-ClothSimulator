@@ -74,7 +74,7 @@ namespace libGraph {
 	) {
 		DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(x, y, z);
 		//DirectX::XMMATRIX rotate_x = DirectX::XMMatrixRotationX(XM_PI/6);
-		//DirectX::XMMATRIX rotate_y = DirectX::XMMatrixRotationY(XM_PI / 2);
+		DirectX::XMMATRIX rotate_y = DirectX::XMMatrixRotationY(RotaZ);
 		//DirectX::XMMATRIX rotate_z = DirectX::XMMatrixRotationZ(XM_PI);
 		DirectX::XMMATRIX scale_mat = DirectX::XMMatrixScaling(size, size, size);
 		m_Worl_mat = translate;

@@ -16,6 +16,8 @@ namespace phy {
 			int step,
 			int time,
 			lib::ModelData& model,
+			std::vector<lib::ModelVertex>& pre_vert,
+			std::vector<lib::ModelVertex>& last_vertex,
 			std::vector<MassModel>& mass_model,
 			std::vector<SpringData>& spring_data
 		);
@@ -25,10 +27,19 @@ namespace phy {
 			int step,
 			int time,
 			lib::ModelData& model,
+			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<MassModel>& mass_model,
 			std::vector<SpringData>& spring_data
 		);
-		void collider(int model_id, lib::ModelData& model, std::vector<MassModel>& mass_model);
+		void collider(
+			int model_id,
+			int time,
+			lib::ModelData& model,
+			std::vector<MassModel>& mass_model,
+			std::vector<lib::ModelVertex>& pre_vert,
+			std::vector<lib::ModelVertex>& last_vertex,
+			std::vector<SpringData>& spring_data
+		);
 
 		void worldForce(int time, int step, lib::ModelData& model, std::vector<SpringData>& spring_data);
 		void forceZero(std::vector<SpringData>& spring_data);
