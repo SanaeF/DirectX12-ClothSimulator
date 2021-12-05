@@ -30,8 +30,8 @@ void Application::run() {
 	cloth_f.is_self_collision = true;
 	cloth_f.gravity = 9.8f;
 	cloth_f.grid_mass = 1.f;
-	cloth_f.damping = 0.0;
-	cloth_f.dt = 3.6;
+	cloth_f.damping = 0.3;
+	cloth_f.dt = 4.6;
 	cloth_f.windF(0, 0, 0);
 
 	cloth_f.tensionParam(15,15);
@@ -77,6 +77,7 @@ void Application::run() {
 			//m_Graphics->clothReset(testcloth);
 		}
 		isSimulate = false;
+		isSimulate = true;
 		if (m_Key->checkHitKey(DIK_P))isSimulate = true;
 		if (count == 1920)count = 0;
 		angle += 0.005f;

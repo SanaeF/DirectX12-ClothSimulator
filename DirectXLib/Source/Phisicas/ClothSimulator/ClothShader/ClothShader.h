@@ -7,7 +7,6 @@ namespace lib {
 namespace phy {
 	class ClothShader {
 	private:
-		static bool m_Is_simulated;
 		std::shared_ptr<lib::DirectX12Manager> m_Dx12;
 	public:
 		ClothShader(std::shared_ptr<lib::DirectX12Manager>& dx_12);

@@ -60,9 +60,9 @@ namespace phy {
 			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<lib::ModelVertex>& last_vertex
 		);
-		void execution(lib::ModelData& model, std::vector<SpringData>& spring_data);
+		void execution(std::vector<SpringData>& spring_data);
 	private:
 		void executeSortShader(bool is_input, lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos);
-		void dataAssign(lib::ModelData& model, std::vector<SpringData>& spring_data);
+		void dataAssign(std::vector<SpringData>& spring_data);
 	};
 }

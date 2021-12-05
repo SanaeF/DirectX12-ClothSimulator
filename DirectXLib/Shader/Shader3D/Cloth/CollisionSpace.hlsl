@@ -1,4 +1,4 @@
-#include "ClothProp/RSCollisionSpace.hlsli"
+#include "RootSignature/RSCollisionSpace.hlsli"
 #include "ClothProp/ModelData.hlsli"
 #include "ClothProp/CollisionData.hlsli"
 RWStructuredBuffer<SpaceData>space : register(u0);
@@ -111,6 +111,9 @@ void CollisionSpace(uint3 th_id : SV_GroupID) {
 	int id = (th_id.x * dim) + th_id.y;
 	if (id == 0)firstSetting(XYZ_ALL);
 	if (id >= param.vertex_size)return;
+	if (vertex[id].pos.x == 0.f ||
+		vertex[id].pos.y == 0.f || 
+		vertex[id].pos.z == 0.f)return;
 	split_area[id] = inputSpace(vertex[id].pos, XYZ_ALL - 1);
 	int area_id = split_area[id];
 	/*if (space[area_id].count >= space_max) {

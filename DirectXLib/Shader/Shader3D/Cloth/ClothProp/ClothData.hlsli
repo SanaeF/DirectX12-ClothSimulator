@@ -11,11 +11,6 @@ struct SimulateParam {
 	float dt;
 	float k;
 };
-struct SpringData {
-	float3 force;
-	float3 velocity;
-	float mass;
-};
 
 struct MassModel {
 	int id0;

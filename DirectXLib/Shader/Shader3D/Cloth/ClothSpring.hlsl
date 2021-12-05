@@ -1,17 +1,16 @@
-#include "ClothProp/RSClothSpring.hlsli"
+#include "RootSignature/RSClothSpring.hlsli"
 #include "ClothProp/ModelData.hlsli"
+#include "ClothProp/SpringData.hlsli"
 #include "ClothProp/ClothData.hlsli"
 #include "SpringCalculator/SpringCalculator.hlsli"
 //CPU‚É‘—‚é\‘¢‘Ì
-RWStructuredBuffer<ModelVertex> out_vert : register(u0);
-RWStructuredBuffer<SpringData>out_spring : register(u1);
-RWStructuredBuffer<MaxPosition>out_max_pos : register(u2);
+RWStructuredBuffer<SpringData>out_spring : register(u0);
 //CPU‚©‚ç‘—‚ç‚ê‚Ä‚­‚é\‘¢‘Ì
-RWStructuredBuffer<SimulateParam> sim_param : register(u3);
-RWStructuredBuffer<MassModel> mass_model : register(u4);
-RWStructuredBuffer<ModelVertex> pre_vert : register(u5);
-RWStructuredBuffer<ModelVertex> vertex :register(u6);
-RWStructuredBuffer<SpringData> spring : register(u7);//ó‚¯æ‚ê‚Ä‚¢‚È‚¢
+RWStructuredBuffer<SimulateParam> sim_param : register(u1);
+RWStructuredBuffer<MassModel> mass_model : register(u2);
+RWStructuredBuffer<ModelVertex> pre_vert : register(u3);
+RWStructuredBuffer<ModelVertex> vertex :register(u4);
+RWStructuredBuffer<SpringData> spring : register(u5);//ó‚¯æ‚ê‚Ä‚¢‚È‚¢
 
 float3 StructuralSolver(int id) {
 	SimulateParam param = sim_param[0];
@@ -106,52 +105,22 @@ float3 BendingSolver(int id) {
 	return result;
 }
 
-void firstSetting(int id) {
-	out_vert[id] = vertex[id];
-	out_spring[id] = spring[id];
-	if (id == 0) {
-		out_max_pos[0].max_pos = float3(0, 0, 0);
-		out_max_pos[0].min_pos = float3(0, 0, 0);
-	}
-}
-void PositionSort(int id) {
-	if (out_max_pos[0].max_pos.x < out_vert[id].pos.x)out_max_pos[0].max_pos.x = out_vert[id].pos.x;
-	if (out_max_pos[0].max_pos.y < out_vert[id].pos.y)out_max_pos[0].max_pos.y = out_vert[id].pos.y;
-	if (out_max_pos[0].max_pos.z < out_vert[id].pos.z)out_max_pos[0].max_pos.z = out_vert[id].pos.z;
-	if (out_max_pos[0].min_pos.x > out_vert[id].pos.x)out_max_pos[0].min_pos.x = out_vert[id].pos.x;
-	if (out_max_pos[0].min_pos.y > out_vert[id].pos.y)out_max_pos[0].min_pos.y = out_vert[id].pos.y;
-	if (out_max_pos[0].min_pos.z > out_vert[id].pos.x)out_max_pos[0].min_pos.z = out_vert[id].pos.z;
-}
-
 [RootSignature(RS)]
 [numthreads(1, 1, 1)]
 void ClothSpring(uint3 th_id : SV_GroupID){
 	SimulateParam param = sim_param[0];
-	out_max_pos[0].is_simulated = true;
 	int dim = sqrt(param.vert_max);
 	int id = (th_id.x * dim) + th_id.y;
 	float dt = param.dt / 100;
 	if (id >= param.vert_max)return;
-	firstSetting(id);
-	if (isFixed(vertex[id].color)) {
-		PositionSort(id);
-		return;
-	}
+	out_spring[id] = spring[id];
+	if (isFixed(vertex[id].color))return;
 	if (isNullData(spring[id].velocity))return;
+
 	float3 f = float3(0, 0, 0);
-	f = add(f, StructuralSolver(id));
-	f = add(f, CompressionSolver(id));
-	f = add(f, ShareSolver(id));
-	f = add(f, BendingSolver(id));
+	f = add(f, StructuralSolver(id));//\‘¢
+	f = add(f, CompressionSolver(id));//ˆ³k
+	f = add(f, ShareSolver(id));//‹È‚°
+	f = add(f, BendingSolver(id));//‚¹‚ñ’f
 	out_spring[id].force = f;
-
-	float3 v = scale(out_spring[id].force, 1 / (spring[id].mass + spring[id].mass));
-	v = scale(v, dt);
-	out_spring[id].velocity = add(spring[id].velocity, v);
-	v = scale(out_spring[id].velocity, dt);
-	out_vert[id].pos = add(vertex[id].pos, v);
-	////—Í‚ğƒ[ƒ‚É‚·‚é
-	out_spring[id].force = float3(0, 0, 0);
-
-	PositionSort(id);
 }

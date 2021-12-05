@@ -145,6 +145,7 @@
     <ClCompile Include="DirectXLib\Source\FPSManager\FPSManager.cpp" />
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader\ClothNewPosShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader\ClothNewPosShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothSimulator.h" />
@@ -201,10 +203,13 @@
     <None Include="DirectXLib\Shader\Shader2D\Header2D.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CollisionData.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ModelData.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothCollider.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSCollisionSpace.hlsli" />
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothSpring.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\NewPosData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\SpringData.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSClothCollider.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSClothSpring.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSCollisionSpace.hlsli" />
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSNewPosition.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\CollisionCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli" />
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli" />
@@ -230,6 +235,14 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothCollider</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClothCollider</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothNewPosition.hlsl">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ClothNewPosition</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.1</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ClothNewPosition</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.1</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>

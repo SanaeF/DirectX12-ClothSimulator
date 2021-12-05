@@ -159,6 +159,12 @@
     <Filter Include="DirectXLib\Source\FPSManager">
       <UniqueIdentifier>{55b6d0ad-3180-4cab-96d5-f7ffd7f19685}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader">
+      <UniqueIdentifier>{861b4025-d53b-4fea-9468-815a2bd10bf7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature">
+      <UniqueIdentifier>{7b6839a5-a6d3-4947-b715-85ee18b9d3c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Application.h">
@@ -265,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\FPSManager\FPSManager.h">
       <Filter>DirectXLib\Source\FPSManager</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader\ClothNewPosShader.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +382,9 @@
     <ClCompile Include="DirectXLib\Source\FPSManager\FPSManager.cpp">
       <Filter>DirectXLib\Source\FPSManager</Filter>
     </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader\ClothNewPosShader.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DirectXLib\Shader\Shader3D\Header3D.hlsli">
@@ -384,20 +396,11 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\ClothData.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothSpring.hlsli">
-      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
-    </None>
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\VectLib.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
     </None>
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\SpringCalculator.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
-    </None>
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSClothCollider.hlsli">
-      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
-    </None>
-    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\RSCollisionSpace.hlsli">
-      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\CollisionData.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
@@ -407,6 +410,24 @@
     </None>
     <None Include="DirectXLib\Shader\Shader3D\Cloth\SpringCalculator\CollisionCalculator.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\SpringCalculator</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\SpringData.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSClothCollider.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\RootSignature</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSClothSpring.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\RootSignature</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSCollisionSpace.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\RootSignature</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSNewPosition.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\RootSignature</Filter>
+    </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\NewPosData.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -429,6 +450,9 @@
       <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothCollider.hlsl">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothNewPosition.hlsl">
       <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
   </ItemGroup>

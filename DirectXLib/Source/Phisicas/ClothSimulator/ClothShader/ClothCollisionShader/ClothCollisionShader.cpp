@@ -43,34 +43,32 @@ namespace phy {
 			m_Shader.reset(
 				new lib::ComputeShader(
 					"./DirectXLib/Shader/Shader3D/Cloth/ClothCollider.hlsl",
-					"ClothCollider", 10, shaderHandler[m_Model_id].compute_handle, m_Dx12)
+					"ClothCollider", 9, shaderHandler[m_Model_id].compute_handle, m_Dx12)
 			);
 			//取得用データ
-			m_Shader->inputBufferSize(0, model.vertex.size(), sizeof(lib::ModelVertex));//モデル情報
-			m_Shader->inputBufferSize(1, spring_data.size(), sizeof(SpringData));//モデル情報
+			m_Shader->inputBufferSize(0, spring_data.size(), sizeof(SpringData));//モデル情報
 			//転送用のデータ
-			m_Shader->inputBufferSize(2, shaderHandler[m_Model_id].collision_param.size(), sizeof(CollisionParam));
-			m_Shader->inputBufferSize(3, pre_vert.size(), sizeof(lib::ModelVertex));//モデル情報
-			m_Shader->inputBufferSize(4, model.vertex.size(), sizeof(lib::ModelVertex));//モデル情報
-			m_Shader->inputBufferSize(5, space.size(), sizeof(SpaceData));//空間情報
-			m_Shader->inputBufferSize(6, split_area.size(), sizeof(int));//頂点ごとの空間ID
-			m_Shader->inputBufferSize(7, last_vertex.size(), sizeof(lib::ModelVertex));//頂点ごとの空間ID
-			m_Shader->inputBufferSize(8, spring_data.size(), sizeof(SpringData));//バネ情報
-			m_Shader->inputBufferSize(9, mass_model.size(), sizeof(MassModel));//バネ情報
+			m_Shader->inputBufferSize(1, shaderHandler[m_Model_id].collision_param.size(), sizeof(CollisionParam));
+			m_Shader->inputBufferSize(2, pre_vert.size(), sizeof(lib::ModelVertex));//モデル情報
+			m_Shader->inputBufferSize(3, model.vertex.size(), sizeof(lib::ModelVertex));//モデル情報
+			m_Shader->inputBufferSize(4, space.size(), sizeof(SpaceData));//空間情報
+			m_Shader->inputBufferSize(5, split_area.size(), sizeof(int));//頂点ごとの空間ID
+			m_Shader->inputBufferSize(6, last_vertex.size(), sizeof(lib::ModelVertex));//頂点ごとの空間ID
+			m_Shader->inputBufferSize(7, spring_data.size(), sizeof(SpringData));//バネ情報
+			m_Shader->inputBufferSize(8, mass_model.size(), sizeof(MassModel));//バネ情報
 			m_Shader->createUnorderdAccessView();
 
 			m_Shader->mapOutput(0);
-			m_Shader->mapOutput(1);
-			m_Shader->mapInput(2, shaderHandler[m_Model_id].collision_param.data());
-			m_Shader->mapInput(3, pre_vert.data());
+			m_Shader->mapInput(1, shaderHandler[m_Model_id].collision_param.data());
+			m_Shader->mapInput(2, pre_vert.data());
 		}
 		else m_Shader.reset(new lib::ComputeShader(shaderHandler[m_Model_id].compute_handle, m_Dx12));
-		m_Shader->mapInput(4, model.vertex.data());
-		m_Shader->mapInput(5, space.data());
-		m_Shader->mapInput(6, split_area.data());
-		m_Shader->mapInput(7, last_vertex.data());
-		m_Shader->mapInput(8, spring_data.data());
-		m_Shader->mapInput(9, mass_model.data());
+		m_Shader->mapInput(3, model.vertex.data());
+		m_Shader->mapInput(4, space.data());
+		m_Shader->mapInput(5, split_area.data());
+		m_Shader->mapInput(6, last_vertex.data());
+		m_Shader->mapInput(7, spring_data.data());
+		m_Shader->mapInput(8, mass_model.data());
 		//space.clear();
 		//split_area.clear();
 		is_input = true;
@@ -120,21 +118,18 @@ namespace phy {
 			(int*)m_Shader->getData(1),
 			(int*)m_Shader->getData(1) + split_area.size());
 	}
-	void ClothCollisionShader::execution(lib::ModelData& model, std::vector<SpringData>& spring_data) {
+	void ClothCollisionShader::execution(std::vector<SpringData>& spring_data) {
 		m_Shader->execution(
 			shaderHandler[m_Model_id].thread.x,
 			shaderHandler[m_Model_id].thread.y,
 			1,
 			shaderHandler[m_Model_id].compute_handle
 		);
-		dataAssign(model, spring_data);
+		dataAssign(spring_data);
 	}
-	void ClothCollisionShader::dataAssign(lib::ModelData& model, std::vector<SpringData>& spring_data) {
-		model.vertex.assign(
-			(lib::ModelVertex*)m_Shader->getData(0),
-			(lib::ModelVertex*)m_Shader->getData(0) + model.vertex.size());
+	void ClothCollisionShader::dataAssign(std::vector<SpringData>& spring_data) {
 		spring_data.assign(
-			(SpringData*)m_Shader->getData(1),
-			(SpringData*)m_Shader->getData(1) + spring_data.size());
+			(SpringData*)m_Shader->getData(0),
+			(SpringData*)m_Shader->getData(0) + spring_data.size());
 	}
 }

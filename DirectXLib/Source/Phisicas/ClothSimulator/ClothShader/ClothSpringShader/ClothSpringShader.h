@@ -15,20 +15,13 @@ namespace phy {
 		std::shared_ptr<lib::ComputeShader> m_Shader;
 		ComPtr<ID3D12Device> m_Device;
 
-		struct ResultParam {
-			bool is_simulated;
-			DirectX::XMFLOAT3 max_pos;
-			DirectX::XMFLOAT3 min_pos;
-		};
 		struct CSSInfo {
-			std::vector<ResultParam> out_param;
 			std::vector<SimulateParam> sim_param;
 			DirectX::XMINT3 thread;
 			bool is_created;
 			int compute_handle;
 		};
 		static std::vector<CSSInfo> shaderHandler;
-		bool m_Is_simulated;
 		bool m_Is_looped;
 		int m_Model_id;
 	public:
@@ -41,10 +34,8 @@ namespace phy {
 			std::vector<SpringData>& spring,
 			std::vector<lib::ModelVertex>& pre_vert
 		);
-		void execution(bool is_simulated, lib::ModelData& model, std::vector<SpringData>& spring);
-		static ResultParam getResultParam(int id);
-		bool isSimulated();
+		void execution(std::vector<SpringData>& spring);
 	private:
-		void dataAssign(bool is_simulated, lib::ModelData& model, std::vector<SpringData>& spring);
+		void dataAssign(std::vector<SpringData>& spring);
 	};
 }
