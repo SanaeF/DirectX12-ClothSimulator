@@ -30,8 +30,8 @@ void Application::run() {
 	cloth_f.is_self_collision = true;
 	cloth_f.gravity = 9.8f;
 	cloth_f.grid_mass = 1.f;
-	cloth_f.damping = 0.3;
-	cloth_f.dt = 2.6;
+	cloth_f.damping = 0.0;
+	cloth_f.dt = 3.6;
 	cloth_f.windF(0, 0, 0);
 
 	cloth_f.tensionParam(15,15);
