@@ -16,6 +16,7 @@ namespace lib {
 	class DxKeyConfig;
 	class DxSound;
 	class DxGraphics;
+	class FPSManager;
 }
 ///シングルトンクラス
 class Application{
@@ -24,6 +25,7 @@ private:
 	std::shared_ptr<lib::DxGraphics>m_Graphics;
 	std::shared_ptr<lib::DxKeyConfig>m_Key;
 	std::shared_ptr<lib::DxSound>m_Sound;
+	std::shared_ptr<lib::FPSManager>m_Fps;
 	SIZE m_Win, m_Pix;
 	const char* m_WinName[2];
 	//ウィンドウ周り

@@ -91,7 +91,7 @@ namespace phy {
 			shaderHandler[m_Model_id].thread.x,
 			shaderHandler[m_Model_id].thread.y,
 			shaderHandler[m_Model_id].thread.z,
-			m_Model_id
+			shaderHandler[m_Model_id].compute_handle
 		);
 		dataAssign(is_simulated, model, spring);
 	}

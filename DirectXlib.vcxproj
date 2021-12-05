@@ -142,6 +142,7 @@
     <ClCompile Include="DirectXLib\Source\DxKeyConfig\DxKeyConfig.cpp" />
     <ClCompile Include="DirectXLib\Source\DxSound\DxSound.cpp" />
     <ClCompile Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.cpp" />
+    <ClCompile Include="DirectXLib\Source\FPSManager\FPSManager.cpp" />
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.cpp" />
@@ -178,6 +179,7 @@
     <ClInclude Include="DirectXLib\Source\DxKeyConfig\DxKeyConfig.h" />
     <ClInclude Include="DirectXLib\Source\DxSound\DxSound.h" />
     <ClInclude Include="DirectXLib\Source\DxSound\InputWavData\InputWavData.h" />
+    <ClInclude Include="DirectXLib\Source\FPSManager\FPSManager.h" />
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothData\SpringData.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader\ClothCollisionShader.h" />

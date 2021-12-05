@@ -54,10 +54,11 @@ namespace lib {
 		m_Texture->createResource(m_Dx12);
 		pipeline.createGraphicsPipeline(m_Dx12, *m_Root_signature, m_Texture->getRootSigDesc());
 		m_Model_data[handleID].texture_buffer = m_Texture->getTextureBuff();
+		lib::ModelData::Object.initialize();
 		return handleID;
 	}
-	void DxGraphics3D::draw(float x, float y, float z, float size, double Angle, int Handle) {
-		if (Handle == -1)return;
+	void DxGraphics3D::draw(float x, float y, float z, float size, double Angle, int handle) {
+		if (handle == -1)return;
 		//if (Handle == -1 || Handle >= mHandleCount)return;
 		DrawGraphParam Param;
 		Param.x = x / static_cast<float>(m_Dx12->getPixelSize().cx);
@@ -65,20 +66,20 @@ namespace lib {
 		Param.z = z / static_cast<float>(m_Dx12->getPixelSize().cx);
 		Param.size = size;
 		Param.angle = Angle;
-		createMatrix(Handle, m_Dx12->getCount3D(Handle));
-		drawMatrix(Param, m_Dx12->getCount3D(Handle), Handle);
-		drawCommand(m_Dx12->getCount3D(Handle), Handle);
+		createMatrix(handle, m_Dx12->getCount3D(handle));
+		drawMatrix(Param, m_Dx12->getCount3D(handle), handle);
+		drawCommand(m_Dx12->getCount3D(handle), handle);
 
-		m_Dx12->setCount3D(Handle, m_Dx12->getCount3D(Handle) + 1);
+		m_Dx12->setCount3D(handle, m_Dx12->getCount3D(handle) + 1);
 	}
 
-	void DxGraphics3D::createMatrix(int Handle, int num) {
-		if (Handle == -1)return;
+	void DxGraphics3D::createMatrix(int handle, int num) {
+		if (handle == -1)return;
 		int ArrySize = num + 1;
-		if (m_Model_data[Handle].tex_desc_heap_arry.size() <= num &&
-			m_Model_data[Handle].matrix_arry.size() <= num) {
-			m_Model_data[Handle].tex_desc_heap_arry.resize(ArrySize);
-			m_Model_data[Handle].matrix_arry.resize(ArrySize);
+		if (m_Model_data[handle].tex_desc_heap_arry.size() <= num &&
+			m_Model_data[handle].matrix_arry.size() <= num) {
+			m_Model_data[handle].tex_desc_heap_arry.resize(ArrySize);
+			m_Model_data[handle].matrix_arry.resize(ArrySize);
 		}
 		else return;
 
@@ -86,7 +87,7 @@ namespace lib {
 		m_Texture->shaderResourceView(
 			m_Dx12,
 			m_Texture->getShaderResourceWierDesc(),
-			m_Model_data[Handle].texture_buffer,
+			m_Model_data[handle].texture_buffer,
 			m_Texture->getBasicDescHeap()
 		);
 		m_Matrix->createBuffer3D(*m_Dx12);
@@ -95,33 +96,33 @@ namespace lib {
 			m_Matrix->getConstBuffer(),
 			m_Texture->getDescHandle()
 		);
-		m_Model_data[Handle].tex_desc_heap_arry[num] = m_Texture->getBasicDescHeap();
-		m_Model_data[Handle].matrix_arry[num] = m_Matrix->getMatData();
+		m_Model_data[handle].tex_desc_heap_arry[num] = m_Texture->getBasicDescHeap();
+		m_Model_data[handle].matrix_arry[num] = m_Matrix->getMatData();
 	}
 
-	void DxGraphics3D::drawMatrix(DrawGraphParam Paramater, int InstancedCount, int Handle) {
-		if (Handle == -1)return;
+	void DxGraphics3D::drawMatrix(DrawGraphParam paramater, int instancedCount, int handle) {
+		if (handle == -1)return;
 		//mMatrix->update();
-		if (Paramater.x == 0 &&
+		/*if (Paramater.x == 0 &&
 			Paramater.y == 0 &&
 			Paramater.size == 1 &&
 			Paramater.angle == 0
-			)return;
+			)return;*/
 		m_Matrix->changeMatrix3D(
-			m_Model_data[Handle].matrix_arry[InstancedCount],
-			Paramater.x,
-			Paramater.y,
-			Paramater.z,
-			Paramater.size,
-			Paramater.angle
+			m_Model_data[handle].matrix_arry[instancedCount],
+			paramater.x,
+			paramater.y,
+			paramater.z,
+			paramater.size,
+			paramater.angle
 		);
 	}
-	void DxGraphics3D::drawCommand(int InstancedCount, int Handle) {
-		if (Handle == -1)return;
-		ID3D12DescriptorHeap* texDH = m_Model_data[Handle].tex_desc_heap_arry[InstancedCount];
-		auto getMatVBView = m_Model_data[Handle].model.vb_view;
-		auto mat_heap = m_Model_data[Handle].model.mat_heap;
-		auto getIndexCount = m_Model_data[Handle].model.index.size();
+	void DxGraphics3D::drawCommand(int instancedCount, int handle) {
+		if (handle == -1)return;
+		ID3D12DescriptorHeap* texDH = m_Model_data[handle].tex_desc_heap_arry[instancedCount];
+		auto getMatVBView = m_Model_data[handle].model.vb_view;
+		auto mat_heap = m_Model_data[handle].model.mat_heap;
+		auto getIndexCount = m_Model_data[handle].model.index.size();
 		m_Dx12->cmdList()->IASetVertexBuffers(0, 1, &getMatVBView);
 		m_Dx12->cmdList()->SetDescriptorHeaps(1, &texDH);
 		m_Dx12->cmdList()->SetGraphicsRootDescriptorTable(0, texDH->GetGPUDescriptorHandleForHeapStart());
@@ -129,33 +130,33 @@ namespace lib {
 		m_Dx12->cmdList()->DrawIndexedInstanced(getIndexCount, 1, 0, 0, 0);
 	}
 
-	void DxGraphics3D::beginDraw(libGraph::DxGraphicsPipeline& pipeline, int Handle) {
-		if (Handle == -1)return;
+	void DxGraphics3D::beginDraw(libGraph::DxGraphicsPipeline& pipeline, int handle) {
+		if (handle == -1)return;
 		auto pipeline_state = pipeline.getPipelineState();
 		if (pipeline_state == nullptr)return;
 		m_Dx12->cmdList()->SetPipelineState(pipeline_state);
 
 		auto rootsignature = m_Root_signature->getRootSignature();
 		if (rootsignature == nullptr)return;
-		auto getMatIBView = m_Model_data[Handle].model.ib_view;
+		auto getMatIBView = m_Model_data[handle].model.ib_view;
 		m_Dx12->cmdList()->IASetIndexBuffer(&getMatIBView);
 		m_Dx12->cmdList()->SetGraphicsRootSignature(rootsignature);
  		m_Dx12->cmdList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	}
-	void DxGraphics3D::setupClothPhis(int step, ClothForce world_f, int Handle) {
-		if (Handle == -1)return;
-		phy::ClothSimulator::initialize(Handle, step, m_Model_data[Handle].model, world_f);
+	void DxGraphics3D::setupClothPhis(int step, ClothForce world_f, int handle) {
+		if (handle == -1)return;
+		phy::ClothSimulator::initialize(handle, step, m_Model_data[handle].model, world_f);
 	}
-	void DxGraphics3D::updateClothPhis(int Handle) {
-		if (Handle == -1)return;
+	void DxGraphics3D::updateClothPhis(int handle) {
+		if (handle == -1)return;
 		phy::ClothSimulator::execution(
-			Handle, 
-			m_Model_data[Handle].model, 
+			handle, 
+			m_Model_data[handle].model, 
 			m_Dx12
 		);
 	}
-	void DxGraphics3D::resetClothPhis(int Handle) {
-		if (Handle == -1)return;
-		phy::ClothSimulator::resetModel(Handle, m_Model_data[Handle].model);
+	void DxGraphics3D::resetClothPhis(int handle) {
+		if (handle == -1)return;
+		phy::ClothSimulator::resetModel(handle, m_Model_data[handle].model);
 	}
 }

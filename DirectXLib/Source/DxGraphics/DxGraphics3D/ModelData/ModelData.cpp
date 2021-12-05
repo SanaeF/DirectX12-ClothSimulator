@@ -4,6 +4,22 @@ namespace lib {
 	ModelData ModelData::Object;
 	ModelData::ModelData(){
 	}
+	void ModelData::initialize() {
+		vertex.clear();
+		param.clear();
+		index.clear();
+		index_group.clear();
+		texturePaths.clear();
+		materials.clear();
+		bones.clear();
+		vertex_buffer = nullptr;
+		index_buffer = nullptr;
+		mat_heap = nullptr;
+		m_Vb = nullptr;
+		m_Ib = nullptr;
+		m_Vert_size = 0;
+		m_Idx_size = 0;
+	}
 	void ModelData::createViewBuffer(ComPtr<ID3D12Device> device) {
 		if (!createVertexBuffer(device))return;
 		if (!createIndexBuffer(device))return;

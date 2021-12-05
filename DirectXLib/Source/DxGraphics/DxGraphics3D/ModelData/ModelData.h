@@ -116,6 +116,7 @@ namespace lib {
 		ID3D12Resource* m_Ib = nullptr;
 	public:
 		ModelData();
+		void initialize();
 		void createViewBuffer(ComPtr<ID3D12Device> device);
 		void createMaterialBuffer(ComPtr<ID3D12Device> device);
 		void bufferMap();

@@ -33,25 +33,24 @@ namespace lib {
 		return m_Graphics2D->load(path, *m_Pipeline2D);
 	}
 
-	void DxGraphics::drawPrototype2D(float x, float y, float size, float Angle, int Handle) {
+	void DxGraphics::drawPrototype2D(float x, float y, float size, float angle, int handle) {
 		m_Graphics2D->beingDraw(*m_Pipeline2D);
-		m_Graphics2D->draw(x, y, size, Angle, Handle);
+		m_Graphics2D->draw(x, y, size, angle, handle);
 	}
 
 
 	int DxGraphics::load3D(const wchar_t* path) {
 		//m_Graphics3D->loadFbx(path, *m_Pipeline3D);
-		m_Graphics3D->loadPmx(path, *m_Pipeline3D);
-		return 0;
+		return m_Graphics3D->loadPmx(path, *m_Pipeline3D);
 	}
 
-	void DxGraphics::draw3D(float x, float y, float z, float size, float Angle) {
-		m_Graphics3D->beginDraw(*m_Pipeline3D, 0);
-		m_Graphics3D->draw(x, y, z, size, Angle, 0);
+	void DxGraphics::draw3D(float x, float y, float z, float size, float angle, int handle) {
+		m_Graphics3D->beginDraw(*m_Pipeline3D, handle);
+		m_Graphics3D->draw(x, y, z, size, angle, handle);
 		//mDraw2D->BeingDraw();
 	}
-	void DxGraphics::setupClothSimulator(int step, ClothForce world_f, int Handle) {
-		m_Graphics3D->setupClothPhis(step, world_f, Handle);
+	void DxGraphics::setupClothSimulator(int step, ClothForce world_f, int handle) {
+		m_Graphics3D->setupClothPhis(step, world_f, handle);
 	}
 	void DxGraphics::clothSimProc(int Handle) {
 		m_Graphics3D->updateClothPhis(Handle);

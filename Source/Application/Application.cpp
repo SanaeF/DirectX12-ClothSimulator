@@ -4,7 +4,7 @@
 #include "../../DirectXLib/Source/DirectX12Manager/DirectX12Manager.h"
 #include "../../DirectXLib/Source/DxKeyConfig/DxKeyConfig.h"
 #include "../../DirectXLib/Source/DxSound/DxSound.h"
-
+#include "../../DirectXLib/Source/FPSManager/FPSManager.h"
 bool Application::initialize() {
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	createGameWindow(m_Hwnd, m_Window_class);
@@ -13,6 +13,7 @@ bool Application::initialize() {
 	m_Sound.reset(new lib::DxSound(m_Hwnd));
 	m_Key.reset(new lib::DxKeyConfig(m_Hwnd,m_Window_class));
 	m_Graphics.reset(new lib::DxGraphics(m_Dx12));
+	m_Fps.reset(new lib::FPSManager(60));
 	m_Key->keyInit(0);
 
 	return true;
@@ -21,7 +22,9 @@ bool Application::initialize() {
 
 void Application::run() {
 	int skirt;
+	int testcloth;
 	skirt = m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//TestCloth,SchoolSkirt
+	testcloth = m_Graphics->load3D(L"./model/skirt/TestCloth.pmx");//TestCloth,SchoolSkirt
 	bool isSimulate = false;
 	ClothForce cloth_f;
 	cloth_f.is_self_collision = true;
@@ -37,6 +40,7 @@ void Application::run() {
 	cloth_f.bendParam(25, 2);
 
 	m_Graphics->setupClothSimulator(5, cloth_f, skirt);
+	//m_Graphics->setupClothSimulator(5, cloth_f, testcloth);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
@@ -47,8 +51,12 @@ void Application::run() {
 		if (msg.message == WM_QUIT) {break;}
 		m_Graphics->clearDraw();//画面の初期化
 		m_Graphics->setArea(0, 0, 1920, 1440);//描画範囲の指定
-		m_Graphics->draw3D(Move[0], Move[1], 6000 + Move[2], 1, angle);
-		if(isSimulate)m_Graphics->clothSimProc(skirt);
+		m_Graphics->draw3D(0, 0, 6000, 1, 0, skirt);
+		//m_Graphics->draw3D(0, 0, 6000, 1, 0, testcloth);
+		if (isSimulate) {
+			m_Graphics->clothSimProc(skirt);
+			//m_Graphics->clothSimProc(testcloth);
+		}
 		m_Graphics->screenFlip();//スワップチェイン
 
 		m_Key->checkAll();//キー入力のセット
@@ -64,11 +72,16 @@ void Application::run() {
 		if (m_Key->checkHitKey(DIK_Z) == 1)angle += 0.002f * 10;
 		if (m_Key->checkHitKey(DIK_X) == 1)angle -= 0.002f * 10;
 		if (m_Key->checkHitKey(DIK_C) == 0)count++;
-		if (m_Key->checkHitKey(DIK_R))m_Graphics->clothReset(skirt);
+		if (m_Key->checkHitKey(DIK_R)) {
+			m_Graphics->clothReset(skirt);
+			//m_Graphics->clothReset(testcloth);
+		}
 		isSimulate = false;
 		if (m_Key->checkHitKey(DIK_P))isSimulate = true;
 		if (count == 1920)count = 0;
 		angle += 0.005f;
+		m_Fps->update();
+		m_Fps->drawLog();
 	}
 }
 

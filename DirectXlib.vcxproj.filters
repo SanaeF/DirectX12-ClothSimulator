@@ -156,6 +156,9 @@
     <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothCollisionShader">
       <UniqueIdentifier>{6ae83166-806d-491a-ba15-2bce0850d94d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXLib\Source\FPSManager">
+      <UniqueIdentifier>{55b6d0ad-3180-4cab-96d5-f7ffd7f19685}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Application.h">
@@ -260,6 +263,9 @@
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.h">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXLib\Source\FPSManager\FPSManager.h">
+      <Filter>DirectXLib\Source\FPSManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -363,6 +369,9 @@
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothShader.cpp">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\FPSManager\FPSManager.cpp">
+      <Filter>DirectXLib\Source\FPSManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

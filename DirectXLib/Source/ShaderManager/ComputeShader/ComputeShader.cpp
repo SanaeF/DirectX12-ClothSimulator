@@ -129,16 +129,15 @@ namespace lib {
 			0, &range, &m_Shader_handle[m_Handle_id].data[slot_id]);
 	}
 	void ComputeShader::execution(int x, int y, int z, int handle) {
+
 		m_Dx12->cmdList()->SetComputeRootSignature(m_Shader_handle[handle].root_sig);
 		m_Dx12->cmdList()->SetPipelineState(m_Shader_handle[handle].pipeline_state);
 		m_Dx12->cmdList()->SetDescriptorHeaps(1, &m_Shader_handle[handle].desc_heap);
 		auto heap_handle = m_Shader_handle[handle].desc_heap->GetGPUDescriptorHandleForHeapStart();
 		m_Dx12->cmdList()->SetComputeRootDescriptorTable(0, heap_handle);
-
 		//コンピュートシェーダーの実行
 		m_Dx12->cmdList()->Dispatch(x, y, z);
-
-		m_Dx12->closeCommand();
+		m_Dx12->cmdList()->Close();
 		m_Dx12->exeCommand();
 	}
 	void* ComputeShader::getData(int slot_id) {

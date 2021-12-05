@@ -21,10 +21,10 @@ namespace lib {
 		void setArea(int x1, int y1, int x2, int y2);
 		void init();
 		int load2D(const wchar_t* path);//2D画像ロード(戻り値ハンドル,-1の場合エラー)
-		void drawPrototype2D(float x, float y, float size, float Angle, int Handle);//描画
+		void drawPrototype2D(float x, float y, float size, float aangle, int handle);//描画
 		int load3D(const wchar_t* path);
-		void draw3D(float x, float y, float z, float size, float Angle);
-		void setupClothSimulator(int step, ClothForce world_f, int Handle);
+		void draw3D(float x, float y, float z, float size, float angle, int handle);
+		void setupClothSimulator(int step, ClothForce world_f, int handle);
 		void clothSimProc(int Handle);
 		void clothReset(int Handle);
 		void clearDraw();
