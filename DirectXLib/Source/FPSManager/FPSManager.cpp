@@ -21,9 +21,9 @@ namespace lib {
 		m_Frame = static_cast<float>(m_Time_end.QuadPart - m_Time_start.QuadPart) / static_cast<float>(m_Time_freq.QuadPart);
 		if (m_Frame < m_Min_frame) { // 時間に余裕がある
 			DWORD sleepTime = static_cast<DWORD>((m_Min_frame - m_Frame) * 1000);//ミリ秒に変換
-			//timeBeginPeriod(1);//分解能を上げる
+			timeBeginPeriod(1);//分解能を上げる
 			Sleep(sleepTime); //寝る
-			//timeEndPeriod(1); //戻す
+			timeEndPeriod(1); //戻す
 			return;
 		}
 		if (m_Frame > 0.0) { // 経過時間が0より大きい(こうしないと下の計算でゼロ除算になると思われ)

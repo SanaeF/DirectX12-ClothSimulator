@@ -23,15 +23,14 @@ namespace phy {
 		std::vector<MassModel>& mass_model,
 		std::vector<SpringData>& spring_data
 	) {
-		last_vertex = model.vertex;
 		ClothSpringShader cloth_shader(model_id, m_Dx12);
 		ClothNewPosShader new_pos(model_id, m_Dx12);
+		last_vertex = model.vertex;
 		worldForce(time, 0, world_f, model, spring_data);
 		for (int ite = 0; ite < step; ite++) {
 			cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
 			cloth_shader.execution(spring_data);
 			new_pos.execution(world_f, model.vertex, spring_data);
-
 		}
 		auto param = new_pos.getFrame(model_id);
 		if (world_f.is_self_collision) {
