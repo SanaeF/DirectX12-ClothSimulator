@@ -119,7 +119,7 @@ void ClothSpring(uint3 th_id : SV_GroupID){
 
 	float3 f = float3(0, 0, 0);
 	f = add(f, StructuralSolver(id));//ç\ë¢
-	f = add(f, CompressionSolver(id));//à≥èk
+	//f = add(f, CompressionSolver(id));//à≥èk
 	f = add(f, ShareSolver(id));//ã»Ç∞
 	f = add(f, BendingSolver(id));//ÇπÇÒíf
 	out_spring[id].force = f;
