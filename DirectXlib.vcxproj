@@ -155,6 +155,7 @@
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.cpp" />
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.cpp" />
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel\VertexPolygonModel.cpp" />
     <ClCompile Include="DirectXLib\Source\ShaderManager\ComputeShader\ComputeShader.cpp" />
     <ClCompile Include="DirectXLib\Source\ShaderManager\ShaderManager.cpp" />
     <ClCompile Include="DirectXLib\Source\VectorMath\VectorMath.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.h" />
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.h" />
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel\VertexPolygonModel.h" />
     <ClInclude Include="DirectXLib\Source\ShaderManager\ComputeShader\ComputeShader.h" />
     <ClInclude Include="DirectXLib\Source\ShaderManager\ShaderManager.h" />
     <ClInclude Include="DirectXLib\Source\VectorMath\VectorMath.h" />

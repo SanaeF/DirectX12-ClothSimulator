@@ -21,11 +21,14 @@ float3 createNormal(float3 p0,float3 p1,float3 p2) {
 float3 CrossPolygonAndLine(float3 p1, float3 p2, float3 plane0, float3 plane1, float3 plane2) {
 	//頂点から法線を求める
 	float3 vn = createNormal(plane0, plane1, plane2);
+	float vn_size = length(vn);
 	//平面との距離を求める
 	float3 v1 = subtract(p1, plane0);
-	float d1 = abs(dot(vn, v1)) / abs(vn);
+	float dotVn_V1 = dot(vn, v1);
+	float d1 = abs(dotVn_V1) / abs(vn_size);
 	float3 v2 = subtract(p2, plane0);
-	float d2 = abs(dot(vn, v2)) / abs(vn);
+	float dotVn_V2 = dot(vn, v1);
+	float d2 = abs(dotVn_V2) / abs(vn_size);
 	//内分比を求める。
 	float ratio = d1 / (d1 + d2);
 	//交点を求める
@@ -35,6 +38,7 @@ float3 CrossPolygonAndLine(float3 p1, float3 p2, float3 plane0, float3 plane1, f
 }
 //三角形と点の当たり判定
 bool isHitPolygonAndPoint(float3 plane0, float3 plane1, float3 plane2, float3 p) {
+	bool result = false;
 	//頂点の外積を求める
 	float3 p0_p1 = subtract(plane1, plane0);
 	float3 p1_p = subtract(p, plane1);
@@ -50,8 +54,8 @@ bool isHitPolygonAndPoint(float3 plane0, float3 plane1, float3 plane2, float3 p)
 	float3 C = cross(p2_p0, p0_p);
 	float dot_AB = dot(A, B);
 	float dot_AC = dot(A, C);
-	if (dot_AB > 0 && dot_AC > 0)return true;
-	return false;
+	if (dot_AB > 0 && dot_AC > 0)result = true;
+	return result;
 }
 //三角形と直線の当たり判定
 bool isHitPolygonAndLine(float3 p1, float3 p2, float3 plane0, float3 plane1, float3 plane2) {
@@ -69,10 +73,10 @@ bool isHitPlneAndLine(float3 p1, float3 p2, float3 plane0, float3 plane1, float3
 		float dist = distance(plane0, plane[ite]);
 		if (dist > dist_max)dist_max = dist;
 	}
-	for (int ite = 0; ite < 3; ite++) {
-		if (distance(plane0, plane[ite]) == dist_max) {
-			float3 max_plane = plane[ite];
-			plane[ite] = plane[2];
+	for (int ite1 = 0; ite1 < 3; ite1++) {
+		if (distance(plane0, plane[ite1]) == dist_max) {
+			float3 max_plane = plane[ite1];
+			plane[ite1] = plane[2];
 			plane[2] = max_plane;
 			break;
 		}

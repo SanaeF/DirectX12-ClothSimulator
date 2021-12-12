@@ -80,6 +80,11 @@ namespace phy {
 		shaderHandler[m_Model_id].frame.assign(
 			(PositionFrame*)m_Shader->getData(2),
 			(PositionFrame*)m_Shader->getData(2) + shaderHandler[m_Model_id].frame.size());
+		if (spring[0].velocity.x == 0 &&
+			spring[0].velocity.y == 0 &&
+			spring[0].velocity.z == 0) {
+			int error = 1;
+		}
 	}
 	ClothNewPosShader::PositionFrame ClothNewPosShader::getFrame(int model_id) {
 		return shaderHandler[model_id].frame[0];

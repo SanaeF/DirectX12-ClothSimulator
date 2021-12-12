@@ -14,6 +14,25 @@ namespace phy {
 		m_Index_group(index_group)
 	{
 		m_Result.resize(SPRING_NUM);
+		m_Mass_model.resize(m_Vertex.size());
+		for (int ite = 0; ite < m_Vertex.size(); ite++) {
+			auto m3x3_4 = create(ite);
+			m_Mass_model[ite].id0 = m3x3_4[0];
+			m_Mass_model[ite].id1 = m3x3_4[1];
+			m_Mass_model[ite].id2 = m3x3_4[2];
+			m_Mass_model[ite].id3 = m3x3_4[3];
+			m_Mass_model[ite].id4 = m3x3_4[4];
+			m_Mass_model[ite].id5 = m3x3_4[5];
+			m_Mass_model[ite].id6 = m3x3_4[6];
+			m_Mass_model[ite].id7 = m3x3_4[7];
+			m_Mass_model[ite].id8 = m3x3_4[8];
+			m_Mass_model[ite].id9 = m3x3_4[9];
+			m_Mass_model[ite].id10 = m3x3_4[10];
+			m_Mass_model[ite].id11 = m3x3_4[11];
+		}
+	}
+	std::vector<MassModel> MassSpringModel::getData() {
+		return m_Mass_model;
 	}
 	std::vector<int> MassSpringModel::create(int num) {
 		m_Is_bad_num = false;

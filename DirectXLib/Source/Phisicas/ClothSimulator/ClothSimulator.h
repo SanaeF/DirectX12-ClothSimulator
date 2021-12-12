@@ -12,6 +12,7 @@ namespace lib {
 		std::vector<ModelVertex>pre_vert;
 		std::vector<ModelVertex>last_vert;
 		std::vector<std::vector<int>>mass_springs;
+		std::vector<PolygonModel>polygon_model;
 		std::vector<MassModel>mass_model;
 		std::vector<SpringData>spring_data;
 		ClothForce world_f;

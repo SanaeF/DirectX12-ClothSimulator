@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <wrl.h>
+#include "../ClothData/SpringData.h"
 #include "../../../DxGraphics/DxGraphics3D/ModelData/ModelData.h"
 namespace phy {
 	enum MODEL_FILE {
@@ -36,6 +37,7 @@ namespace phy {
 		float m_Semi_high_p4;//十字方向との点の最小距離(折りたたまれたポリゴンを3x3から除外するため)
 		float m_Semi_high_p4s[4];
 		bool m_Is_bad_num;
+		std::vector<MassModel>m_Mass_model;
 		std::vector<int> m_CheckIGP;
 		std::vector<std::vector<int>>m_Index_group;
 		std::vector<lib::ModelVertex>m_Vertex;
@@ -51,6 +53,7 @@ namespace phy {
 			std::vector<UINT>& index,
 			std::vector<std::vector<int>>& index_group
 		);
+		std::vector<MassModel> getData();
 		std::vector<int> create(int num);
 		~MassSpringModel();
 	private:

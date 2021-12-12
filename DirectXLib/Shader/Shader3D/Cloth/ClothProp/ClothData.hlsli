@@ -26,6 +26,12 @@ struct MassModel {
 	int id10;
 	int id11;
 };
+
+struct PolygonModel {
+	int3 id[6];
+	int polygon_num;
+};
+
 struct MaxPosition {
 	bool is_simulated;
 	float3 max_pos;

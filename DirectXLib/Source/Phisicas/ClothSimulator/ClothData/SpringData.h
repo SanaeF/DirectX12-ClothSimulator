@@ -62,10 +62,19 @@ struct MassModel {
 	int id11;
 };
 
+struct PolygonModel {
+	DirectX::XMINT3 id[6];
+	int polygon_num;
+};
 
 struct ClothForce {//何も指定しないと、素朴な値が代入されます
+	enum COLLISION_TYPE {
+		OUT_STEP,//クロスのステップ内に含める
+		IN_STEP //クロスのステップ内に含めない
+	};
 	bool is_self_collision;//自己衝突を行うかどうか
-
+	int collision_type;//当たり判定の種類を指定
+	float collision_power;//当たり判定の攻撃力を指定
 	float grid_mass;//質点の重さ
 	float gravity;//重力
 	float damping;//空気抵抗
@@ -104,6 +113,8 @@ struct ClothForce {//何も指定しないと、素朴な値が代入されます
 	}
 	ClothForce() {
 		is_self_collision = false;
+		collision_type = COLLISION_TYPE::OUT_STEP;
+		collision_power = 1.38f;
 		tension.stretch = 15;
 		compress.stretch = 15;
 		share.stretch = 15;

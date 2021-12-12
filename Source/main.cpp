@@ -1,11 +1,7 @@
 #include"Application/Application.h"
 #include<Windows.h>
-#ifdef _DEBUG
-int main() {
-#else
-#include<Windows.h>
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-#endif
 	auto& app = Application::getInstance();
 	app.setWindow(1280, 960, "PlasticSkirt", "PlasticSkirt");
 	app.setGraphMode(1920, 1440);

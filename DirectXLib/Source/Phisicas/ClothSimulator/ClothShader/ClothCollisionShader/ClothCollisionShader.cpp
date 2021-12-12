@@ -21,8 +21,9 @@ namespace phy {
 	void ClothCollisionShader::create(
 		DirectX::XMFLOAT3 max, DirectX::XMFLOAT3 min,
 		lib::ModelData& model,
-		std::vector<MassModel>& mass_model,
+		ClothForce& world_f,
 		std::vector<SpringData>& spring_data,
+		std::vector<PolygonModel>& polygon_model,
 		std::vector<lib::ModelVertex>& pre_vert,
 		std::vector<lib::ModelVertex>& last_vertex
 	) {
@@ -30,6 +31,7 @@ namespace phy {
 			assert(0 && "<このモデルは上限を超えています!>DirectX12の使用により、クロスシミュレーターに使用できる頂点数は65535個が限界です。");
 		}
 		shaderHandler[m_Model_id].collision_param[0].vertex_size = model.vertex.size();
+		shaderHandler[m_Model_id].collision_param[0].power = world_f.collision_power;
 		int size = sqrt(model.vertex.size());
 		int size_out = model.vertex.size() - (size * size);
 		auto& thread = shaderHandler[m_Model_id].thread;
@@ -55,7 +57,7 @@ namespace phy {
 			m_Shader->inputBufferSize(5, split_area.size(), sizeof(int));//頂点ごとの空間ID
 			m_Shader->inputBufferSize(6, last_vertex.size(), sizeof(lib::ModelVertex));//頂点ごとの空間ID
 			m_Shader->inputBufferSize(7, spring_data.size(), sizeof(SpringData));//バネ情報
-			m_Shader->inputBufferSize(8, mass_model.size(), sizeof(MassModel));//バネ情報
+			m_Shader->inputBufferSize(8, polygon_model.size(), sizeof(PolygonModel));//バネ情報
 			m_Shader->createUnorderdAccessView();
 
 			m_Shader->mapOutput(0);
@@ -68,7 +70,7 @@ namespace phy {
 		m_Shader->mapInput(5, split_area.data());
 		m_Shader->mapInput(6, last_vertex.data());
 		m_Shader->mapInput(7, spring_data.data());
-		m_Shader->mapInput(8, mass_model.data());
+		m_Shader->mapInput(8, polygon_model.data());
 		//space.clear();
 		//split_area.clear();
 		is_input = true;

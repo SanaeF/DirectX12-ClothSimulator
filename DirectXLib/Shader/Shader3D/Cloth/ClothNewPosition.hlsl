@@ -35,6 +35,7 @@ void ClothNewPosition(uint3 th_id : SV_GroupID) {
 	int dim = sqrt(param.vert_max);
 	int id = (th_id.x * dim) + th_id.y;
 	if (id >= param.vert_max)return;
+	if (isnan(in_spring[id].velocity.x))in_spring[id].velocity = float3(0, 0, 0);
 	firstSetting(id);
 	if (isFixed(in_vert[id].color))return;
 	float dt = param.dt / 100;

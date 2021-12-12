@@ -28,6 +28,7 @@ namespace phy {
 		};
 		struct CollisionParam {
 			int vertex_size;
+			float power;
 		};
 
 		struct ResultParam {
@@ -55,8 +56,9 @@ namespace phy {
 		void create(
 			DirectX::XMFLOAT3 max, DirectX::XMFLOAT3 min,
 			lib::ModelData& model,
-			std::vector<MassModel>& mass_model,
+			ClothForce& world_f,
 			std::vector<SpringData>& spring_data,
+			std::vector<PolygonModel>& polygon_model,
 			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<lib::ModelVertex>& last_vertex
 		);

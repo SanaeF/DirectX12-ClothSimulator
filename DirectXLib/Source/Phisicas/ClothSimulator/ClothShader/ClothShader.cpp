@@ -21,25 +21,46 @@ namespace phy {
 		std::vector<lib::ModelVertex>& pre_vert,
 		std::vector<lib::ModelVertex>& last_vertex,
 		std::vector<MassModel>& mass_model,
-		std::vector<SpringData>& spring_data
+		std::vector<SpringData>& spring_data,
+		std::vector<PolygonModel>& polygon_model
 	) {
 		ClothSpringShader cloth_shader(model_id, m_Dx12);
 		ClothNewPosShader new_pos(model_id, m_Dx12);
-		last_vertex = model.vertex;
-		worldForce(time, 0, world_f, model, spring_data);
-		for (int ite = 0; ite < step; ite++) {
-			cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
-			cloth_shader.execution(spring_data);
-			new_pos.execution(world_f, model.vertex, spring_data);
+		if (world_f.collision_type == ClothForce::COLLISION_TYPE::OUT_STEP) {
+			last_vertex = model.vertex;
+			worldForce(time, 0, world_f, model, spring_data);
+			for (int ite = 0; ite < step; ite++) {
+				cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
+				cloth_shader.execution(spring_data);
+				new_pos.execution(world_f, model.vertex, spring_data);
+			}
+			auto param = new_pos.getFrame(model_id);
+			if (world_f.is_self_collision) {
+				//“–‚½‚è”»’è‚ÌŒvŽZ‚ð‚·‚é
+				ClothCollisionShader collision(model_id, m_Dx12);
+				ClothNewPosShader new_pos(model_id, m_Dx12);
+				collision.create(param.max_pos, param.min_pos, model, world_f, spring_data, polygon_model, pre_vert, last_vertex);
+				collision.execution(spring_data);
+				new_pos.execution(world_f, model.vertex, spring_data);
+			}
 		}
-		auto param = new_pos.getFrame(model_id);
-		if (world_f.is_self_collision) {
-			//“–‚½‚è”»’è‚ÌŒvŽZ‚ð‚·‚é
-			ClothCollisionShader collision(model_id, m_Dx12);
-			ClothNewPosShader new_pos(model_id, m_Dx12);
-			collision.create(param.max_pos, param.min_pos, model, mass_model, spring_data, pre_vert, last_vertex);
-			collision.execution(spring_data);
-			new_pos.execution(world_f, model.vertex, spring_data);
+		if (world_f.collision_type == ClothForce::COLLISION_TYPE::IN_STEP) {
+			worldForce(time, 0, world_f, model, spring_data);
+			for (int ite = 0; ite < step; ite++) {
+				last_vertex = model.vertex;
+				cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
+				cloth_shader.execution(spring_data);
+				new_pos.execution(world_f, model.vertex, spring_data);
+				auto param = new_pos.getFrame(model_id);
+				if (world_f.is_self_collision) {
+					//“–‚½‚è”»’è‚ÌŒvŽZ‚ð‚·‚é
+					ClothCollisionShader collision(model_id, m_Dx12);
+					ClothNewPosShader new_pos(model_id, m_Dx12);
+					collision.create(param.max_pos, param.min_pos, model, world_f, spring_data, polygon_model, pre_vert, last_vertex);
+					collision.execution(spring_data);
+					new_pos.execution(world_f, model.vertex, spring_data);
+				}
+			}
 		}
 	}
 

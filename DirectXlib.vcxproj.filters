@@ -165,6 +165,9 @@
     <Filter Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature">
       <UniqueIdentifier>{7b6839a5-a6d3-4947-b715-85ee18b9d3c6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel">
+      <UniqueIdentifier>{d5426be0-b4c2-4b27-85a2-345dea121307}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application\Application.h">
@@ -275,6 +278,9 @@
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader\ClothNewPosShader.h">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader</Filter>
     </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel\VertexPolygonModel.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\main.cpp">
@@ -384,6 +390,9 @@
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader\ClothNewPosShader.cpp">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothNewPosShader</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel\VertexPolygonModel.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

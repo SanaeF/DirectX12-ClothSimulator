@@ -3,6 +3,7 @@
 #include <fstream>
 #include "../../DirectXLib/Source/DirectX12Manager/DirectX12Manager.h"
 #include "MassSpringModel/MassSpringModel.h"
+#include "VertexPolygonModel/VertexPolygonModel.h"
 #include "SpringForceCalculator/SpringForceCalculator.h"
 #include "ClothShader/ClothShader.h"
 namespace phy {
@@ -25,8 +26,9 @@ namespace phy {
 			m_Cloth_handle_data[handle].spring_data[ite].velocity = DirectX::XMFLOAT3(0, 0, 0);
 		}
 		//質点生成
-		MassSpringModel ms(MODEL_FILE::PMX, model.vertex, model.index, model.index_group);
-		m_Cloth_handle_data[handle].mass_model.resize(size);
+		MassSpringModel mass_model(MODEL_FILE::PMX, model.vertex, model.index, model.index_group);
+		m_Cloth_handle_data[handle].mass_model = mass_model.getData();
+		/*m_Cloth_handle_data[handle].mass_model.resize(size);
 		for (int ite = 0; ite < size; ite++) {
 			auto m3x3_4 = ms.create(ite);
 			m_Cloth_handle_data[handle].mass_model[ite].id0 = m3x3_4[0];
@@ -41,7 +43,10 @@ namespace phy {
 			m_Cloth_handle_data[handle].mass_model[ite].id9 = m3x3_4[9];
 			m_Cloth_handle_data[handle].mass_model[ite].id10 = m3x3_4[10];
 			m_Cloth_handle_data[handle].mass_model[ite].id11 = m3x3_4[11];
-		}
+		}*/
+		//頂点三角形のデータを生成
+		VertexPolygonModel polygon(model);
+		m_Cloth_handle_data[handle].polygon_model = polygon.getData();
 		m_Cloth_handle_data[handle].world_f = world_f;
 		m_Cloth_handle_data[handle].step = step;
 		m_time = 0;
@@ -92,7 +97,8 @@ namespace phy {
 			m_Cloth_handle_data[handle].pre_vert,
 			m_Cloth_handle_data[handle].last_vert,
 			m_Cloth_handle_data[handle].mass_model, 
-			m_Cloth_handle_data[handle].spring_data
+			m_Cloth_handle_data[handle].spring_data,
+			m_Cloth_handle_data[handle].polygon_model
 		);
 		model.bufferMap();
 		m_time++;

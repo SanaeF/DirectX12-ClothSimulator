@@ -6,6 +6,7 @@
 #include "../../DirectXLib/Source/DxSound/DxSound.h"
 #include "../../DirectXLib/Source/FPSManager/FPSManager.h"
 bool Application::initialize() {
+	int fps = 60.f;
 	auto result = CoInitializeEx(0, COINIT_MULTITHREADED);
 	createGameWindow(m_Hwnd, m_Window_class);
 	m_Dx12.reset(new lib::DirectX12Manager(m_Hwnd));
@@ -13,7 +14,7 @@ bool Application::initialize() {
 	m_Sound.reset(new lib::DxSound(m_Hwnd));
 	m_Key.reset(new lib::DxKeyConfig(m_Hwnd,m_Window_class));
 	m_Graphics.reset(new lib::DxGraphics(m_Dx12));
-	m_Fps.reset(new lib::FPSManager(60));
+	m_Fps.reset(new lib::FPSManager(fps));
 	m_Key->keyInit(0);
 
 	return true;
@@ -28,18 +29,20 @@ void Application::run() {
 	bool isSimulate = false;
 	ClothForce cloth_f;
 	cloth_f.is_self_collision = true;
+	cloth_f.collision_type = ClothForce::COLLISION_TYPE::IN_STEP;
+	cloth_f.collision_power = 1.38f*10;
 	cloth_f.gravity = 9.8f;
 	cloth_f.grid_mass = 1.f;
 	cloth_f.damping = 0.3;
 	cloth_f.dt = 4.6;
-	cloth_f.windF(0, 0, 0);
+	cloth_f.windF(10, 0, 0);
 
 	cloth_f.tensionParam(15,15);
 	cloth_f.compressParam(15, 5);
 	cloth_f.shareParam(15, 5);
 	cloth_f.bendParam(25, 2);
 
-	m_Graphics->setupClothSimulator(5, cloth_f, skirt);
+	m_Graphics->setupClothSimulator(15, cloth_f, skirt);
 	//m_Graphics->setupClothSimulator(5, cloth_f, testcloth);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {

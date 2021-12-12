@@ -51,15 +51,17 @@ float3 CalcForce(float3 pos1, float3 pos2, float length, float constant, float d
 }
 
 bool isFixed(float3 color) {
+	bool result = false;
 	if (color.x == 1.f &&
 		color.y == 0.f &&
-		color.z == 0.f)return true;
-	return false;
+		color.z == 0.f)result = true;
+	return result;
 }
 
 bool isNullData(float3 data) {
+	bool result = false;
 	if (data.x == 0.f &&
 		data.y == 0.f &&
-		data.z == 0.f)return true;
-	return false;
+		data.z == 0.f)result = true;
+	return result;
 }
