@@ -69,8 +69,8 @@ struct PolygonModel {
 
 struct ClothForce {//何も指定しないと、素朴な値が代入されます
 	enum COLLISION_TYPE {
-		OUT_STEP,//クロスのステップ内に含める
-		IN_STEP //クロスのステップ内に含めない
+		OUT_STEP,//クロスのステップ内に含める(高品質)
+		IN_STEP //クロスのステップ内に含めない(低負荷)
 	};
 	bool is_self_collision;//自己衝突を行うかどうか
 	int collision_type;//当たり判定の種類を指定
