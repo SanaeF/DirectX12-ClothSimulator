@@ -47,10 +47,17 @@ namespace phy {
 			}
 			createMatrix3x3(num);
 		}
+		int count = 0;
+		for (int ite = 0; ite < 12; ite++) {
+			if (m_Result[ite] == -1)count++;
+		}
+		if (count>4&&count < 12) {
+			assert(0 && "¿“_‚Ì¶¬‚É¸”s");
+		}
 		return m_Result;
 	}
 	void MassSpringModel::createMatrix3x3(int vertex_id) {
-		if (vertex_id == 498 || vertex_id == 9120) {
+		if (vertex_id == 2477) {
 			int a = 0;
 		}
 		createCross(vertex_id, m_Mid_point);
@@ -96,9 +103,9 @@ namespace phy {
 		result = sortIndex(vertex_id, result.count, result);
 		//data‚É‘ã“ü
 		int input_num = 0;
-		if (all_index.count == 6)input_num = 4;//’†‰›
-		if (all_index.count == 3)input_num = 3;//•Ó
-		if (all_index.count < 3)input_num = 2;//Šp
+		if (result.count - all_index.count == 0)input_num = 4;//’†‰›
+		if (result.count - all_index.count == 1)input_num = 3;//•Ó
+		if (all_index.count <= 1)input_num = 2;//Šp
 		for (int ite = 0; ite < 4; ite++) {
 			if (ite >= input_num)data[ite] = -1;
 			else data[ite] = result.constant[ite];

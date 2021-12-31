@@ -24,25 +24,25 @@ bool Application::initialize() {
 void Application::run() {
 	int skirt;
 	int testcloth;
-	skirt = m_Graphics->load3D(L"./model/skirt/SchoolSkirt.pmx");//TestCloth,SchoolSkirt
+	skirt = m_Graphics->load3D(L"./model/skirt/SchoolSkirt(3136).pmx");//TestCloth,SchoolSkirt
 	testcloth = m_Graphics->load3D(L"./model/skirt/TestCloth.pmx");//TestCloth,SchoolSkirt
 	bool isSimulate = false;
 	ClothForce cloth_f;
 	cloth_f.is_self_collision = true;
 	cloth_f.collision_type = ClothForce::COLLISION_TYPE::IN_STEP;
-	cloth_f.collision_power = 1.38f*10;
+	cloth_f.collision_size = 0.0138f;
 	cloth_f.gravity = 9.8f;
 	cloth_f.grid_mass = 1.f;
-	cloth_f.damping = 0.3;
-	cloth_f.dt = 4.6;
-	cloth_f.windF(10, 0, 0);
+	cloth_f.damping = 0.01;
+	cloth_f.dt = 2.4;
+	cloth_f.windF(25, 0, 0);
 
 	cloth_f.tensionParam(15,15);
 	cloth_f.compressParam(15, 5);
 	cloth_f.shareParam(15, 5);
 	cloth_f.bendParam(25, 2);
 
-	m_Graphics->setupClothSimulator(15, cloth_f, skirt);
+	m_Graphics->setupClothSimulator(25, cloth_f, skirt);//9
 	//m_Graphics->setupClothSimulator(5, cloth_f, testcloth);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
@@ -54,7 +54,7 @@ void Application::run() {
 		if (msg.message == WM_QUIT) {break;}
 		m_Graphics->clearDraw();//画面の初期化
 		m_Graphics->setArea(0, 0, 1920, 1440);//描画範囲の指定
-		m_Graphics->draw3D(0, 0, 6000, 1, 0, skirt);
+		m_Graphics->draw3D(Move[0], Move[1], 6000+ Move[2], 1, 0, skirt);
 		//m_Graphics->draw3D(0, 0, 6000, 1, 0, testcloth);
 		if (isSimulate) {
 			m_Graphics->clothSimProc(skirt);
@@ -79,7 +79,6 @@ void Application::run() {
 			m_Graphics->clothReset(skirt);
 			//m_Graphics->clothReset(testcloth);
 		}
-		isSimulate = false;
 		isSimulate = true;
 		if (m_Key->checkHitKey(DIK_P))isSimulate = true;
 		if (count == 1920)count = 0;

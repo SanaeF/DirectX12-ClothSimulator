@@ -75,6 +75,7 @@ struct ClothForce {//何も指定しないと、素朴な値が代入されます
 	bool is_self_collision;//自己衝突を行うかどうか
 	int collision_type;//当たり判定の種類を指定
 	float collision_power;//当たり判定の攻撃力を指定
+	float collision_size;
 	float grid_mass;//質点の重さ
 	float gravity;//重力
 	float damping;//空気抵抗
@@ -115,6 +116,7 @@ struct ClothForce {//何も指定しないと、素朴な値が代入されます
 		is_self_collision = false;
 		collision_type = COLLISION_TYPE::OUT_STEP;
 		collision_power = 1.38f;
+		collision_size=0.15;
 		tension.stretch = 15;
 		compress.stretch = 15;
 		share.stretch = 15;
@@ -125,10 +127,10 @@ struct ClothForce {//何も指定しないと、素朴な値が代入されます
 		bend.shrink = 0.5;
 
 		grid_mass = 1.f;
-		gravity = 9.5;
+		gravity = 9.8;
 		damping = 0;
 		dt = 1.f;
-		k = 12;
+		k = 1.2f;
 		wind = DirectX::XMFLOAT3(0.f, 0.f, 0.f);
 	}
 };

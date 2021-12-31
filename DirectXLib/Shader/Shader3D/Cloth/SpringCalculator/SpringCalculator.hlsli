@@ -43,7 +43,7 @@ float3 CalcForce(float3 pos1, float3 pos2, float length, float constant, float d
 	float3 n = subtract(pos1, pos2);
 	float leg = mulAdd(n, n);
 	n = normalize(n);//ê≥ãKâª2
-	float f = (length - leg) * (k/10);
+	float f = (length - leg) * (k);
 	if (f < 0)f = f * (damping);//êLÇ—ÇÈí∑Ç≥Ç≈Ç†ÇÍÇŒå∏ëﬁ
 	else f = f * (constant);
 	result = scale(n, f);

@@ -107,11 +107,6 @@ namespace model {
 				data.param[ite].weight.born4 = NO_DATA_FLAG;
 				pmx_file.read(reinterpret_cast<char*>(&data.param[ite].weight.weight1), 4);
 				data.param[ite].weight.weight2 = 1.0f - data.param[ite].weight.weight1;
-				if (data.param[ite].weight.born2 == 1)m_Fixed_idx.push_back(ite);
-				if (data.param[ite].weight.born2 == 2) {
-					m_Same_pos.push_back(ite);
-					m_Is_same[ite] = true;
-				}
 				break;
 			case lib::ModelParam::Weight::BDEF4:
 				data.param[ite].weight.type = lib::ModelParam::Weight::BDEF4;
@@ -147,6 +142,11 @@ namespace model {
 			if (data.param[ite].weight.born1 == NO_DATA_FLAG){
 				pmx_file.close();
 				return false;
+			}
+			if (data.param[ite].weight.born1 == 1 || data.param[ite].weight.born2 == 1)m_Fixed_idx.push_back(ite);
+			if (data.param[ite].weight.born1 == 2 || data.param[ite].weight.born2 == 2) {
+				m_Same_pos.push_back(ite);
+				m_Is_same[ite] = true;
 			}
 			if (m_Is_same[ite]) {
 				setStandardIndex(ite, data);

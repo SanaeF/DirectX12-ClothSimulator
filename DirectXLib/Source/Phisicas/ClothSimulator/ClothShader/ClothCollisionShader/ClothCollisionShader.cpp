@@ -32,14 +32,16 @@ namespace phy {
 		}
 		shaderHandler[m_Model_id].collision_param[0].vertex_size = model.vertex.size();
 		shaderHandler[m_Model_id].collision_param[0].power = world_f.collision_power;
+		shaderHandler[m_Model_id].collision_param[0].hit_size = world_f.collision_size;
 		int size = sqrt(model.vertex.size());
 		int size_out = model.vertex.size() - (size * size);
 		auto& thread = shaderHandler[m_Model_id].thread;
 		thread.x = size + size_out;
 		thread.y = size;
+		thread.z = 1;
 		auto& is_input = shaderHandler[m_Model_id].is_created;
 		//ソートシェーダー
-		executeSortShader(is_input, model, max, min);
+		//executeSortShader(is_input, model, max, min);
 		//当たり判定シェーダー
 		if (!is_input) {
 			m_Shader.reset(
@@ -75,7 +77,7 @@ namespace phy {
 		//split_area.clear();
 		is_input = true;
 	}
-	void ClothCollisionShader::executeSortShader(bool is_input, lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos) {
+	void ClothCollisionShader::executeSortShader(lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos) {
 		//入力
 		std::vector<SendParam> send_param(1);
 		send_param[0].vertex_size = model.vertex.size();
@@ -86,7 +88,7 @@ namespace phy {
 		space.resize(XYZ_ALL);
 		split_area.resize(model.vertex.size());
 		void* p_space = space.data();
-		if (!is_input) {
+		if (!shaderHandler[m_Model_id].is_created) {
 			m_Shader.reset(
 				new lib::ComputeShader(
 					"./DirectXLib/Shader/Shader3D/Cloth/CollisionSpace.hlsl",
@@ -124,7 +126,7 @@ namespace phy {
 		m_Shader->execution(
 			shaderHandler[m_Model_id].thread.x,
 			shaderHandler[m_Model_id].thread.y,
-			1,
+			shaderHandler[m_Model_id].thread.z,
 			shaderHandler[m_Model_id].compute_handle
 		);
 		dataAssign(spring_data);

@@ -29,6 +29,7 @@ namespace phy {
 		struct CollisionParam {
 			int vertex_size;
 			float power;
+			float hit_size;
 		};
 
 		struct ResultParam {
@@ -62,9 +63,9 @@ namespace phy {
 			std::vector<lib::ModelVertex>& pre_vert,
 			std::vector<lib::ModelVertex>& last_vertex
 		);
+		void executeSortShader(lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos);
 		void execution(std::vector<SpringData>& spring_data);
 	private:
-		void executeSortShader(bool is_input, lib::ModelData& model, DirectX::XMFLOAT3 max_pos, DirectX::XMFLOAT3 min_pos);
 		void dataAssign(std::vector<SpringData>& spring_data);
 	};
 }

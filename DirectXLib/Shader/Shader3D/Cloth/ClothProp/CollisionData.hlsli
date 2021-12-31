@@ -1,6 +1,7 @@
 struct CollisionParam {
 	int vertex_size;
 	float power;
+	float hit_size;
 };
 
 struct SpaceData {

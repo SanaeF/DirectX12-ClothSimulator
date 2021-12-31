@@ -38,7 +38,7 @@ void ClothNewPosition(uint3 th_id : SV_GroupID) {
 	if (isnan(in_spring[id].velocity.x))in_spring[id].velocity = float3(0, 0, 0);
 	firstSetting(id);
 	if (isFixed(in_vert[id].color))return;
-	float dt = param.dt / 100;
+	float dt = param.dt/100;
 	float3 v = scale(out_spring[id].force, in_spring[id].mass / (in_spring[id].mass + in_spring[id].mass));
 	v = scale(v, dt);
 	out_spring[id].velocity = add(in_spring[id].velocity, v);

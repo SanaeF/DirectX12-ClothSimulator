@@ -138,9 +138,6 @@
     <Filter Include="DirectXLib\Source\LibHelper">
       <UniqueIdentifier>{ec29b673-5c70-4c97-b57c-96bcfb91ab79}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData">
-      <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp">
       <UniqueIdentifier>{ed2f4164-be26-4403-8336-8d686e3ceff8}</UniqueIdentifier>
     </Filter>
@@ -167,6 +164,9 @@
     </Filter>
     <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel">
       <UniqueIdentifier>{d5426be0-b4c2-4b27-85a2-345dea121307}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\ModelData">
+      <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,7 +219,7 @@
       <Filter>DirectXLib\Source\DxGraphics\DxRootSignature</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.h">
-      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\ModelData</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel\FbxModel.h">
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\FbxModel</Filter>
@@ -374,7 +374,7 @@
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData\ModelData.cpp">
-      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelData</Filter>
+      <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\ModelData</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader\ClothSpringShader.cpp">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothSpringShader</Filter>
