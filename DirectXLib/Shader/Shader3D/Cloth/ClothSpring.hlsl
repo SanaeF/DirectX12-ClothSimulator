@@ -47,8 +47,8 @@ float3 CompressionSolver(int id) {//Ž¿“_‚ÌŒü‚«‚É“­‚­—Í
 		if (id2 == -1)continue;
 		float Natulength = distance(pre_vert[id].pos, pre_vert[id2].pos);//‚Î‚Ë‚ÌŽ©‘R’·
 		float3 f = CalcForce(
-			vertex[id].pos,
 			vertex[id2].pos,
+			vertex[id].pos,
 			Natulength,
 			param.compress.stretch,
 			param.compress.shrink,
