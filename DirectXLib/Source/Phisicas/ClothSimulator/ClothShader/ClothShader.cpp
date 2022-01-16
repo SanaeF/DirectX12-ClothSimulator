@@ -29,34 +29,36 @@ namespace phy {
 		ClothNewPosShader new_pos(model_id, m_Dx12);
 		worldForce(time, step, world_f, model, spring_data);
 		if (world_f.collision_type == ClothForce::COLLISION_TYPE::OUT_STEP) {
-			last_vertex = model.vertex;
-			for (int ite = 0; ite < step; ite++) {
+			last_vertex = model.vertex;//過去の座標として記録
+			for (int ite = 0; ite < step; ite++) {//ステップ数
+				//クロスシミュレーションシェーダーの実行
 				cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
 				cloth_shader.execution(spring_data);
-				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, false);
+				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, false);//座標を変更
 			}
 			auto param = new_pos.getFrame(model_id);
-			if (world_f.is_self_collision) {
-				//当たり判定の計算をする
-				collision.executeSortShader(model, param.max_pos, param.min_pos);
+			if (world_f.is_self_collision) {//当たり判定の計算をする
+				collision.executeSortShader(model, param.max_pos, param.min_pos);//空間分割シェーダー
+				//自己衝突シェーダー
 				collision.create(param.max_pos, param.min_pos, model, world_f, spring_data, polygon_model, pre_vert, last_vertex);
 				collision.execution(spring_data);
-				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, true);
+				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, true);//座標を変更
 			}
 		}
 		if (world_f.collision_type == ClothForce::COLLISION_TYPE::IN_STEP) {
-			for (int ite = 0; ite < step; ite++) {
-				last_vertex = model.vertex;
+			for (int ite = 0; ite < step; ite++) {//ステップ数
+				last_vertex = model.vertex;//過去の座標として記録
+				//クロスシミュレーションシェーダーの実行
 				cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
 				cloth_shader.execution(spring_data);
-				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, false);
+				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, false);//座標を変更
 				auto param = new_pos.getFrame(model_id);
-				if (world_f.is_self_collision) {
-					//当たり判定の計算をする
-					collision.executeSortShader(model, param.max_pos, param.min_pos);
+				if (world_f.is_self_collision) {//当たり判定の計算をする
+					collision.executeSortShader(model, param.max_pos, param.min_pos);//空間分割シェーダー
+					//自己衝突シェーダー
 					collision.create(param.max_pos, param.min_pos, model, world_f, spring_data, polygon_model, pre_vert, last_vertex);
 					collision.execution(spring_data);
-					new_pos.execution(world_f, model.vertex, spring_data, polygon_model, true);
+					new_pos.execution(world_f, model.vertex, spring_data, polygon_model, true);//座標を変更
 				}
 			}
 		}
