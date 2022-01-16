@@ -10,6 +10,7 @@ struct SimulateParam {
 	Resistance bend;
 	float dt;
 	float k;
+	bool is_no_add_vel;
 };
 
 struct MassModel {

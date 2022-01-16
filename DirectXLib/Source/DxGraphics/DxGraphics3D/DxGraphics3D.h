@@ -47,6 +47,7 @@ namespace lib {
 		int loadFbx(const char* path, libGraph::DxGraphicsPipeline& pipeline);
 		int loadPmx(const std::wstring& file_path, libGraph::DxGraphicsPipeline& pipeline);
 		void setupClothPhis(int step, ClothForce world_f, int handle);
+		void worldForce(ClothForce world_f, int handle);
 		void draw(float x, float y, float z, float size, double angle, int handle);
 		void beginDraw(libGraph::DxGraphicsPipeline& pipeline, int handle);
 		void updateClothPhis(int handle);

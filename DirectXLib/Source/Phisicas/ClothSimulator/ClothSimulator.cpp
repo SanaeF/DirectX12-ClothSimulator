@@ -51,6 +51,9 @@ namespace phy {
 		m_Cloth_handle_data[handle].step = step;
 		m_time = 0;
 	}
+	void ClothSimulator::worldForce(int handle, ClothForce world_f) {
+		m_Cloth_handle_data[handle].world_f = world_f;
+	}
 	void ClothSimulator::resetPower(std::vector<SpringData>& spring_data) {
 		m_time = 0;
 		for (int ite = 0; ite < spring_data.size(); ite++) {

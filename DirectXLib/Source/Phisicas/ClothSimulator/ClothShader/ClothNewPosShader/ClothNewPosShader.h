@@ -32,7 +32,9 @@ namespace phy {
 		void execution(
 			ClothForce& world_f,
 			std::vector<lib::ModelVertex>& vert,
-			std::vector<SpringData>& spring
+			std::vector<SpringData>& spring,
+			std::vector<PolygonModel>& polygon_model,
+			bool no_add_vel
 		);
 		PositionFrame getFrame(int model_id);
 	private:

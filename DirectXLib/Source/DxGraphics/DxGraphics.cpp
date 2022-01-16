@@ -58,6 +58,9 @@ namespace lib {
 	void DxGraphics::clothReset(int Handle) {
 		m_Graphics3D->resetClothPhis(Handle);
 	}
+	void DxGraphics::clothWorldF(ClothForce world_f, int handle) {
+		m_Graphics3D->worldForce(world_f, handle);
+	}
 	void DxGraphics::clearDraw() {
 		m_Dx12->clearScreen();
 		auto viewPort = m_View_port->getViewPort();

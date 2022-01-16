@@ -147,6 +147,10 @@ namespace lib {
 		if (handle == -1)return;
 		phy::ClothSimulator::initialize(handle, step, m_Model_data[handle].model, world_f);
 	}
+	void DxGraphics3D::worldForce(ClothForce world_f, int handle) {
+		if (handle == -1)return;
+		phy::ClothSimulator::worldForce(handle, world_f);
+	}
 	void DxGraphics3D::updateClothPhis(int handle) {
 		if (handle == -1)return;
 		phy::ClothSimulator::execution(

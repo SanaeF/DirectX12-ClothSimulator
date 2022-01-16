@@ -27,6 +27,7 @@ namespace lib {
 		void setupClothSimulator(int step, ClothForce world_f, int handle);
 		void clothSimProc(int Handle);
 		void clothReset(int Handle);
+		void clothWorldF(ClothForce world_f, int handle);
 		void clearDraw();
 		void screenFlip();
 		DxGraphics(std::shared_ptr<DirectX12Manager>& dx_12);

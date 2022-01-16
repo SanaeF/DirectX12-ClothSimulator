@@ -20,7 +20,7 @@ RWStructuredBuffer<PolygonModel> polygon_model : register(u8);
 float3 extrudeSphereForce(float3 vec, float dist, float power) {
 	vec = normalize(vec);
 	float size = dist + power;
-	if (size > 1)size = 1;
+	//if (size > 1)size = 1;
 	return scale(vec, size);
 }
 
@@ -30,14 +30,14 @@ float3 extrudeForce(float3 now_p1, float3 last_p, float3 cross_p, float power) {
 	float3 vec = subtract(last_p, now_p1);
 	vec = normalize(vec);
 	float size = dist + power;
-	if (size > 1)size = 1;
+	//if (size > 1)size = 1;
 	return scale(vec, size);
 }
 //対象の頂点と同一の頂点を持ったポリゴンがないかを確認
 bool isEffectivPolygon(int id, int3 polygon_id) {
 	bool result = true;
-	if (polygon_id.x == id ||
-		polygon_id.y == id ||
+	if (polygon_id.x == id &&
+		polygon_id.y == id &&
 		polygon_id.z == id)result = false;
 	return result;
 }
@@ -74,31 +74,50 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 
 	//空間内同士の当たり判定
 	int hit_type = 1;
-	if (in_vert[id1].pos.x== last_vert[id1].pos.x  ||
-		in_vert[id1].pos.y == last_vert[id1].pos.y || 
+	if (in_vert[id1].pos.x == last_vert[id1].pos.x &&
+		in_vert[id1].pos.y == last_vert[id1].pos.y && 
 		in_vert[id1].pos.z == last_vert[id1].pos.z) return;
 	int size = space[space_id].count;
+	float hit_size = param.hit_size;
 	for (int ite1 = 0; ite1 < size; ite1++) {
 		int id2 = space[ite1].id[space_id];
 		//id2 = ite;
-		if (id1 == id2)return;
+		if (id1 == id2)continue;
 		//二つの頂点に対して何かしらの当たり判定を取る
 		bool is_hit_sphere = false;
 		//貫通していない場合の当たり判定
 		float hit_dist = distance(in_vert[id1].pos, in_vert[id2].pos);
-		float hit_size = param.hit_size * 10;
-		if (hit_dist < hit_size) {
+		if (hit_dist < hit_size * 10) {
 			float3 vec = subtract(in_vert[id2].pos, in_vert[id1].pos);
-			float3 f = extrudeSphereForce(vec, hit_dist, hit_size);
+			float3 f = extrudeSphereForce(vec, hit_dist, hit_size * 10);
 			out_spring[id2].force = add(out_spring[id2].force, f);
 
 			vec = subtract(last_vert[id1].pos, in_vert[id1].pos);
-			f = extrudeSphereForce(vec, hit_dist, hit_size);
+			f = extrudeSphereForce(vec, hit_dist, hit_size * 1);
 			out_spring[id1].force = add(out_spring[id1].force, f);
-			is_hit_sphere = true;
+			//is_hit_sphere = true;
+		}
+		//自身が持つ三角形と対象の頂点(P0,P1)の判定
+		int size = polygon_model[id1].polygon_num;
+		for (int ite2 = 0; ite2 < size; ite2++) {
+			//有効な三角形か確認
+			int3 polygon = polygon_model[id1].id[ite2];
+			if (isEffectivPolygon(id2, polygon)) {
+				//三角形と直線の交点を求める
+				float3 cross_p =
+					CrossPolygonAndLine(
+						in_vert[id2].pos, last_vert[id2].pos, in_vert[polygon.x].pos, in_vert[polygon.y].pos, in_vert[polygon.z].pos
+					);
+				//三角形と直線の交点で当たり判定を取る
+				if (isHitPolygonAndPoint(in_vert[polygon.x].pos, in_vert[polygon.y].pos, in_vert[polygon.z].pos, cross_p)) {
+					float3 f = extrudeForce(in_vert[id2].pos, last_vert[id2].pos, cross_p, hit_size * 10);
+					if (isnan(f.x) && isnan(f.y) && isnan(f.z))f = float3(0, 0, 0);
+					out_spring[id2].force = add(out_spring[id2].force, f);
+				}
+			}
 		}
 		//三角形の数だけループ
-		int size = polygon_model[id2].polygon_num;
+		size = polygon_model[id2].polygon_num;
 		for (int ite2 = 0; ite2 < size; ite2++) {
 			//有効な三角形か確認
 			int3 polygon = polygon_model[id2].id[ite2];
@@ -110,7 +129,7 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 					);
 				//三角形と直線の交点で当たり判定を取る
 				if (isHitPolygonAndPoint(in_vert[polygon.x].pos, in_vert[polygon.y].pos, in_vert[polygon.z].pos, cross_p)) {
-					float3 f = extrudeForce(in_vert[id1].pos, last_vert[id1].pos, cross_p, hit_size);
+					float3 f = extrudeForce(in_vert[id1].pos, last_vert[id1].pos, cross_p, hit_size * 10);
 					if (isnan(f.x) && isnan(f.y) && isnan(f.z))f = float3(0, 0, 0);
 					out_spring[id1].force = add(out_spring[id1].force, f);
 				}

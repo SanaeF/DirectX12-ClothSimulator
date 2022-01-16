@@ -31,7 +31,7 @@ namespace phy {
 		ClothSimulator();
 		//モデルから得られるシミュレート用の情報を設定
 		static void initialize(int handle, int step, lib::ModelData& model, ClothForce world_f);
-
+		static void worldForce(int handle, ClothForce world_f);
 		static void resetPower(std::vector<SpringData>& spring_data);
 		//物理演算の計算を更新
 		static void update(

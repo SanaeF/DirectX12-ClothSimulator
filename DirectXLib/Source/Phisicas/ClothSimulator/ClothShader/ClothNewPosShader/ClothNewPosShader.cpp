@@ -14,7 +14,9 @@ namespace phy {
 	void ClothNewPosShader::execution(
 		ClothForce& world_f,
 		std::vector<lib::ModelVertex>& vert,
-		std::vector<SpringData>& spring
+		std::vector<SpringData>& spring,
+		std::vector<PolygonModel>& polygon_model,
+		bool no_add_vel
 	) {
 		if (65535 < vert.size()) {
 			assert(0 && "<このモデルは上限を超えています!>DirectX12の使用により、クロスシミュレーターに使用できる頂点数は65535個が限界です。");
@@ -32,6 +34,7 @@ namespace phy {
 
 			shaderHandler[m_Model_id].sim_param[0].dt = world_f.dt;
 			shaderHandler[m_Model_id].sim_param[0].k = world_f.k;
+			shaderHandler[m_Model_id].sim_param[0].is_no_add_vel = no_add_vel;
 			int size = sqrt(vert.size());
 			int size_out = vert.size() - (size * size);
 			auto& thread = shaderHandler[m_Model_id].thread;
@@ -41,7 +44,7 @@ namespace phy {
 			m_Shader.reset(
 				new lib::ComputeShader(
 					"./DirectXLib/Shader/Shader3D/Cloth/ClothNewPosition.hlsl",
-					"ClothNewPosition", 6, shaderHandler[m_Model_id].compute_handle, m_Dx12)
+					"ClothNewPosition", 7, shaderHandler[m_Model_id].compute_handle, m_Dx12)
 			);
 			//取得用データ
 			m_Shader->inputBufferSize(0, vert.size(), sizeof(lib::ModelVertex));//シミュレートして変わったモデル情報
@@ -51,11 +54,13 @@ namespace phy {
 			m_Shader->inputBufferSize(3, shaderHandler[m_Model_id].sim_param.size(), sizeof(SimulateParam));//シミュレート情報
 			m_Shader->inputBufferSize(4, vert.size(), sizeof(lib::ModelVertex));//描画に使うモデル情報
 			m_Shader->inputBufferSize(5, spring.size(), sizeof(SpringData));//バネモデル情報
+			m_Shader->inputBufferSize(6, polygon_model.size(), sizeof(PolygonModel));//バネモデル情報
 			m_Shader->createUnorderdAccessView();
 
 			m_Shader->mapOutput(0);
 			m_Shader->mapOutput(1);
 			m_Shader->mapOutput(2);
+			m_Shader->mapInput(6, polygon_model.data());
 		}
 		else m_Shader.reset(new lib::ComputeShader(shaderHandler[m_Model_id].compute_handle, m_Dx12));
 		if (!is_input)m_Shader->mapInput(3, shaderHandler[m_Model_id].sim_param.data());

@@ -33,7 +33,7 @@ namespace phy {
 			for (int ite = 0; ite < step; ite++) {
 				cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
 				cloth_shader.execution(spring_data);
-				new_pos.execution(world_f, model.vertex, spring_data);
+				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, false);
 			}
 			auto param = new_pos.getFrame(model_id);
 			if (world_f.is_self_collision) {
@@ -41,7 +41,7 @@ namespace phy {
 				collision.executeSortShader(model, param.max_pos, param.min_pos);
 				collision.create(param.max_pos, param.min_pos, model, world_f, spring_data, polygon_model, pre_vert, last_vertex);
 				collision.execution(spring_data);
-				new_pos.execution(world_f, model.vertex, spring_data);
+				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, true);
 			}
 		}
 		if (world_f.collision_type == ClothForce::COLLISION_TYPE::IN_STEP) {
@@ -49,14 +49,14 @@ namespace phy {
 				last_vertex = model.vertex;
 				cloth_shader.create(world_f, model, mass_model, spring_data, pre_vert);
 				cloth_shader.execution(spring_data);
-				new_pos.execution(world_f, model.vertex, spring_data);
+				new_pos.execution(world_f, model.vertex, spring_data, polygon_model, false);
 				auto param = new_pos.getFrame(model_id);
 				if (world_f.is_self_collision) {
 					//“–‚½‚è”»’è‚ÌŒvŽZ‚ð‚·‚é
 					collision.executeSortShader(model, param.max_pos, param.min_pos);
 					collision.create(param.max_pos, param.min_pos, model, world_f, spring_data, polygon_model, pre_vert, last_vertex);
 					collision.execution(spring_data);
-					new_pos.execution(world_f, model.vertex, spring_data);
+					new_pos.execution(world_f, model.vertex, spring_data, polygon_model, true);
 				}
 			}
 		}

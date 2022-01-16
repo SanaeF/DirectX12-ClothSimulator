@@ -35,7 +35,6 @@ void Application::run() {
 	cloth_f.grid_mass = 1.f;
 	cloth_f.damping = 0.01;
 	cloth_f.dt = 2.4;
-	cloth_f.windF(25, 0, 0);
 
 	cloth_f.tensionParam(15,15);
 	cloth_f.compressParam(15, 5);
@@ -82,7 +81,9 @@ void Application::run() {
 		isSimulate = true;
 		if (m_Key->checkHitKey(DIK_P))isSimulate = true;
 		if (count == 1920)count = 0;
-		angle += 0.005f;
+		angle += 0.05f;
+		cloth_f.windF(cos(angle)*50, 0, 0);
+		m_Graphics->clothWorldF(cloth_f, skirt);
 		m_Fps->update();
 		m_Fps->drawLog();
 	}
