@@ -52,6 +52,29 @@ namespace lib {
 		}
 		return result;
 	}
+	//‚È‚·Šp‚ÌŒvŽZ
+	float VectorMath::subtendedAngle(DirectX::XMFLOAT3 pos1, DirectX::XMFLOAT3 pos2) {
+		float axb = pos1.x * pos2.x + pos1.y * pos2.y + pos1.z * pos2.z;
+		float AxB =
+			sqrt((pos1.x * pos1.x) + (pos1.y * pos1.y) + (pos1.z * pos1.z)) *
+			sqrt((pos2.x * pos2.x) + (pos2.y * pos2.y) + (pos2.z * pos2.z));
+		if (axb == 0 || AxB == 0)return acos(0);
+		return acos(axb / AxB);
+	}
+
+	DirectX::XMFLOAT3 VectorMath::cross(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2) {
+		DirectX::XMFLOAT3 result(0.f, 0.f, 0.f);
+		result.x = p1.y * p2.z - p1.z * p2.y;
+		result.y = p1.z * p2.x - p1.x * p2.z;
+		result.z = p1.x * p2.y - p1.y * p2.x;
+		return result;
+	}
+	DirectX::XMFLOAT3 VectorMath::createNormal(DirectX::XMFLOAT3 p0, DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2) {
+		DirectX::XMFLOAT3 p0_p1 = subtract(p1, p0);
+		DirectX::XMFLOAT3 p0_p2 = subtract(p2, p0);
+		float theta = subtendedAngle(p0_p1, p0_p2);
+		return cross(p0_p1, p0_p2);
+	}
 	//2“_ŠÔ‚Ì’†“_
 	DirectX::XMFLOAT3 VectorMath::slplitPoint(DirectX::XMFLOAT3 p1, DirectX::XMFLOAT3 p2) {
 		DirectX::XMFLOAT3 result(0.f, 0.f, 0.f);

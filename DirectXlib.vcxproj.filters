@@ -111,21 +111,6 @@
     <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel">
       <UniqueIdentifier>{9f79db48-4c67-40c5-ba42-008185a5200f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator">
-      <UniqueIdentifier>{0a7ba1ab-c3fe-4019-b3a3-606a92f4ff9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider">
-      <UniqueIdentifier>{cdfaf14a-5019-414c-915f-99db3b4201bb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring">
-      <UniqueIdentifier>{3d3f255d-964e-496a-8558-299921ea3137}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring">
-      <UniqueIdentifier>{98778358-1e61-49bf-993f-09e465cc605d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring">
-      <UniqueIdentifier>{d14c7726-6f2c-4055-a8cb-f334cef2263b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DirectXLib\Source\VectorMath">
       <UniqueIdentifier>{81005658-491d-4fa1-a7db-5e3693c70094}</UniqueIdentifier>
     </Filter>
@@ -167,6 +152,27 @@
     </Filter>
     <Filter Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\ModelData">
       <UniqueIdentifier>{b9c03e32-299a-420e-924d-cd6bb6c0665f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU">
+      <UniqueIdentifier>{6265bc26-6d9f-4653-a84c-dff8a8018aa6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCollider">
+      <UniqueIdentifier>{2367d7e7-1d76-48ba-8321-f7efb9d9a5b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothNewPosition">
+      <UniqueIdentifier>{90d4d18f-f5c9-4de2-bab4-eece428d003c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpace">
+      <UniqueIdentifier>{143e92bd-e2c2-4e31-aacd-253d552054d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpring">
+      <UniqueIdentifier>{4155da67-1ccc-4649-89f0-7ebf348a1a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Collider">
+      <UniqueIdentifier>{326bdce2-564e-47d9-a234-e93650a20ef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothWorldForce">
+      <UniqueIdentifier>{cc02ec2d-eed6-478e-be97-ea55a6b40846}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -236,12 +242,6 @@
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.h">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel</Filter>
     </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider</Filter>
-    </ClInclude>
     <ClInclude Include="DirectXLib\Source\ShaderManager\ShaderManager.h">
       <Filter>DirectXLib\Source\ShaderManager</Filter>
     </ClInclude>
@@ -250,15 +250,6 @@
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\LibHelper\LibHelper.h">
       <Filter>DirectXLib\Source\LibHelper</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
-    </ClInclude>
-    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.h">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.h">
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
@@ -280,6 +271,27 @@
     </ClInclude>
     <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel\VertexPolygonModel.h">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCPU.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCollider\ClothCollider.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCollider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothNewPosition\ClothNewPosition.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothNewPosition</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpace\ClothSpace.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpace</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpring\ClothSpring.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpring</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Collider\Collider.h">
+      <Filter>DirectXLib\Source\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothWorldForce\ClothWorldForce.h">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothWorldForce</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -346,12 +358,6 @@
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel\MassSpringModel.cpp">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\MassSpringModel</Filter>
     </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\SpringForceCalculator.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider\ClothCollider.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ClothCollider</Filter>
-    </ClCompile>
     <ClCompile Include="DirectXLib\Source\ShaderManager\ShaderManager.cpp">
       <Filter>DirectXLib\Source\ShaderManager</Filter>
     </ClCompile>
@@ -360,15 +366,6 @@
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\LibHelper\LibHelper.cpp">
       <Filter>DirectXLib\Source\LibHelper</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring\StructuralSpring.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\StructuralSpring</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring\ShearSpring.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\ShearSpring</Filter>
-    </ClCompile>
-    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring\BendingSpring.cpp">
-      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\SpringForceCalculator\BendingSpring</Filter>
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel\PmxModel.cpp">
       <Filter>DirectXLib\Source\DxGraphics\DxGraphics3D\ModelLoader\PmxModel</Filter>
@@ -393,6 +390,27 @@
     </ClCompile>
     <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel\VertexPolygonModel.cpp">
       <Filter>DirectXLib\Source\Phisicas\ClothSimulator\VertexPolygonModel</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCPU.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCollider\ClothCollider.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothCollider</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothNewPosition\ClothNewPosition.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothNewPosition</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpace\ClothSpace.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpace</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpring\ClothSpring.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothCPU\ClothSpring</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Collider\Collider.cpp">
+      <Filter>DirectXLib\Source\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothWorldForce\ClothWorldForce.cpp">
+      <Filter>DirectXLib\Source\Phisicas\ClothSimulator\ClothShader\ClothWorldForce</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -438,6 +456,9 @@
     <None Include="DirectXLib\Shader\Shader3D\Cloth\ClothProp\NewPosData.hlsli">
       <Filter>DirectXLib\Shader\Shader3D\Cloth\ClothProp</Filter>
     </None>
+    <None Include="DirectXLib\Shader\Shader3D\Cloth\RootSignature\RSClothWorldForce.hlsli">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth\RootSignature</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Pixel3D.hlsl">
@@ -462,6 +483,9 @@
       <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
     <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothNewPosition.hlsl">
+      <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
+    </FxCompile>
+    <FxCompile Include="DirectXLib\Shader\Shader3D\Cloth\ClothWorldForce.hlsl">
       <Filter>DirectXLib\Shader\Shader3D\Cloth</Filter>
     </FxCompile>
   </ItemGroup>

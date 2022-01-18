@@ -25,6 +25,7 @@ namespace lib {
 		int load3D(const wchar_t* path);
 		void draw3D(float x, float y, float z, float size, float angle, int handle);
 		void setupClothSimulator(int step, ClothForce world_f, int handle);
+		void clothUseGPU(int handle, bool flag = true);
 		void clothSimProc(int Handle);
 		void clothReset(int Handle);
 		void clothWorldF(ClothForce world_f, int handle);

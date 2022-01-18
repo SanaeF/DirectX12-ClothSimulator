@@ -4,7 +4,7 @@
 #include "../../DirectXLib/Source/DirectX12Manager/DirectX12Manager.h"
 #include "MassSpringModel/MassSpringModel.h"
 #include "VertexPolygonModel/VertexPolygonModel.h"
-#include "SpringForceCalculator/SpringForceCalculator.h"
+#include "ClothCPU/ClothCPU.h"
 #include "ClothShader/ClothShader.h"
 namespace phy {
 	std::vector<lib::ClothHandleData> ClothSimulator::m_Cloth_handle_data;
@@ -49,7 +49,11 @@ namespace phy {
 		m_Cloth_handle_data[handle].polygon_model = polygon.getData();
 		m_Cloth_handle_data[handle].world_f = world_f;
 		m_Cloth_handle_data[handle].step = step;
+		m_Cloth_handle_data[handle].is_gpu = true;
 		m_time = 0;
+	}
+	void ClothSimulator::useGPU(int handle, bool flag) {
+		m_Cloth_handle_data[handle].is_gpu = flag;
 	}
 	void ClothSimulator::worldForce(int handle, ClothForce world_f) {
 		m_Cloth_handle_data[handle].world_f = world_f;
@@ -61,25 +65,6 @@ namespace phy {
 			spring_data[ite].velocity = DirectX::XMFLOAT3(0, 0, 0);
 		}
 	}
-	void ClothSimulator::update(
-		lib::ModelData& model,
-		std::vector<SpringData>& spring_data,
-		std::vector<std::vector<int>>& mass_spring_id
-	) {
-		//const int step = 1;//15;
-		//SpringForceCalculator force(model.pre_vert);
-		////モデル全頂点の力と速度データ受け取り
-		//if (spring_data.size() > 0) force.setSpringForceData(spring_data);
-		////重力を加える
-		//force.gravity(m_time, model.vertex, mass_spring_id);
-		////ステップ数だけバネの計算をする
-		//for (int i = 0; i < step; i++) {
-		//	force.restriction(m_time, model.vertex, mass_spring_id);
-		//}
-		////force.collision(vertex);
-		//spring_data = force.getSpringForceData();
-		//m_time++;
-	}
 	void ClothSimulator::resetModel(int handle, lib::ModelData& model) {
 		ClothSimulator::resetPower(m_Cloth_handle_data[handle].spring_data);
 		model.vertex = m_Cloth_handle_data[handle].pre_vert;
@@ -90,19 +75,35 @@ namespace phy {
 		lib::ModelData& model,
 		std::shared_ptr<lib::DirectX12Manager>& dx_12
 	) {
-		ClothShader cloth(dx_12);
-		cloth.execution(
-			handle, 
-			m_Cloth_handle_data[handle].step,
-			m_time, 
-			m_Cloth_handle_data[handle].world_f,
-			model,
-			m_Cloth_handle_data[handle].pre_vert,
-			m_Cloth_handle_data[handle].last_vert,
-			m_Cloth_handle_data[handle].mass_model, 
-			m_Cloth_handle_data[handle].spring_data,
-			m_Cloth_handle_data[handle].polygon_model
-		);
+		if (m_Cloth_handle_data[handle].is_gpu) {
+			ClothShader cloth_gpu(dx_12);
+			cloth_gpu.execution(
+				handle,
+				m_Cloth_handle_data[handle].step,
+				m_time,
+				m_Cloth_handle_data[handle].world_f,
+				model,
+				m_Cloth_handle_data[handle].pre_vert,
+				m_Cloth_handle_data[handle].last_vert,
+				m_Cloth_handle_data[handle].mass_model,
+				m_Cloth_handle_data[handle].spring_data,
+				m_Cloth_handle_data[handle].polygon_model
+			);
+		}
+		else {
+			ClothCPU cloth_cpu;
+			cloth_cpu.execution(
+				m_Cloth_handle_data[handle].step,
+				m_time,
+				m_Cloth_handle_data[handle].world_f,
+				model,
+				m_Cloth_handle_data[handle].pre_vert,
+				m_Cloth_handle_data[handle].last_vert,
+				m_Cloth_handle_data[handle].mass_model,
+				m_Cloth_handle_data[handle].spring_data,
+				m_Cloth_handle_data[handle].polygon_model
+			);
+		}
 		model.bufferMap();
 		m_time++;
 	}

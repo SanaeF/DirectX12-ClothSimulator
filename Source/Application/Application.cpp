@@ -33,15 +33,16 @@ void Application::run() {
 	cloth_f.collision_size = 0.0138f;
 	cloth_f.gravity = 9.8f;
 	cloth_f.grid_mass = 1.f;
-	cloth_f.damping = 0.01;
-	cloth_f.dt = 2.4;
+	cloth_f.damping = 0.01*0;
+	cloth_f.dt = 3.4;
 
 	cloth_f.tensionParam(15,15);
 	cloth_f.compressParam(15, 5);
 	cloth_f.shareParam(15, 5);
 	cloth_f.bendParam(25, 2);
-
+	//cloth_f.windF(25, 0, -5);
 	m_Graphics->setupClothSimulator(25, cloth_f, skirt);//9
+	//m_Graphics->clothUseGPU(skirt, false);
 	//m_Graphics->setupClothSimulator(5, cloth_f, testcloth);
 	float angle = 0.0f;int spd = 1;int count = 0;float Move[3] = { 0,0,0 };MSG msg = {};
 	while (true) {
@@ -82,7 +83,7 @@ void Application::run() {
 		if (m_Key->checkHitKey(DIK_P))isSimulate = true;
 		if (count == 1920)count = 0;
 		angle += 0.05f;
-		cloth_f.windF(cos(angle)*50, 0, 0);
+		cloth_f.windF(cos(angle)*50, 0, -5);
 		m_Graphics->clothWorldF(cloth_f, skirt);
 		m_Fps->update();
 		m_Fps->drawLog();

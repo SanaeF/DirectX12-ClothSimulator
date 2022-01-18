@@ -16,6 +16,7 @@ namespace lib {
 		std::vector<MassModel>mass_model;
 		std::vector<SpringData>spring_data;
 		ClothForce world_f;
+		bool is_gpu;
 	};
 }
 namespace phy {
@@ -31,14 +32,10 @@ namespace phy {
 		ClothSimulator();
 		//モデルから得られるシミュレート用の情報を設定
 		static void initialize(int handle, int step, lib::ModelData& model, ClothForce world_f);
+		static void useGPU(int handle, bool flag = true);
 		static void worldForce(int handle, ClothForce world_f);
 		static void resetPower(std::vector<SpringData>& spring_data);
 		//物理演算の計算を更新
-		static void update(
-			lib::ModelData& model,
-			std::vector<SpringData>& spring_data,
-			std::vector<std::vector<int>>& mass_spring_id
-		);
 		static void execution(
 			int handle,
 			lib::ModelData& model,

@@ -151,6 +151,10 @@ namespace lib {
 		if (handle == -1)return;
 		phy::ClothSimulator::worldForce(handle, world_f);
 	}
+	void DxGraphics3D::clothUseGPU(int handle, bool flag) {
+		if (handle == -1)return;
+		phy::ClothSimulator::useGPU(handle, flag);
+	}
 	void DxGraphics3D::updateClothPhis(int handle) {
 		if (handle == -1)return;
 		phy::ClothSimulator::execution(

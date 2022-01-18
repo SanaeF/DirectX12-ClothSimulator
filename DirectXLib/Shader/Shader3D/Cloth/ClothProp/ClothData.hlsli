@@ -4,12 +4,17 @@ struct Resistance {
 };
 struct SimulateParam {
 	int vert_max;
+	int time;
+	float3 wind;
 	Resistance tension;
 	Resistance compress;
 	Resistance share;
 	Resistance bend;
 	float dt;
 	float k;
+	float grid_mass;
+	float gravity;
+	float damping;
 	bool is_no_add_vel;
 };
 

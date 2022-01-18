@@ -52,6 +52,9 @@ namespace lib {
 	void DxGraphics::setupClothSimulator(int step, ClothForce world_f, int handle) {
 		m_Graphics3D->setupClothPhis(step, world_f, handle);
 	}
+	void DxGraphics::clothUseGPU(int handle, bool flag) {
+		m_Graphics3D->clothUseGPU(handle, flag);
+	}
 	void DxGraphics::clothSimProc(int Handle) {
 		m_Graphics3D->updateClothPhis(Handle);
 	}

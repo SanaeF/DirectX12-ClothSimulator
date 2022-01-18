@@ -1,7 +1,7 @@
 #include "ClothShader.h"
 #include "../../DirectXLib/Source/DirectX12Manager/DirectX12Manager.h"
 #include "../../DirectXLib/Source/VectorMath/VectorMath.h"
-
+#include "ClothWorldForce/ClothWorldForce.h"
 #include "ClothSpringShader/ClothSpringShader.h"
 #include "ClothCollisionShader/ClothCollisionShader.h"
 #include "ClothNewPosShader/ClothNewPosShader.h"
@@ -27,7 +27,8 @@ namespace phy {
 		ClothSpringShader cloth_shader(model_id, m_Dx12);
 		ClothCollisionShader collision(model_id, m_Dx12);
 		ClothNewPosShader new_pos(model_id, m_Dx12);
-		worldForce(time, step, world_f, model, spring_data);
+		ClothWorldForce world_force(model_id, m_Dx12);
+		world_force.execution(time, world_f, model.vertex, spring_data);
 		if (world_f.collision_type == ClothForce::COLLISION_TYPE::OUT_STEP) {
 			last_vertex = model.vertex;//過去の座標として記録
 			for (int ite = 0; ite < step; ite++) {//ステップ数
