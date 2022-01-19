@@ -16,15 +16,14 @@ namespace phy {
 	) {
 		if (model.vertex.size() <= 0)return;
 		worldForce(time, step, world_f, model, spring_data);
-		ClothSpring cloth(world_f, model.vertex, mass_model, spring_data, pre_vert);
-		//ClothCollisionShader collision(model_id, m_Dx12);
-		ClothNewPosition new_pos(world_f, model.vertex, spring_data, polygon_model);
 		if (world_f.collision_type == ClothForce::COLLISION_TYPE::OUT_STEP) {
 			last_vertex = model.vertex;//過去の座標として記録
 			for (int ite = 0; ite < step; ite++) {//ステップ数
 				//クロスシミュレーションシェーダーの実行
+				ClothSpring cloth(world_f, model.vertex, mass_model, spring_data, pre_vert);
 				cloth.execution(spring_data);
-				//new_pos.execution(model.vertex, spring_data, false);//座標を変更
+				ClothNewPosition new_pos(world_f, model.vertex, spring_data, polygon_model);
+				new_pos.execution(model.vertex, spring_data, false);//座標を変更
 			}
 			//auto param = new_pos.getFrame();
 			if (world_f.is_self_collision) {//当たり判定の計算をする
@@ -39,8 +38,10 @@ namespace phy {
 			for (int ite = 0; ite < step; ite++) {//ステップ数
 				last_vertex = model.vertex;//過去の座標として記録
 				//クロスシミュレーションシェーダーの実行
+				ClothSpring cloth(world_f, model.vertex, mass_model, spring_data, pre_vert);
 				cloth.execution(spring_data);
-				//new_pos.execution(model.vertex, spring_data, false);//座標を変更
+				ClothNewPosition new_pos(world_f, model.vertex, spring_data, polygon_model);
+				new_pos.execution(model.vertex, spring_data, false);//座標を変更
 				//auto param = new_pos.getFrame();
 				if (world_f.is_self_collision) {//当たり判定の計算をする
 					//collision.executeSortShader(model, param.max_pos, param.min_pos);//空間分割シェーダー
