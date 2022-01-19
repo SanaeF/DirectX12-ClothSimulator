@@ -14,8 +14,13 @@ namespace phy {
 		std::shared_ptr<lib::DirectX12Manager>& m_Dx12;
 		std::shared_ptr<lib::ComputeShader> m_Shader;
 		ComPtr<ID3D12Device> m_Device;
+		struct PositionFrame {
+			DirectX::XMFLOAT3 max_pos;
+			DirectX::XMFLOAT3 min_pos;
+		};
 		struct CSSInfo {
 			std::vector<SimulateParam>sim_param;
+			std::vector<PositionFrame>frame;
 			DirectX::XMINT3 thread;
 			bool is_created;
 			int compute_handle;
@@ -30,6 +35,7 @@ namespace phy {
 			std::vector<lib::ModelVertex>& vert, 
 			std::vector<SpringData>& spring
 		);
+		PositionFrame getFrame(int model_id);
 	private:
 		void dataAssign(std::vector<lib::ModelVertex>& vert, std::vector<SpringData>& spring);
 	};

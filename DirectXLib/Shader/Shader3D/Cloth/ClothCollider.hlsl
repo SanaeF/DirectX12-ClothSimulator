@@ -77,11 +77,10 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 	if (in_vert[id1].pos.x == last_vert[id1].pos.x &&
 		in_vert[id1].pos.y == last_vert[id1].pos.y && 
 		in_vert[id1].pos.z == last_vert[id1].pos.z) return;
-	int size = space[space_id].count;
+	int target_size = space[space_id].count;
 	float hit_size = param.hit_size;
-	for (int ite1 = 0; ite1 < size; ite1++) {
+	for (int ite1 = 0; ite1 < target_size; ite1++) {
 		int id2 = space[ite1].id[space_id];
-		//id2 = ite;
 		if (id1 == id2)continue;
 		//二つの頂点に対して何かしらの当たり判定を取る
 		bool is_hit_sphere = false;
@@ -98,8 +97,8 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 			//is_hit_sphere = true;
 		}
 		//自身が持つ三角形と対象の頂点(P0,P1)の判定
-		int size = polygon_model[id1].polygon_num;
-		for (int ite2 = 0; ite2 < size; ite2++) {
+		int pol_size = polygon_model[id1].polygon_num;
+		for (int ite2 = 0; ite2 < pol_size; ite2++) {
 			//有効な三角形か確認
 			int3 polygon = polygon_model[id1].id[ite2];
 			if (isEffectivPolygon(id2, polygon)) {
@@ -117,8 +116,8 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 			}
 		}
 		//三角形の数だけループ
-		size = polygon_model[id2].polygon_num;
-		for (int ite2 = 0; ite2 < size; ite2++) {
+		pol_size = polygon_model[id2].polygon_num;
+		for (int ite2 = 0; ite2 < pol_size; ite2++) {
 			//有効な三角形か確認
 			int3 polygon = polygon_model[id2].id[ite2];
 			if (isEffectivPolygon(id1, polygon)) {
