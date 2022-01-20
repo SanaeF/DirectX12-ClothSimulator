@@ -27,11 +27,11 @@ namespace phy {
 		}
 		auto& is_input = m_ShaderHandler[m_Model_id].is_created;
 		m_ShaderHandler[m_Model_id].sim_param[0].wind = world_f.wind;
+		m_ShaderHandler[m_Model_id].sim_param[0].time = time;
 		if (!is_input) {
 			m_ShaderHandler[m_Model_id].sim_param.resize(1);
 			m_ShaderHandler[m_Model_id].frame.resize(1);
 			m_ShaderHandler[m_Model_id].sim_param[0].vert_max = vert.size();
-			m_ShaderHandler[m_Model_id].sim_param[0].time = time;
 			m_ShaderHandler[m_Model_id].sim_param[0].tension = world_f.tension;
 			m_ShaderHandler[m_Model_id].sim_param[0].compress = world_f.compress;
 			m_ShaderHandler[m_Model_id].sim_param[0].share = world_f.share;

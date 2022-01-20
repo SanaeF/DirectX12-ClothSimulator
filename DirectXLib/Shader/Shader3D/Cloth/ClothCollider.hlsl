@@ -79,6 +79,10 @@ void ClothCollider(uint3 th_id : SV_GroupID) {
 		in_vert[id1].pos.z == last_vert[id1].pos.z) return;
 	int target_size = space[space_id].count;
 	float hit_size = param.hit_size;
+
+	float3 normal_vec = float3(in_vert[id1].normal.x, in_vert[id1].normal.y, in_vert[id1].normal.z);
+	out_spring[id1].force = add(out_spring[id1].force, scale(normal_vec, hit_size/2));
+
 	for (int ite1 = 0; ite1 < target_size; ite1++) {
 		int id2 = space[ite1].id[space_id];
 		if (id1 == id2)continue;
